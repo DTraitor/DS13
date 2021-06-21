@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0cf03b6e0b422c553b49b9dc4fd79293496f49c2
 /obj/item/integrated_circuit/passive/power
 	name = "power thingy"
 	desc = "Does power stuff."

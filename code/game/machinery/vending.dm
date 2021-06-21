@@ -339,7 +339,7 @@
 	if(user)
 		user.visible_message(SPAN_NOTICE("[user] knock down [src]."), SPAN_NOTICE("You tear down [src]."))
 	shot_down = TRUE
-	density = FALSE
+	set_density(FALSE)
 	src.set_dir(turn(src.dir, 90))
 	return TRUE
 
@@ -1123,7 +1123,7 @@
 					/obj/item/weapon/reagent_containers/food/drinks/cans/artbru = 20,
 					/obj/item/weapon/reagent_containers/food/drinks/glass2/square/boda = 20,
 					/obj/item/weapon/reagent_containers/food/drinks/glass2/square/bodaplus = 20)
-	contraband = list(/obj/item/weapon/reagent_containers/food/drinks/bottle/space_up = 300) // TODO Russian cola can
+	contraband = list(/obj/item/weapon/reagent_containers/food/drinks/bottle/space_up = 300)
 	idle_power_usage = 211 //refrigerator - believe it or not, this is actually the average power consumption of a refrigerated vending machine according to NRCan.
 
 /obj/machinery/vending/tool

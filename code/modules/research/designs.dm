@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 
 /datum/design/item
@@ -1320,339 +1321,226 @@
 	materials = list(MATERIAL_STEEL = 10000, MATERIAL_GLASS = 10000)
 	build_path = /obj/item/disk/integrated_circuit/upgrade/clone
 	sort_string = "WCLAE"
+=======
+/***************************************************************
+**						Design Datums						  **
+**	All the data for building stuff. 						  **
+***************************************************************/
+>>>>>>> 0cf03b6e0b422c553b49b9dc4fd79293496f49c2
 
 /*
-CIRCUITS BELOW
+
+Design Guidlines
+- Materials are automatically read from the result item. Any material/chemical requirements specified in these datums are extras added to that
+- A single sheet of anything is 2000 units of material. Materials besides metal/glass require help from other jobs (mining for
+other types of metals and chemistry for reagents).
+
 */
+//Note: More then one of these can be added to a design.
 
-/datum/design/circuit
-	build_type = IMPRINTER
-	req_tech = list(TECH_DATA = 2)
-	materials = list(MATERIAL_GLASS = 2000)
-	chemicals = list(/datum/reagent/acid = 20)
-	time = 5
+/datum/design						//Datum for object designs, used in construction
+	var/name = null					//Name of the created object. If null, it will be 'guessed' from build_path if possible.
+	var/item_name = null			//An item name before it is modified by various name-modifying procs
+	var/name_category = null		//If set, name is modified into "[name_category] ([item_name])"
+	var/desc = null					//Description of the created object. If null, it will use group_desc and name where applicable.
+	var/id = null					//ID of the created object for easy refernece. If null, uses typepath instead.
+	var/sort_string = "ZZZZZ"		//Sorting order
 
-/datum/design/circuit/AssembleDesignName()
-	..()
+	var/list/materials = list()		//List of materials. Format: "id" = amount.
+	var/list/chemicals = list()		//List of reagents. Format: "id" = amount.
+	var/build_path = null			//The path of the object that gets created.
+	var/build_type = STORE			//Flag as to what kind machine the design is built in. See defines.
+	var/category = "Misc"			//Used to sort designs
+	var/time = 0					//How many ticks it requires to build. If 0, calculated from the amount of materials used.
+
+	var/list/req_tech = null		//IDs of that techs the object originated from and the minimum level requirements.
+									//Use null to make design undiscoverable in R&D.
+
+	var/list/ui_data = null			//Pre-generated UI data, to be sent into NanoUI/TGUI interfaces.
+
+	// An MPC file containing this design. You can use it directly, but only if it doesn't interact with the rest of MPC system. If it does, use copies.
+	var/datum/computer_file/binary/design/file
+
+	var/price = 1000	//What does it cost to buy this from the store?
+	var/store_purchases	=	0	//How many times in the current round has this been bought from a store?
+	var/demand_scaling = 0.02	//The price of the item increases by this % every time it is purchased
+
+	//When this design is bought at the store, can we do a makeover/transfer to equip it?
+	//Only true for RIGs and rig modules
+	var/store_transfer	= FALSE
+
+//These procs are used in subtypes for assigning names and descriptions dynamically
+/datum/design/proc/AssembleDesignInfo()
+	var/atom/movable/temp_atom = Fabricate(null, 1, null)
 	if(build_path)
-		var/obj/item/weapon/circuitboard/C = build_path
-		if(initial(C.board_type) == "machine")
-			name = "Machine circuit design ([item_name])"
-		else if(initial(C.board_type) == "computer")
-			name = "Computer circuit design ([item_name])"
-		else
-			name = "Circuit design ([item_name])"
+		temp_atom = Fabricate(null, 1, null)
 
-/datum/design/circuit/AssembleDesignDesc()
-	if(!desc)
-		desc = "Allows for the construction of \a [item_name] circuit board."
+	AssembleDesignName(temp_atom)
+	AssembleDesignMaterials(temp_atom)
+	AssembleDesignTime(temp_atom)
+	AssembleDesignDesc(temp_atom)
+	AssembleDesignId(temp_atom)
+	AssembleDesignUIData(temp_atom)
 
-/datum/design/circuit/arcademachine
-	name = "battle arcade machine"
-	id = "arcademachine"
-	req_tech = list(TECH_DATA = 1)
-	build_path = /obj/item/weapon/circuitboard/arcade/battle
-	sort_string = "MAAAA"
+	if (temp_atom)
+		qdel(temp_atom)
 
-/datum/design/circuit/oriontrail
-	name = "orion trail arcade machine"
-	id = "oriontrail"
-	req_tech = list(TECH_DATA = 1)
-	build_path = /obj/item/weapon/circuitboard/arcade/orion_trail
-	sort_string = "MABAA"
+/datum/design/proc/get_price(var/mob/user)
 
-/datum/design/circuit/prisonmanage
-	name = "prisoner management console"
-	id = "prisonmanage"
-	build_path = /obj/item/weapon/circuitboard/prisoner
-	sort_string = "DACAA"
 
-/datum/design/circuit/operating
-	name = "patient monitoring console"
-	id = "operating"
-	build_path = /obj/item/weapon/circuitboard/operating
-	sort_string = "FACAA"
+	.=price
+	if (store_purchases && demand_scaling)
+		. *= 1 + (demand_scaling * store_purchases)
 
-/datum/design/circuit/resleever
-	name = "neural lace resleever"
-	id = "resleever"
-	req_tech = list(TECH_DATA = 3, TECH_BIO = 3)
-	build_path = /obj/item/weapon/circuitboard/resleever
-	sort_string = "FAGAH"
+	//TODO Future: Discounts based on user's job or skills?
 
-/datum/design/circuit/crewconsole
-	name = "crew monitoring console"
-	id = "crewconsole"
-	req_tech = list(TECH_DATA = 3, TECH_MAGNET = 2, TECH_BIO = 2)
-	build_path = /obj/item/weapon/circuitboard/crew
-	sort_string = "FAGAI"
 
-/datum/design/circuit/rdconsole
-	name = "R&D control console"
-	id = "rdconsole"
-	req_tech = list(TECH_DATA = 4)
-	build_path = /obj/item/weapon/circuitboard/rdconsole
-	sort_string = "HAAAA"
+//Get name from build path if possible
+/datum/design/proc/AssembleDesignName(atom/temp_atom)
+	if(!name && temp_atom)
+		name = temp_atom.name
 
-/datum/design/circuit/comm_monitor
-	name = "telecommunications monitoring console"
-	id = "comm_monitor"
-	req_tech = list(TECH_DATA = 3)
-	build_path = /obj/item/weapon/circuitboard/comm_monitor
-	sort_string = "HAACA"
+	item_name = name
 
-/datum/design/circuit/comm_server
-	name = "telecommunications server monitoring console"
-	id = "comm_server"
-	req_tech = list(TECH_DATA = 3)
-	build_path = /obj/item/weapon/circuitboard/comm_server
-	sort_string = "HAACB"
+	if(name_category)
+		name = "[name_category] ([item_name])"
 
-/datum/design/circuit/comm_traffic
-	name = "telecommunications traffic control console"
-	id = "comm_traffic"
-	req_tech = list(TECH_DATA = 6)
-	build_path = /obj/item/weapon/circuitboard/comm_traffic
-	sort_string = "HAACC"
+	name = capitalize(name)
 
-/datum/design/circuit/message_monitor
-	name = "messaging monitor console"
-	id = "message_monitor"
-	req_tech = list(TECH_DATA = 5)
-	build_path = /obj/item/weapon/circuitboard/message_monitor
-	sort_string = "HAACD"
+//Try to make up a nice description if we don't have one
+/datum/design/proc/AssembleDesignDesc(atom/temp_atom)
+	if(desc)
+		return
+	if(!desc && temp_atom)
+		desc = temp_atom.desc
 
-/datum/design/circuit/destructive_analyzer
-	name = "destructive analyzer"
-	id = "destructive_analyzer"
-	req_tech = list(TECH_DATA = 2, TECH_MAGNET = 2, TECH_ENGINEERING = 2)
-	build_path = /obj/item/weapon/circuitboard/destructive_analyzer
-	sort_string = "HABAA"
+//Extract matter and reagent requirements from the target object and any objects inside it.
+//Any materials specified in these designs are extras, added on top of what is extracted.
+/datum/design/proc/AssembleDesignMaterials(atom/temp_atom)
+	if(istype(temp_atom, /obj))
+		for(var/obj/O in temp_atom.GetAllContents(includeSelf = TRUE))
+			AddObjectMaterials(O)
 
-/datum/design/circuit/protolathe
-	name = "protolathe"
-	id = "protolathe"
-	req_tech = list(TECH_DATA = 2, TECH_ENGINEERING = 2)
-	build_path = /obj/item/weapon/circuitboard/protolathe
-	sort_string = "HABAB"
+//Add materials and reagents from object to the recipe
+/datum/design/proc/AddObjectMaterials(obj/O)
+	var/multiplier = 1
 
-/datum/design/circuit/circuit_imprinter
-	name = "circuit imprinter"
-	id = "circuit_imprinter"
-	req_tech = list(TECH_DATA = 2, TECH_ENGINEERING = 2)
-	build_path = /obj/item/weapon/circuitboard/circuit_imprinter
-	sort_string = "HABAC"
+	// If stackable, we want to multiply materials by amount
+	if(istype(O, /obj/item/stack))
+		var/obj/item/stack/stack = O
+		multiplier = stack.get_amount()
 
-/datum/design/circuit/autolathe
-	name = "autolathe board"
-	id = "autolathe"
-	req_tech = list(TECH_DATA = 2, TECH_ENGINEERING = 2)
-	build_path = /obj/item/weapon/circuitboard/autolathe
-	sort_string = "HABAD"
+	var/list/mats = O.matter
+	if (mats && mats.len)
 
-/datum/design/circuit/rdservercontrol
-	name = "R&D server control console"
-	id = "rdservercontrol"
-	req_tech = list(TECH_DATA = 3)
-	build_path = /obj/item/weapon/circuitboard/rdservercontrol
-	sort_string = "HABBA"
+		for(var/a in mats)
 
-/datum/design/circuit/rdserver
-	name = "R&D server"
-	id = "rdserver"
-	req_tech = list(TECH_DATA = 3)
-	build_path = /obj/item/weapon/circuitboard/rdserver
-	sort_string = "HABBB"
+			var/amount = mats[a] * multiplier
+			if(amount)
+				LAZYAPLUS(materials, a, amount)
 
-/datum/design/circuit/mechfab
-	name = "exosuit fabricator"
-	id = "mechfab"
-	req_tech = list(TECH_DATA = 3, TECH_ENGINEERING = 3)
-	build_path = /obj/item/weapon/circuitboard/mechfab
-	sort_string = "HABAE"
+	mats = O.matter_reagents
+	if (mats && mats.len)
+		for(var/a in mats)
+			var/amount = mats[a] * multiplier
+			if(amount)
+				LAZYAPLUS(chemicals, a, amount)
 
-/datum/design/circuit/atmosalerts
-	name = "atmosphere alert console"
-	id = "atmosalerts"
-	build_path = /obj/item/weapon/circuitboard/atmos_alert
-	sort_string = "JAAAA"
 
-/datum/design/circuit/air_management
-	name = "atmosphere monitoring console"
-	id = "air_management"
-	build_path = /obj/item/weapon/circuitboard/air_management
-	sort_string = "JAAAB"
+//Calculate design time from the amount of materials and chemicals used.
+/datum/design/proc/AssembleDesignTime()
+	if(time)
+		return
 
-/datum/design/circuit/rcon_console
-	name = "RCON remote control console"
-	id = "rcon_console"
-	req_tech = list(TECH_DATA = 4, TECH_ENGINEERING = 3, TECH_POWER = 5)
-	build_path = /obj/item/weapon/circuitboard/rcon_console
-	sort_string = "JAAAC"
+	var/total_materials = 0
+	var/total_reagents = 0
 
-/datum/design/circuit/powermonitor
-	name = "power monitoring console"
-	id = "powermonitor"
-	build_path = /obj/item/weapon/circuitboard/powermonitor
-	sort_string = "JAAAD"
+	for(var/m in materials)
+		total_materials += materials[m]
 
-/datum/design/circuit/solarcontrol
-	name = "solar control console"
-	id = "solarcontrol"
-	build_path = /obj/item/weapon/circuitboard/solar_control
-	sort_string = "JAAAE"
+	for(var/c in chemicals)
+		total_reagents += chemicals[c]
 
-/datum/design/circuit/pacman
-	name = "PACMAN-type generator"
-	id = "pacman"
-	req_tech = list(TECH_DATA = 3, TECH_PHORON = 3, TECH_POWER = 3, TECH_ENGINEERING = 3)
-	build_path = /obj/item/weapon/circuitboard/pacman
-	sort_string = "JBAAA"
+	time = 5 + total_materials + (total_reagents / 5)
+	time = max(round(time), 5)
 
-/datum/design/circuit/superpacman
-	name = "SUPERPACMAN-type generator"
-	id = "superpacman"
-	req_tech = list(TECH_DATA = 3, TECH_POWER = 4, TECH_ENGINEERING = 4)
-	build_path = /obj/item/weapon/circuitboard/pacman/super
-	sort_string = "JBAAB"
+// By default, ID is just design's type.
+/datum/design/proc/AssembleDesignId()
+	if(id)
+		return
+	id = sanitizeSafe(input = "[type]", max_length = MAX_MESSAGE_LEN, encode = FALSE, trim = TRUE, extra = TRUE, allow_links = FALSE)
 
-/datum/design/circuit/mrspacman
-	name = "MRSPACMAN-type generator"
-	id = "mrspacman"
-	req_tech = list(TECH_DATA = 3, TECH_POWER = 5, TECH_ENGINEERING = 5)
-	build_path = /obj/item/weapon/circuitboard/pacman/mrs
-	sort_string = "JBAAC"
+//Gets the default ID for a design from a typepath
+/proc/get_design_id_from_type(var/design_type)
+	var/datum/design/D = design_type
+	if (initial(D.id))
+		return initial(D.id)
+	else
+		return sanitizeSafe(input = "[design_type]", max_length = MAX_MESSAGE_LEN, encode = FALSE, trim = TRUE, extra = TRUE, allow_links = FALSE)
 
-/datum/design/circuit/batteryrack
-	name = "cell rack PSU"
-	id = "batteryrack"
-	req_tech = list(TECH_POWER = 3, TECH_ENGINEERING = 2)
-	build_path = /obj/item/weapon/circuitboard/batteryrack
-	sort_string = "JBABA"
 
-/datum/design/circuit/smes_cell
-	name = "'SMES' superconductive magnetic energy storage"
-	desc = "Allows for the construction of circuit boards used to build a SMES."
-	id = "smes_cell"
-	req_tech = list(TECH_POWER = 7, TECH_ENGINEERING = 5)
-	build_path = /obj/item/weapon/circuitboard/smes
-	sort_string = "JBABB"
+/datum/design/proc/AssembleDesignUIData()
+	ui_data = list("id" = "[id]", "name" = name, "item_name" = (item_name ? item_name : name), "desc" = desc, "time" = time, "category" = category, "price" = price)
 
-/datum/design/circuit/gas_heater
-	name = "gas heating system"
-	id = "gasheater"
-	req_tech = list(TECH_POWER = 2, TECH_ENGINEERING = 1)
-	build_path = /obj/item/weapon/circuitboard/unary_atmos/heater
-	sort_string = "JCAAA"
+	// ui_data["icon"] is set in asset code.
+	//"icon" = getAtomCacheFilename(CR.result),
 
-/datum/design/circuit/gas_cooler
-	name = "gas cooling system"
-	id = "gascooler"
-	req_tech = list(TECH_MAGNET = 2, TECH_ENGINEERING = 2)
-	build_path = /obj/item/weapon/circuitboard/unary_atmos/cooler
-	sort_string = "JCAAB"
+	if(length(materials))
+		var/list/RS = list()
+		for(var/mat in materials)
+			RS.Add(list(list("name" = mat, "req" = materials[mat])))
+		ui_data["materials"] = RS
 
-/datum/design/circuit/secure_airlock
-	name = "secure airlock electronics"
-	desc =  "Allows for the construction of a tamper-resistant airlock electronics."
-	id = "securedoor"
-	req_tech = list(TECH_DATA = 3)
-	build_path = /obj/item/weapon/airlock_electronics/secure
-	sort_string = "JDAAA"
+	if(length(chemicals))
+		var/list/RS = list()
 
-/datum/design/circuit/biogenerator
-	name = "biogenerator"
-	id = "biogenerator"
-	req_tech = list(TECH_DATA = 2)
-	build_path = /obj/item/weapon/circuitboard/biogenerator
-	sort_string = "KBAAA"
+		for(var/reagent in chemicals)
+			var/datum/reagent/RG = new reagent(TRUE)//Passing in true here prevents a runtime errror
+			var/chemical_name = "UNKNOWN"
+			if(RG)
+				chemical_name = RG.name
 
-/datum/design/circuit/miningdrill
-	name = "mining drill head"
-	id = "mining drill head"
-	req_tech = list(TECH_DATA = 1, TECH_ENGINEERING = 1)
-	build_path = /obj/item/weapon/circuitboard/miningdrill
-	sort_string = "KCAAA"
+			RS.Add(list(list("id" = reagent, "name" = chemical_name, "req" = chemicals[reagent])))
 
-/datum/design/circuit/miningdrillbrace
-	name = "mining drill brace"
-	id = "mining drill brace"
-	req_tech = list(TECH_DATA = 1, TECH_ENGINEERING = 1)
-	build_path = /obj/item/weapon/circuitboard/miningdrillbrace
-	sort_string = "KCAAB"
+		ui_data["chemicals"] = RS
 
-/datum/design/circuit/tcom
-	req_tech = list(TECH_DATA = 4, TECH_ENGINEERING = 4)
 
-/datum/design/circuit/tcom/AssembleDesignName()
-	name = "Telecommunications machinery circuit design ([name])"
-/datum/design/circuit/tcom/AssembleDesignDesc()
-	desc = "Allows for the construction of a telecommunications [name] circuit board."
+/datum/design/ui_data()
+	return ui_data
 
-/datum/design/circuit/tcom/server
-	name = "server mainframe"
-	id = "tcom-server"
-	build_path = /obj/item/weapon/circuitboard/telecomms/server
-	sort_string = "PAAAA"
+//Returns a new instance of the item for this design
+//This is to allow additional initialization to be performed, including possibly additional contructor arguments.
+/datum/design/proc/Fabricate(newloc, mat_efficiency, fabricator)
+	if(!build_path)
+		return
 
-/datum/design/circuit/tcom/processor
-	name = "processor unit"
-	id = "tcom-processor"
-	build_path = /obj/item/weapon/circuitboard/telecomms/processor
-	sort_string = "PAAAB"
+	var/atom/A = new build_path(newloc)
+	A.Created()
 
-/datum/design/circuit/tcom/bus
-	name = "bus mainframe"
-	id = "tcom-bus"
-	build_path = /obj/item/weapon/circuitboard/telecomms/bus
-	sort_string = "PAAAC"
+	if(mat_efficiency != 1 && isobj(A))
+		var/obj/O = A
+		if(length(O.matter))
+			for(var/i in O.matter)
+				O.matter[i] = round(O.matter[i] * mat_efficiency, 0.01)
 
-/datum/design/circuit/tcom/hub
-	name = "hub mainframe"
-	id = "tcom-hub"
-	build_path = /obj/item/weapon/circuitboard/telecomms/hub
-	sort_string = "PAAAD"
+	return A
 
-/datum/design/circuit/tcom/relay
-	name = "relay mainframe"
-	id = "tcom-relay"
-	req_tech = list(TECH_DATA = 3, TECH_ENGINEERING = 4, TECH_BLUESPACE = 3)
-	build_path = /obj/item/weapon/circuitboard/telecomms/relay
-	sort_string = "PAAAE"
 
-/datum/design/circuit/tcom/broadcaster
-	name = "subspace broadcaster"
-	id = "tcom-broadcaster"
-	req_tech = list(TECH_DATA = 4, TECH_ENGINEERING = 4, TECH_BLUESPACE = 2)
-	build_path = /obj/item/weapon/circuitboard/telecomms/broadcaster
-	sort_string = "PAAAF"
 
-/datum/design/circuit/tcom/receiver
-	name = "subspace receiver"
-	id = "tcom-receiver"
-	req_tech = list(TECH_DATA = 4, TECH_ENGINEERING = 3, TECH_BLUESPACE = 2)
-	build_path = /obj/item/weapon/circuitboard/telecomms/receiver
-	sort_string = "PAAAG"
+/datum/design/autolathe
+	build_type = AUTOLATHE
 
-/datum/design/circuit/shield_generator
-	name = "Shield Generator"
-	desc = "Allows for the construction of a shield generator circuit board."
-	id = "shield_generator"
-	req_tech = list(TECH_MAGNET = 3, TECH_POWER = 4)
-	build_path = /obj/item/weapon/circuitboard/shield_generator
-	sort_string = "VAAAC"
+/datum/design/autolathe/corrupted
+	name = "ERROR"
+	build_path = /obj/item/weapon/material/shard/shrapnel
 
-/datum/design/circuit/shield_diffuser
-	name = "Shield Diffuser"
-	desc = "Allows for the construction of a shield generator circuit board."
-	id = "shield_diffuser"
-	req_tech = list(TECH_MAGNET = 3, TECH_POWER = 4)
-	build_path = /obj/item/weapon/circuitboard/shield_diffuser
-	sort_string = "VAAAB"
-
+<<<<<<< HEAD
 /datum/design/circuit/ntnet_relay
 	name = "SolNet Quantum Relay"
 	id = "ntnet_relay"
 	req_tech = list(TECH_DATA = 4)
 	build_path = /obj/item/weapon/circuitboard/ntnet_relay
 	sort_string = "WAAAA"
+=======
+
+>>>>>>> 0cf03b6e0b422c553b49b9dc4fd79293496f49c2
