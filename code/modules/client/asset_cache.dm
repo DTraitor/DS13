@@ -221,7 +221,7 @@ You can set verify to TRUE if you want send() to sleep until the client has the 
 	)
 	var/list/uncommon_dirs = list(
 		"nano/templates/",
-		"news_articles/images/"
+		"nano/images/news_articles"
 	)
 
 /datum/asset/nanoui/register()
@@ -353,6 +353,7 @@ var/decl/asset_cache/asset_cache = new()
 	for(var/file in SSresearch.design_files_to_init)
 		SSresearch.initialize_design_file(file)
 	SSresearch.design_files_to_init = list()
+
 
 	SSdatabase.update_store_designs()
 

@@ -13,6 +13,11 @@ GLOBAL_VAR_INIT(number_of_store_kiosks, 0)
 	layer = ABOVE_WINDOW_LAYER	//Above windows but below humans
 	anchored = TRUE
 
+	// Power
+	use_power = 1
+	idle_power_usage = 50
+	var/vend_power_usage = 450 //actuators and stuff
+
 	var/door_state = STORE_OPEN
 
 	//Only one person can step into the store at once
@@ -53,10 +58,10 @@ GLOBAL_VAR_INIT(number_of_store_kiosks, 0)
 		icon_state = "kiosk_off"
 		light = FALSE
 
-	cut_overlays()
+	overlays.Cut()
 	if (door_state == -1)
 		var/image/I = image(icon, src, "door_closed",ABOVE_HUMAN_LAYER )
-		add_overlay(I)
+		overlays += I
 		light = FALSE
 
 	//The store emits light as long as its powered on and the door is open

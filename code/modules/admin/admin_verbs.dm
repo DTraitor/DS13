@@ -201,6 +201,9 @@ var/list/admin_verbs_debug = list(
 	/client/proc/show_plant_genes,
 	/client/proc/enable_debug_verbs,
 	/client/proc/callproc,
+//	/client/proc/start_line_profiling,
+//	/client/proc/stop_line_profiling,
+//	/client/proc/show_line_profiling,
 	/client/proc/callproc_target,
 	/client/proc/SDQL_query,
 	/client/proc/SDQL2_query,
@@ -208,6 +211,7 @@ var/list/admin_verbs_debug = list(
 	/client/proc/jumptomob,
 	/client/proc/jumptocoord,
 	/client/proc/dsay,
+	/client/proc/check_timer_sources,
 	/datum/admins/proc/run_unit_test,
 	/client/proc/view_chunk,
 	/client/proc/update_chunk,
@@ -217,7 +221,6 @@ var/list/admin_verbs_debug = list(
 	/client/proc/visualpower,
 	/client/proc/visualpower_remove,
 	/client/proc/debug_vectorpool,
-//	/client/proc/cmd_display_overlay_log,
 	/client/proc/activate_marker,
 	/client/proc/dummy_crowd
 	)
