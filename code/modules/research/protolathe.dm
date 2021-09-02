@@ -43,9 +43,7 @@
 	MATERIAL_PHORON)
 
 /obj/machinery/r_n_d/protolathe/Initialize()
-	materials = default_material_composition.Copy()
-	..()
-
+	. = ..()
 	materials[MATERIAL_STEEL]	= new /datum/rnd_material("Steel",    /obj/item/stack/material/steel)
 	materials[MATERIAL_GLASS]	= new /datum/rnd_material("Glass",    /obj/item/stack/material/glass)
 	materials[MATERIAL_PLASTIC]	= new /datum/rnd_material("Plastic",  /obj/item/stack/material/plastic)
@@ -98,7 +96,7 @@
 		A /= max(1 , (being_built.materials[M]/efficiency_coeff))
 		return A
 	else
-		A = reagents[M].volume
+		A = reagents.get_reagent_amount(M)
 		A /= max(1, (being_built.chemicals[M]/efficiency_coeff))
 		return A
 
