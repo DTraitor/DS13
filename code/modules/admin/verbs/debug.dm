@@ -65,7 +65,7 @@
 		alert("That mob doesn't seem to exist, close the panel and try again.")
 		return
 
-	if(istype(M, /mob/new_player))
+	if(istype(M, /mob/dead/new_player))
 		alert("The mob must not be a new_player.")
 		return
 
@@ -214,7 +214,7 @@
 	set name = "Del-All"
 
 	// to prevent REALLY stupid deletions
-	var/blocked = list(/obj, /mob, /mob/living, /mob/living/carbon, /mob/living/carbon/human, /mob/observer, /mob/living/silicon, /mob/living/silicon/robot, /mob/living/silicon/ai)
+	var/blocked = list(/obj, /mob, /mob/living, /mob/living/carbon, /mob/living/carbon/human, /mob/dead/observer, /mob/living/silicon, /mob/living/silicon/robot, /mob/living/silicon/ai)
 	var/hsbitem = input(usr, "Choose an object to delete.", "Delete:") as null|anything in typesof(/obj) + typesof(/mob) - blocked
 	if(hsbitem)
 		for(var/atom/O in world)
@@ -278,7 +278,7 @@
 		if(alert("This mob is being controlled by [M.ckey]. Are you sure you wish to assume control of it? [M.ckey] will be made a ghost.",,"Yes","No") != "Yes")
 			return
 		else
-			var/mob/observer/ghost/ghost = new/mob/observer/ghost(M,1)
+			var/mob/dead/observer/ghost/ghost = new/mob/dead/observer/ghost(M,1)
 			ghost.ckey = M.ckey
 	log_and_message_admins("assumed direct control of [M].")
 	var/mob/adminmob = src.mob
@@ -577,6 +577,12 @@
 	if(!ishuman(H))	return
 	cmd_analyse_health(H)
 	feedback_add_details("admin_verb","ANLS") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
+
+/*/client/proc/cmd_display_overlay_log()		// Uncomment here and in 'code/modules/admin/admin_verbs.dm'
+	set category = "Debug"						// if you want to see how much it takes to render overlay
+	set name = "Display overlay Log"
+	set desc = "Display SSoverlays log of everything that's passed through it."
+	render_stats(SSoverlays.stats, src)*/
 
 /obj/effect/debugmarker
 	icon = 'icons/effects/lighting_overlay.dmi'

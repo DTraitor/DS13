@@ -42,9 +42,13 @@
 */
 /mob/living/proc/necromorph_conversion(var/compatibility = 1)
 
+
 	//Final
 	if (!is_necromorph_conversion_valid())
 		return
+
+	if (client || key)
+		ghostize()	//Kick out any existing client
 
 
 	//Animal conversion doesnt use species, we just spawn a new mob and delete the old one
@@ -67,6 +71,9 @@
 	//Final
 	if (!is_necromorph_conversion_valid())
 		return
+
+	if (client || key)
+		ghostize()	//Kick out any existing client
 
 	ADD_TRANSFORMATION_MOVEMENT_HANDLER(src)
 
@@ -120,15 +127,15 @@
 
 /mob/living/carbon/human/get_necromorph_conversion_possibilities(var/compatibility = 1)
 	//These options are always available
-	var/list/options = list(SPECIES_NECROMORPH_SLASHER = (10 / compatibility),
+	var/list/options = list(SPECIES_NECROMORPH_SLASHER = (9.5 / compatibility),
 	SPECIES_NECROMORPH_SLASHER_ENHANCED = (1 * compatibility))
 
 	//Gender based options
 	if (gender == FEMALE)
 		options[SPECIES_NECROMORPH_SPITTER]	=	3 * compatibility
 	else
-		options[SPECIES_NECROMORPH_EXPLODER]	=	3 * compatibility
-
+		options[SPECIES_NECROMORPH_EXPLODER]	=	2.5 * compatibility
+		options[SPECIES_NECROMORPH_EXPLODER_ENHANCED]	=	0.5 * compatibility
 
 	//Future TODO: Twitcher if they had stasis
 
@@ -161,7 +168,7 @@
 			light_armor = FALSE
 
 	if (light_armor && has_organ(BP_L_LEG) && has_organ(BP_R_LEG))
-		options[SPECIES_NECROMORPH_LEAPER]	=	1 * compatibility	//Its still a pretty rare option
+		options[SPECIES_NECROMORPH_LEAPER]	=	2 * compatibility	//Its still a pretty rare option
 
 	return options
 
@@ -176,7 +183,10 @@
 		return FALSE
 
 
-
+/mob/living/carbon/human/is_necromorph_conversion_valid()
+	.=..()
+	if (!has_organ(BP_HEAD))
+		return FALSE
 
 
 //Compatibility

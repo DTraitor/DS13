@@ -403,12 +403,9 @@ Checks if a list has the same entries and values as an element of big.
 		return (result + L.Copy(Li, 0))
 	return (result + R.Copy(Ri, 0))
 
-//Mergesort: any value in a list
-/proc/sortList(var/list/L)
-	if(L.len < 2)
-		return L
-	var/middle = L.len / 2 + 1 // Copy is first,second-1
-	return mergeLists(sortList(L.Copy(0,middle)), sortList(L.Copy(middle))) //second parameter null = to end of list
+//any value in a list
+/proc/sortList(list/L, cmp=/proc/cmp_text_asc)
+	return sortTim(L.Copy(), cmp)
 
 //Mergsorge: uses sortList() but uses the var's name specifically. This should probably be using mergeAtom() instead
 /proc/sortNames(var/list/L)
@@ -901,7 +898,19 @@ proc/dd_sortedTextList(list/incoming)
 /*
 	Outputs the entire contents of an associative list to a string including sublists. Recursive
 */
-/proc/dump_list(var/list/L, var/depth = 0, var/assoc = TRUE)
+/proc/dump_list(var/list/L, var/depth = 0, var/assoc = null)
+
+	//Lets figure out if it is associative
+	if (isnull(assoc) && LAZYLEN(L))
+		var/key = L[1]
+		//Assoc keys cant be numerical
+		if (isnum(key))
+			assoc = FALSE
+		else if (!isnull(L[key]))
+			assoc = TRUE
+		else
+			assoc = FALSE
+
 	var/output = ""
 	var/depthstring = ""
 

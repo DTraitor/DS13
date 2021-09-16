@@ -1,5 +1,6 @@
 /mob
-	density = 1
+	datum_flags = DATUM_FLAG_WEAKREF_USE_TAG
+	density = TRUE
 	plane = DEFAULT_PLANE
 	layer = MOB_LAYER
 
@@ -7,21 +8,14 @@
 	animate_movement = 2
 	movable_flags = MOVABLE_FLAG_PROXMOVE
 
-	virtual_mob = /mob/observer/virtual/mob
+	virtual_mob = /mob/dead/observer/virtual/mob
 
 	movement_handlers = list(
-		/datum/movement_handler/mob/relayed_movement,
-		/datum/movement_handler/mob/death,
-		/datum/movement_handler/mob/conscious,
-		/datum/movement_handler/mob/eye,
 		/datum/movement_handler/move_relay,
-		/datum/movement_handler/mob/buckle_relay,
 		/datum/movement_handler/mob/delay,
-		/datum/movement_handler/mob/stop_effect,
 		/datum/movement_handler/mob/physically_capable,
-		/datum/movement_handler/mob/physically_restrained,
+		/datum/movement_handler/mob/physically_restrained,	//TODO: Add this from various things it checks, should be removed otherwise
 		/datum/movement_handler/mob/space,
-		/datum/movement_handler/mob/multiz,
 		/datum/movement_handler/mob/movement
 	)
 
@@ -203,4 +197,5 @@
 	//Combat
 	var/evasion = 15	//A base percentage chance of avoiding attacks which would otherwise hit
 
-	
+	//Seciruty
+	var/static/next_mob_id = 0
