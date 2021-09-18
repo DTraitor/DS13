@@ -4,7 +4,7 @@
 
 /datum/extension/encumbrance
 	flags = EXTENSION_FLAG_IMMEDIATE
-	expected_type = /mob/living
+	expected_type = /atom
 
 	var/encumbrance = 0
 	var/speed_factor	=	0
@@ -16,31 +16,30 @@
 	STATMOD_EVASION = 0)
 
 /datum/extension/encumbrance/proc/update()
-	var/mob/living/L = holder
 	var/encumbrance_before = encumbrance
 	encumbrance = 0
 	deltimer(update_timer)
-	for(var/slot = slot_first to slot_last)
-		var/obj/item/I = L.get_equipped_item(slot)
-		if(I)
-			var/item_slowdown = 0
-			item_slowdown += I.slowdown_general
-			item_slowdown += I.slowdown_per_slot[slot]
-			item_slowdown += I.slowdown_accessory
+	if(istype(holder, /mob))
+		var/mob/living/L = holder
+		for(var/slot = slot_first to slot_last)
+			var/obj/item/I = L.get_equipped_item(slot)
+			if(I)
+				var/item_slowdown = 0
+				item_slowdown += I.slowdown_general
+				item_slowdown += I.slowdown_per_slot[slot]
+				item_slowdown += I.slowdown_accessory
 
-			encumbrance += max(item_slowdown, 0)
+				encumbrance += max(item_slowdown, 0)
 
+		//If we have no encumbrance we don't need this
+		if (encumbrance <= 0)
+			remove_self()
+			return
 
-
-	//If we have no encumbrance we don't need this
-	if (encumbrance <= 0)
-		remove_self()
-		return
-
-	encumbrance = max(0, encumbrance - (L.get_skill_value(SKILL_HAULING) * ENCUMBRANCE_REDUCTION_FACTOR))
-	if (encumbrance == encumbrance_before)
-		//If its unchanged, do nothing
-		return
+		encumbrance = max(0, encumbrance - (L.get_skill_value(SKILL_HAULING) * ENCUMBRANCE_REDUCTION_FACTOR))
+		if (encumbrance == encumbrance_before)
+			//If its unchanged, do nothing
+			return
 
 
 	statmods[STATMOD_MOVESPEED_MULTIPLICATIVE] = (1 / (1 + (encumbrance * ENCUMBRANCE_TO_MOVESPEED)))
