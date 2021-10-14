@@ -66,8 +66,8 @@
 	var/obj/item/weapon/reagent_containers/glass/beaker/vial/loaded_vial
 	volume = 0
 
-/obj/item/weapon/reagent_containers/hypospray/vial/New()
-	..()
+/obj/item/weapon/reagent_containers/hypospray/vial/Initialize()
+	. = ..()
 	loaded_vial = new /obj/item/weapon/reagent_containers/glass/beaker/vial(src)
 	volume = loaded_vial.volume
 	reagents.maximum_volume = loaded_vial.reagents.maximum_volume

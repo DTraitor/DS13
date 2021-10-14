@@ -14,7 +14,7 @@ GLOBAL_LIST_EMPTY(store_designs)
 
 	for (var/id in temp_list)
 
-		var/datum/design/D = SSresearch.design_ids[id]
+		var/datum/design/D = SSresearch.design_by_id[id]
 
 		//Its gotta be printable in the store
 		if (!(D.build_type & STORE))

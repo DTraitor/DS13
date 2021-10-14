@@ -9,7 +9,7 @@
 	. = ..()
 	if(linked_console)
 		linked_console.linked_destroy = null
-		linked_console.update_open_uis()
+		SStgui.update_uis(linked_console)
 		linked_console = null
 
 /obj/machinery/r_n_d/destructive_analyzer/RefreshParts()
@@ -17,12 +17,6 @@
 	for(var/obj/item/weapon/stock_parts/S in component_parts)
 		T += S.rating
 	decon_mod = T
-
-/obj/machinery/r_n_d/destructive_analyzer/proc/ConvertReqString2List(list/source_list)
-	var/list/temp_list = params2list(source_list)
-	for(var/O in temp_list)
-		temp_list[O] = text2num(temp_list[O])
-	return temp_list
 
 /obj/machinery/r_n_d/destructive_analyzer/update_icon()
 	if(panel_open)
@@ -43,7 +37,7 @@
 		update_icon()
 		if(linked_console)
 			linked_console.linked_destroy = null
-			linked_console.update_open_uis()
+			SStgui.update_uis(linked_console)
 			linked_console = null
 		return
 
@@ -82,7 +76,7 @@
 			busy = FALSE
 			update_icon()
 		if(linked_console)
-			linked_console.update_open_uis()
+			SStgui.update_uis(linked_console)
 		return 1
 	return
 
@@ -95,9 +89,7 @@
 
 	busy = TRUE
 	update_icon()
-	if(linked_console)
-		linked_console.screen = "working"
-	addtimer(CALLBACK(src, .proc/finish_deconstructing), 24)
+	addtimer(CALLBACK(src, .proc/finish_deconstructing), 22)
 
 /obj/machinery/r_n_d/destructive_analyzer/proc/finish_deconstructing()
 	busy = FALSE
@@ -125,8 +117,7 @@
 
 	use_power(250)
 	if(linked_console)
-		linked_console.screen = "main"
-		linked_console.update_open_uis()
+		SStgui.update_uis(linked_console)
 
 /obj/machinery/r_n_d/destructive_analyzer/eject_item()
 	if(busy)

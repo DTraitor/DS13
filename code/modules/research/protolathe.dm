@@ -32,15 +32,6 @@
 	var/max_material_storage = 100000
 	var/efficiency_coeff
 	var/list/queue = list()
-	var/list/allowed_mats = list(MATERIAL_STEEL,
-	MATERIAL_GLASS,
-	MATERIAL_PLASTIC,
-	MATERIAL_PLASTEEL,
-	MATERIAL_SILVER,
-	MATERIAL_GOLD,
-	MATERIAL_DIAMOND,
-	MATERIAL_URANIUM,
-	MATERIAL_PHORON)
 
 /obj/machinery/r_n_d/protolathe/Initialize()
 	. = ..()
@@ -58,14 +49,8 @@
 	. = ..()
 	if(linked_console)
 		linked_console.linked_lathe = null
-		linked_console.update_open_uis()
+		SStgui.update_uis(linked_console)
 		linked_console = null
-
-/obj/machinery/r_n_d/protolathe/TotalMaterials() //returns the total of all the stored materials. Makes code neater.
-	var/am = 0
-	for(var/M in materials)
-		am += materials[M].amount
-	return am
 
 /obj/machinery/r_n_d/protolathe/RefreshParts()
 	var/T = 0
@@ -108,7 +93,7 @@
 		update_icon()
 		if(linked_console)
 			linked_console.linked_lathe = null
-			linked_console.update_open_uis()
+			SStgui.update_uis(linked_console)
 			linked_console = null
 		return
 	if(default_deconstruction_crowbar(user, O))
@@ -132,7 +117,7 @@
 		return FALSE
 	var/obj/item/stack/material/stack = O
 	if(istype(O, /obj/item/stack/material))
-		if(!(stack.default_type in allowed_mats))
+		if(!materials[stack.default_type])
 			to_chat(user, "<span class='notice'>You cannot insert this material into the [src]!</span>")
 			return
 
@@ -159,7 +144,7 @@
 	busy = FALSE
 	update_icon()
 	if(linked_console)
-		linked_console.update_open_uis()
+		SStgui.update_uis(linked_console)
 
 /obj/machinery/r_n_d/protolathe/proc/queue_design(datum/design/D, amount)
 	var/datum/rnd_queue_design/RNDD = new /datum/rnd_queue_design(D, amount)
@@ -221,14 +206,4 @@
 		produce_design(queue[1])
 
 	if(linked_console)
-		linked_console.update_open_uis()
-
-/obj/machinery/r_n_d/protolathe/eject_sheet(sheet_type, amount)
-	if(materials[sheet_type])
-		var/available_num_sheets = Floor(materials[sheet_type].amount / materials[sheet_type].sheet_size)
-		if(available_num_sheets > 0)
-			var/S = materials[sheet_type].sheet_type
-			var/obj/item/stack/material/M = new S(loc)
-			var/sheet_ammount = min(available_num_sheets, amount)
-			M.set_amount(sheet_ammount)
-			materials[sheet_type].amount = max(0, materials[sheet_type].amount - sheet_ammount * materials[sheet_type].sheet_size)
+		SStgui.update_uis(linked_console)

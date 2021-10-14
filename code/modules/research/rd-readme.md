@@ -1,7 +1,6 @@
-/*
-Research and Development System. (Designed specifically for the /tg/station 13 (Space Station 13) open source project)
+# Research and Development System
 
-///////////////Overview///////////////////
+### Overview
 This system is a "tech tree" research and development system designed for SS13. It allows a "researcher" job (this document assumes
 the "scientist" job is given this role) the tools necessary to research new and better technologies. In general, the system works
 by breaking existing technology and using what you learn from to advance your knowledge of SCIENCE! As your knowledge progresses,
@@ -9,7 +8,7 @@ you can build newer (and better?) devices (which you can also, eventually, decon
 
 A brief overview is below. For more details, see the related files.
 
-////////////Game Use/////////////
+### Game Use
 The major research and development is performed using a combination of four machines:
 - R&D Console: A computer console that allows you to manipulate the other devices that are linked to it and view/manipulate the
 technologies you have researched so far.
@@ -24,9 +23,23 @@ are the "Tech Trees" of the game. You start out with a number of them at the gam
 Destructive Analyzer. By themselves, they don't do a whole lot. However, they unlock Device Designs. This is the information used
 by the circuit imprinter and the protolathe to produce objects. It also tracks the current reliability of that particular design.
 
-//EXISTING TECH
+### Existing Tech
 Each tech path should have at LEAST one item at every level (levels 1 - 20). This is to allow for a more fluid progression of the
 researching. Existing tech (ie, anything you can find on the station or get from the quartermaster) shouldn't go higher then
 level 5 or 7. Everything past that should be stuff you research.
 
-*/
+
+### Code Design
+
+                SSresearch-----------
+                    |               |
+                    V               |
+                 Servers            |
+                    |               |
+                    V               |
+            Research Consoles <-------
+                  Datum
+                    |
+                    V
+                 Console
+

@@ -53,13 +53,12 @@ other types of metals and chemistry for reagents).
 	AssembleDesignDesc(temp_atom)
 	AssembleDesignId(temp_atom)
 	AssembleDesignUIData(temp_atom)
+	AssembleDesignFile()
 
 	if (temp_atom)
 		qdel(temp_atom)
 
 /datum/design/proc/get_price(var/mob/user)
-
-
 	.=price
 	if (store_purchases && demand_scaling)
 		. *= 1 + (demand_scaling * store_purchases)
@@ -118,7 +117,6 @@ other types of metals and chemistry for reagents).
 			if(amount)
 				LAZYAPLUS(chemicals, a, amount)
 
-
 //Calculate design time from the amount of materials and chemicals used.
 /datum/design/proc/AssembleDesignTime()
 	if(time)
@@ -140,7 +138,7 @@ other types of metals and chemistry for reagents).
 /datum/design/proc/AssembleDesignId()
 	if(id)
 		return
-	id = sanitizeSafe(input = "[type]", max_length = MAX_MESSAGE_LEN, encode = FALSE, trim = TRUE, extra = TRUE, allow_links = FALSE)
+	id = sanitizeSafe(input = replace_characters("[type]", list("/"="-")), max_length = MAX_MESSAGE_LEN, encode = FALSE, trim = TRUE, extra = TRUE, allow_links = FALSE)
 
 //Gets the default ID for a design from a typepath
 /proc/get_design_id_from_type(var/design_type)
@@ -148,14 +146,19 @@ other types of metals and chemistry for reagents).
 	if (initial(D.id))
 		return initial(D.id)
 	else
-		return sanitizeSafe(input = "[design_type]", max_length = MAX_MESSAGE_LEN, encode = FALSE, trim = TRUE, extra = TRUE, allow_links = FALSE)
+		return sanitizeSafe(input = replace_characters("[design_type]", list("/"="-")), max_length = MAX_MESSAGE_LEN, encode = FALSE, trim = TRUE, extra = TRUE, allow_links = FALSE)
 
 
-/datum/design/proc/AssembleDesignUIData()
+/datum/design/proc/AssembleDesignUIData(atom/temp)
 	ui_data = list("id" = "[id]", "name" = name, "item_name" = (item_name ? item_name : name), "desc" = desc, "time" = time, "category" = category, "price" = price)
 
-	// ui_data["icon"] is set in asset code.
-	//"icon" = sanitizeFileName("[CR.result].png"),
+	var/filename = sanitizeFileName("[id].png")
+	var/icon/I = getFlatTypeIcon(temp.type)
+
+	ui_data["icon_name"] = filename
+	ui_data["icon"] = I
+	ui_data["icon_width"] = I.Width()
+	ui_data["icon_height"] = I.Height()
 
 	if(length(materials))
 		var/list/RS = list()
@@ -176,9 +179,11 @@ other types of metals and chemistry for reagents).
 
 		ui_data["chemicals"] = RS
 
-
-/datum/design/ui_data()
-	return ui_data
+/datum/design/proc/AssembleDesignFile()
+	var/datum/computer_file/binary/design/design_file = new
+	design_file.design = src
+	design_file.on_design_set()
+	file = design_file
 
 //Returns a new instance of the item for this design
 //This is to allow additional initialization to be performed, including possibly additional contructor arguments.
