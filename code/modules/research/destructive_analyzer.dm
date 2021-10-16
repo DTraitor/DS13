@@ -9,7 +9,7 @@
 	. = ..()
 	if(linked_console)
 		linked_console.linked_destroy = null
-		linked_console.update_open_uis()
+		SStgui.update_uis(linked_console)
 		linked_console = null
 
 /obj/machinery/r_n_d/destructive_analyzer/RefreshParts()
@@ -37,7 +37,7 @@
 		update_icon()
 		if(linked_console)
 			linked_console.linked_destroy = null
-			linked_console.update_open_uis()
+			SStgui.update_uis(linked_console)
 			linked_console = null
 		return
 
@@ -76,7 +76,7 @@
 			busy = FALSE
 			update_icon()
 		if(linked_console)
-			linked_console.update_open_uis()
+			SStgui.update_uis(linked_console)
 		return 1
 	return
 
@@ -90,8 +90,7 @@
 	busy = TRUE
 	update_icon()
 	if(linked_console)
-		linked_console.screen = "working"
-		SSnano.update_uis(linked_console)
+		SStgui.update_uis(linked_console)
 	addtimer(CALLBACK(src, .proc/finish_deconstructing), 24)
 
 /obj/machinery/r_n_d/destructive_analyzer/proc/finish_deconstructing()
@@ -119,8 +118,7 @@
 
 	use_power(250)
 	if(linked_console)
-		linked_console.screen = "main"
-		linked_console.update_open_uis()
+		SStgui.update_uis(linked_console)
 
 /obj/machinery/r_n_d/destructive_analyzer/eject_item()
 	if(busy)
