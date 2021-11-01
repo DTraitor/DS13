@@ -1,12 +1,15 @@
 /datum/technology/bio
-	name = "Basic Biotech"
-	desc = "Basic Biotech"
-	id = "basic_biotech"
 	tech_type = TECH_BIO
+	icon_file = 'icons/obj/device.dmi'
+
+/datum/technology/bio/basic
+	name = "Basic Biotech"
+	desc = "First step into the bio technologies!"
+	id = "basic_biotech"
 
 	x = 0.1
 	y = 0.5
-	icon = "healthanalyzer"
+	icon = "health"
 
 	required_technologies = list()
 	cost = 0
@@ -15,26 +18,32 @@
 
 /datum/technology/bio/basic_medical_machines
 	name = "Basic Medical Machines"
-	desc = "Basic Medical Machines"
+	desc = "Patient and RIG monitoring consoles"
 	id = "basic_medical_machines"
 
 	x = 0.2
 	y = 0.5
-	icon = "operationcomputer"
+	//special way to generate an icon
 
 	required_technologies = list("basic_biotech")
 	cost = 250
 
 	unlocks_designs = list("operating", "crewconsole")
 
+/datum/technology/bio/basic_medical_machines/generate_icon()
+	I = icon('icons/obj/computer.dmi', "computer")
+	I.Blend(icon('icons/obj/computer.dmi', "crew"), ICON_OVERLAY)
+	I.Blend(icon('icons/obj/computer.dmi', "med_key"), ICON_OVERLAY)
+
 /datum/technology/bio/hydroponics
 	name = "Hydroponics"
-	desc = "Hydroponics"
+	desc = "Basic hydroponic machinery"
 	id = "hydroponics"
 
 	x = 0.1
 	y = 0.4
-	icon = "hydroponics"
+	icon_file = 'icons/obj/hydroponics_machines.dmi'
+	icon = "hydrotray3"
 
 	required_technologies = list("basic_biotech")
 	cost = 250
@@ -43,12 +52,13 @@
 
 /datum/technology/bio/adv_hydroponics
 	name = "Advanced Hydroponics"
-	desc = "Advanced Hydroponics"
+	desc = "Botany DNA manipulation machinery or how to grow bicaridine"
 	id = "adv_hydroponics"
 
 	x = 0.1
 	y = 0.3
-	icon = "gene"
+	icon_file = 'icons/obj/hydroponics_machines.dmi'
+	icon = "traitcopier"
 
 	required_technologies = list("hydroponics")
 	cost = 750
@@ -57,12 +67,13 @@
 
 /datum/technology/bio/food_process
 	name = "Food Processing"
-	desc = "Food Processing"
+	desc = "Quick guide how to cook some delicious humans"
 	id = "food_process"
 
 	x = 0.2
 	y = 0.4
-	icon = "microwave"
+	icon_file = 'icons/obj/kitchen.dmi'
+	icon = "mw"
 
 	required_technologies = list("hydroponics")
 	cost = 500
@@ -71,12 +82,13 @@
 
 /datum/technology/bio/implants
 	name = "Implants"
-	desc = "Implants"
+	desc = "Implanting someone without permission from department head or person you are implanting is forbidden!"
 	id = "implants"
 
 	x = 0.2
 	y = 0.6
-	icon = "implant"
+	icon_file = 'icons/obj/items.dmi'
+	icon = "implantcase-r"
 
 	required_technologies = list("basic_medical_machines")
 	cost = 1500
@@ -85,26 +97,30 @@
 
 /datum/technology/bio/adv_med_machines
 	name = "Advanced Medical Machines"
-	desc = "Advanced Medical Machines"
+	desc = "Advanced health care machinery"
 	id = "adv_med_machines"
 
 	x = 0.3
 	y = 0.5
-	icon = "sleeper"
+	//special way to generate an icon
 
 	required_technologies = list("basic_medical_machines")
 	cost = 1500
 
 	unlocks_designs = list("cryo_cell", "sleeper", "body_scanner")
 
+/datum/technology/bio/adv_med_machines/generate_icon()
+	I = icon('icons/obj/Cryogenic2.dmi', "sleeper_0", 4)
+
 /datum/technology/bio/add_med_tools
 	name = "Additional Medical Tools"
-	desc = "Additional Medical Tools"
+	desc = "Some useful tools you can print in case you don't have enough in the storage"
 	id = "add_med_tools"
 
 	x = 0.4
 	y = 0.5
-	icon = "medhud"
+	icon_file = 'icons/obj/clothing/glasses.dmi'
+	icon = "healthhud"
 
 	required_technologies = list("adv_med_machines")
 	cost = 750
@@ -112,13 +128,13 @@
 	unlocks_designs = list("mass_spectrometer", "reagent_scanner", "scalpel_laser1", "health_hud", "oxycandle", "defibrillators_back")
 
 /datum/technology/bio/adv_add_med_tools
-	name = "Advanced Additional Medical Tools"
-	desc = "Advanced Additional Medical Tools"
+	name = "Additional Advanced Medical Tools"
+	desc = "For those who prefer the best tools"
 	id = "adv_add_med_tools"
 
 	x = 0.5
 	y = 0.5
-	icon = "adv_mass_spec"
+	icon = "adv_spectrometer"
 
 	required_technologies = list("add_med_tools")
 	cost = 1250
@@ -127,12 +143,12 @@
 
 /datum/technology/bio/track_dev
 	name = "Tracking Devices"
-	desc = "Tracking Devices"
+	desc = "What's the point of using tracking implant if you can implant prisoner with beacon?"
 	id = "track_dev"
 
 	x = 0.4
 	y = 0.4
-	icon = "gps"
+	icon = "locator"
 
 	required_technologies = list("add_med_tools")
 	cost = 500
@@ -141,12 +157,13 @@
 
 /datum/technology/bio/chemicals
 	name = "Chemicals"
-	desc = "Chemicals"
+	desc = "Don't let the clown to get this!"
 	id = "chemicals"
 
 	x = 0.6
 	y = 0.5
-	icon = "chemdisp"
+	icon_file = 'icons/obj/chemical.dmi'
+	icon = "dispenser"
 
 	required_technologies = list("adv_add_med_tools")
 	cost = 2000
@@ -155,11 +172,12 @@
 
 /datum/technology/bio/hypospray
 	name = "Hypospray"
-	desc = "Hypospray"
+	desc = "The fastest way to deliver chemicals into someone"
 	id = "hypospray"
 
 	x = 0.6
 	y = 0.4
+	icon_file = 'icons/obj/syringe.dmi'
 	icon = "hypo"
 
 	required_technologies = list("chemicals")
@@ -169,11 +187,12 @@
 
 /datum/technology/bio/chemical_guns
 	name = "Fast Chemicals Delivery"
-	desc = "Fast Chemicals Delivery"
+	desc = "The fastest way to deliver cyanide in someone you don't like"
 	id = "chemical_guns"
 
 	x = 0.7
 	y = 0.4
+	icon_file = 'icons/obj/gun.dmi'
 	icon = "rapidsyringegun"
 
 	required_technologies = list("hypospray", "nleth_eq")
@@ -183,12 +202,13 @@
 
 /datum/technology/bio/scalpelmanager
 	name = "Incision Management System"
-	desc = "Incision Management System"
+	desc = "5/6 surgeons recommend using IMS"
 	id = "scalpelmanager"
 
 	x = 0.7
 	y = 0.6
-	icon = "scalpelmanager"
+	icon_file = 'icons/obj/surgery.dmi'
+	icon = "scalpel_manager_on"
 
 	required_technologies = list("chemicals")
 	cost = 2000
@@ -197,12 +217,12 @@
 
 /datum/technology/bio/adv_health_scanner
 	name = "Advanced Health Scanner"
-	desc = "Advanced Health Scanner"
+	desc = "7/5 doctos recommend using advanced health scanner"
 	id = "adv_health_scanner"
 
 	x = 0.8
 	y = 0.5
-	icon = "adv_health_scanner"
+	icon = "health_adv"
 
 	required_technologies = list("chemicals")
 	cost = 3000
@@ -211,12 +231,13 @@
 
 /datum/technology/bio/beakers
 	name = "Special Beakers"
-	desc = "Special Beakers"
+	desc = "How does it even work?"
 	id = "beakers"
 
 	x = 0.6
 	y = 0.6
-	icon = "blue_beaker"
+	icon_file = 'icons/obj/chemical.dmi'
+	icon = "beakerbluespace"
 
 	required_technologies = list("chemicals")
 	cost = 1500

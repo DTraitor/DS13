@@ -251,15 +251,20 @@ The tech datums are the actual "tech trees" that you improve through researching
 /datum/technology
 	var/name = "name"
 	var/desc = "description"
-	var/id = "id"							// should be unique
+	var/id = null							// should be unique
 	var/tech_type							// Which tech tree does this techology belongs to
 
 	var/x = 0.5								// Position on the tech tree map, 0 - left, 1 - right
 	var/y = 0.5								// 0 - down, 1 - top
 	var/no_lines = FALSE					// Prevents rendering any lines that leads to this tech
-	var/icon = "gun"						// css class of techology icon, defined in shared.css
+	var/icon/I
+	var/icon_file = 'icons/obj/gun.dmi'
+	var/icon = "gun"
 
 	var/list/required_technologies = list()	// Ids of techologies that are required to be unlocked before this one. Should have same tech_type
 	var/cost = 100							// How much research points required to unlock this techology
 
 	var/list/unlocks_designs = list()		// Ids of designs that this technology unlocks
+
+/datum/technology/proc/generate_icon()
+	I = icon(icon_file, icon)

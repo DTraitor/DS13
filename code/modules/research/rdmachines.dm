@@ -5,16 +5,11 @@
 /obj/machinery/r_n_d
 	name = "R&D Device"
 	icon = 'icons/obj/machines/research.dmi'
-	density = 1
-	anchored = 1
+	density = TRUE
+	anchored = TRUE
 	use_power = 1
-	var/busy = 0
-	var/hacked = 0
-	var/disabled = 0
-	var/shocked = 0
-	var/datum/wires/rnd/wires = null
+	var/busy = FALSE
 	var/obj/machinery/computer/rdconsole/linked_console
-	var/working = 0
 	var/list/datum/rnd_material/materials = list()
 
 /obj/machinery/r_n_d/proc/eject_sheet(sheet_type, amount)

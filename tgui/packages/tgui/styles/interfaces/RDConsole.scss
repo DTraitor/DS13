@@ -1,0 +1,31 @@
+.sciBorderTop {
+  border-top-style: solid;
+  border-top-color: white;
+  border-top-width: 1px;
+}
+
+.sciBorderBottom {
+  border-bottom-style: solid;
+  border-bottom-color: white;
+  border-bottom-width: 1px;
+}
+
+.sciBorderRight {
+  border-right-style: solid;
+  border-right-color: white;
+  border-right-width: 1px;
+}
+
+.sciBorderLeft {
+  border-left-style: solid;
+  border-left-color: white;
+  border-left-width: 1px;
+}
+
+.sciNoPadding{
+  padding: 0 0;
+}
+
+.sciCantResearch{
+  background-color: #c42b3c;
+}

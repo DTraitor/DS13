@@ -1,12 +1,15 @@
 /datum/technology/data
+	tech_type = TECH_DATA
+	icon_file = 'icons/obj/modular_components.dmi'
+
+/datum/technology/data/basic
 	name = "Basic Modular Computers"
 	desc = "Basic Modular Computers"
 	id = "basic_modular"
-	tech_type = TECH_DATA
 
 	x = 0.5
 	y = 0.3
-	icon = "cpu"
+	icon = "cpu_normal"
 
 	required_technologies = list()
 	cost = 0
@@ -20,7 +23,8 @@
 
 	x = 0.5
 	y = 0.2
-	icon = "tablet_frame"
+	icon_file = 'icons/obj/modular_tablet.dmi'
+	icon = "tabletsol"
 
 	required_technologies = list("basic_modular")
 	cost = 750
@@ -34,7 +38,7 @@
 
 	x = 0.5
 	y = 0.4
-	icon = "hdd64"
+	icon = "hdd_small"
 
 	required_technologies = list("basic_modular")
 	cost = 250
@@ -48,7 +52,7 @@
 
 	x = 0.5
 	y = 0.5
-	icon = "hdd256"
+	icon = "hdd_advanced"
 
 	required_technologies = list("ms_hdd")
 	cost = 500
@@ -62,7 +66,7 @@
 
 	x = 0.5
 	y = 0.6
-	icon = "hdd512"
+	icon = "hdd_super"
 
 	required_technologies = list("adv_hdd")
 	cost = 750
@@ -76,7 +80,7 @@
 
 	x = 0.5
 	y = 0.7
-	icon = "hdd2048"
+	icon = "hdd_cluster"
 
 	required_technologies = list("sup_hdd")
 	cost = 1250
@@ -90,7 +94,7 @@
 
 	x = 0.4
 	y = 0.4
-	icon = "netcard_w"
+	icon = "netcard_ethernet"
 
 	required_technologies = list("basic_modular")
 	cost = 500
@@ -104,7 +108,7 @@
 
 	x = 0.4
 	y = 0.5
-	icon = "netcard_adv"
+	icon = "netcard_advanced"
 
 	required_technologies = list("netcard_w", "solnet_relay")
 	cost = 1250
@@ -132,7 +136,7 @@
 
 	x = 0.7
 	y = 0.5
-	icon = "pcpu_small"
+	icon = "cpu_small_photonic"
 
 	required_technologies = list("cpu_small")
 	cost = 500
@@ -146,7 +150,7 @@
 
 	x = 0.7
 	y = 0.6
-	icon = "pcpu"
+	icon = "cpu_normal_photonic"
 
 	required_technologies = list("pcpu_small")
 	cost = 100
@@ -160,7 +164,7 @@
 
 	x = 0.6
 	y = 0.4
-	icon = "modular_bat_micro"
+	icon = "battery_normal"
 
 	required_technologies = list("basic_modular")
 	cost = 250
@@ -174,7 +178,7 @@
 
 	x = 0.6
 	y = 0.5
-	icon = "modular_bat_advanced"
+	icon = "battery_advanced"
 
 	required_technologies = list("modular_bat_micro", "adv_power")
 	cost = 500
@@ -188,7 +192,7 @@
 
 	x = 0.6
 	y = 0.6
-	icon = "modular_bat_super"
+	icon = "battery_super"
 
 	required_technologies = list("modular_bat_advanced", "sup_power")
 	cost = 750
@@ -202,7 +206,7 @@
 
 	x = 0.6
 	y = 0.7
-	icon = "modular_bat_ultra"
+	icon = "battery_ultra"
 
 	required_technologies = list("modular_bat_super", "hyp_power")
 	cost = 1250
@@ -216,7 +220,7 @@
 
 	x = 0.6
 	y = 0.2
-	icon = "tesla_link"
+	icon = "teslalink"
 
 	required_technologies = list("basic_modular")
 	cost = 500
@@ -230,7 +234,7 @@
 
 	x = 0.7
 	y = 0.2
-	icon = "nanoprinter"
+	icon = "printer"
 
 	required_technologies = list("basic_modular")
 	cost = 500
@@ -244,7 +248,7 @@
 
 	x = 0.4
 	y = 0.2
-	icon = "rfid"
+	icon = "cardreader"
 
 	required_technologies = list("basic_modular")
 	cost = 750
@@ -258,7 +262,7 @@
 
 	x = 0.3
 	y = 0.3
-	icon = "nanoprinter"
+	icon = "printer"
 
 	required_technologies = list("basic_modular", "add_med_tools")
 	cost = 750
@@ -272,7 +276,7 @@
 
 	x = 0.8
 	y = 0.3
-	icon = "nanoprinter"
+	icon = "printer"
 
 	required_technologies = list("basic_modular", "gas_heat")
 	cost = 750

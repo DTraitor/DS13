@@ -49,7 +49,7 @@
 	. = ..()
 	if(linked_console)
 		linked_console.linked_lathe = null
-		linked_console.update_open_uis()
+		SStgui.update_uis(linked_console)
 		linked_console = null
 
 /obj/machinery/r_n_d/protolathe/RefreshParts()
@@ -93,7 +93,7 @@
 		update_icon()
 		if(linked_console)
 			linked_console.linked_lathe = null
-			linked_console.update_open_uis()
+			SStgui.update_uis(linked_console)
 			linked_console = null
 		return
 	if(default_deconstruction_crowbar(user, O))
@@ -101,6 +101,7 @@
 	if(default_part_replacement(user, O))
 		return
 	if(O.is_open_container())
+		addtimer(CALLBACK(SStgui, /datum/controller/subsystem/tgui/proc/update_uis, linked_console))
 		return FALSE
 	if(panel_open)
 		to_chat(user, "<span class='notice'>You can't load \the [src] while it's opened.</span>")
@@ -144,7 +145,7 @@
 	busy = FALSE
 	update_icon()
 	if(linked_console)
-		linked_console.update_open_uis()
+		SStgui.update_uis(linked_console)
 
 /obj/machinery/r_n_d/protolathe/proc/queue_design(datum/design/D, amount)
 	var/datum/rnd_queue_design/RNDD = new /datum/rnd_queue_design(D, amount)
@@ -206,4 +207,4 @@
 		produce_design(queue[1])
 
 	if(linked_console)
-		linked_console.update_open_uis()
+		SStgui.update_uis(linked_console)

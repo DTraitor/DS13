@@ -1,8 +1,10 @@
 /datum/technology/power
+	tech_type = TECH_POWER
+	icon_file = 'icons/obj/power.dmi'
+/datum/technology/power/basic
 	name = "Basic Power"
 	desc = "Basic Power"
 	id = "basic_power"
-	tech_type = TECH_POWER
 
 	x = 0.6
 	y = 0.8
@@ -13,6 +15,10 @@
 
 	unlocks_designs = list("basic_capacitor", "basic_cell", "device_cell_standard", "powermonitor", "pacman")
 
+/datum/technology/power/basic/generate_icon()
+	.=..()
+	I.Blend(icon('icons/obj/power.dmi', "cell-o2"), ICON_OVERLAY)
+
 /datum/technology/power/adv_power
 	name = "Advanced Power"
 	desc = "Advanced Power"
@@ -20,12 +26,16 @@
 
 	x = 0.6
 	y = 0.6
-	icon = "cell"
+	icon = "hcell"
 
 	required_technologies = list("basic_power")
 	cost = 500
 
 	unlocks_designs = list("high_cell", "device_cell_high", "adv_capacitor")
+
+/datum/technology/power/adv_power/generate_icon()
+	.=..()
+	I.Blend(icon('icons/obj/power.dmi', "cell-o2"), ICON_OVERLAY)
 
 /datum/technology/power/sup_power
 	name = "Super Power"
@@ -34,12 +44,16 @@
 
 	x = 0.6
 	y = 0.4
-	icon = "cell"
+	icon = "scell"
 
 	required_technologies = list("adv_power")
 	cost = 1000
 
 	unlocks_designs = list("super_cell", "super_capacitor")
+
+/datum/technology/power/sup_power/generate_icon()
+	.=..()
+	I.Blend(icon('icons/obj/power.dmi', "cell-o2"), ICON_OVERLAY)
 
 /datum/technology/power/hyp_power
 	name = "Hyper Power"
@@ -48,12 +62,16 @@
 
 	x = 0.8
 	y = 0.4
-	icon = "cell"
+	icon = "hpcell"
 
 	required_technologies = list("sup_power")
 	cost = 1500
 
 	unlocks_designs = list("hyper_cell")
+
+/datum/technology/power/hyp_power/generate_icon()
+	.=..()
+	I.Blend(icon('icons/obj/power.dmi', "cell-o2"), ICON_OVERLAY)
 
 /datum/technology/power/sol_power
 	name = "Solar Power"
@@ -62,12 +80,15 @@
 
 	x = 0.8
 	y = 0.6
-	icon = "solarcontrol"
+	// special way to generate an icon
 
 	required_technologies = list("adv_power")
 	cost = 750
 
 	unlocks_designs = list("solarcontrol")
+
+/datum/technology/power/sol_power/generate_icon()
+	I = getFlatTypeIcon(/obj/machinery/power/solar_control)
 
 /datum/technology/power/adv_power_gen
 	name = "Advanced Power Generation"
@@ -76,7 +97,7 @@
 
 	x = 0.4
 	y = 0.6
-	icon = "generator"
+	icon = "portgen1"
 
 	required_technologies = list("adv_power")
 	cost = 1250
@@ -90,7 +111,8 @@
 
 	x = 0.2
 	y = 0.6
-	icon = "batteryrack"
+	icon_file = 'icons/obj/cellrack.dmi'
+	icon = "rack"
 
 	required_technologies = list("adv_power_gen")
 	cost = 1750
@@ -111,6 +133,11 @@
 
 	unlocks_designs = list("smes_cell", "smes_coil_standard", "smes_coil_super_capacity", "smes_coil_super_io")
 
+/datum/technology/power/adv_power_storage/generate_icon()
+	.=..()
+	I.Blend(icon('icons/obj/power.dmi', "smes-og5"), ICON_OVERLAY)
+	I.Blend(icon('icons/obj/power.dmi', "smes-op2"), ICON_OVERLAY)
+
 /datum/technology/power/sup_power_gen
 	name = "Super Power Generation"
 	desc = "Super Power Generation"
@@ -118,7 +145,7 @@
 
 	x = 0.4
 	y = 0.4
-	icon = "generator"
+	icon = "portgen2"
 
 	required_technologies = list("adv_power_gen", "sup_power")
 	cost = 2000
@@ -132,7 +159,8 @@
 
 	x = 0.2
 	y = 0.4
-	icon = "fusion"
+	icon_file = 'icons/obj/machines/power/fusion.dmi'
+	icon = "core"
 
 	required_technologies = list("sup_power_gen")
 	cost = 2500

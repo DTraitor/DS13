@@ -1,4 +1,8 @@
 /datum/technology/tcom
+	tech_type = TECH_BLUESPACE
+	icon_file = 'icons/obj/stationobjs.dmi'
+
+/datum/technology/tcom/parts
 	name = "Telecommuncation Parts"
 	desc = "Telecommuncation Parts"
 	id = "telecomm_parts"
@@ -6,7 +10,8 @@
 
 	x = 0.5
 	y = 0.3
-	icon = "telecom_part"
+	icon_file = 'icons/obj/stock_parts.dmi'
+	icon = "subspace_ansible"
 
 	required_technologies = list("super_parts")
 	cost = 750
@@ -20,12 +25,17 @@
 
 	x = 0.5
 	y = 0.4
-	icon = "monitoring"
+	//special way to generate an icon
 
 	required_technologies = list("telecomm_parts")
 	cost = 1250
 
 	unlocks_designs = list("comm_monitor", "comm_server", "comm_traffic", "message_monitor", "shield_generator", "shield_diffuser")
+
+/datum/technology/tcom/monitoring/generate_icon()
+	I = icon('icons/obj/computer.dmi', "computer")
+	I.Blend(icon('icons/obj/computer.dmi', "comm_logs"), ICON_OVERLAY)
+	I.Blend(icon('icons/obj/computer.dmi', "generic_key"), ICON_OVERLAY)
 
 /datum/technology/tcom/rcon
 	name = "RCON"
@@ -34,12 +44,17 @@
 
 	x = 0.5
 	y = 0.5
-	icon = "monitoring"
+	//special way to generate an icon
 
 	required_technologies = list("tcom_monitoring", "adv_power_storage")
 	cost = 750
 
 	unlocks_designs = list("rcon_console")
+
+/datum/technology/tcom/rcon/generate_icon()
+	I = icon('icons/obj/computer.dmi', "computer")
+	I.Blend(icon('icons/obj/computer.dmi', "ai-fixer"), ICON_OVERLAY)
+	I.Blend(icon('icons/obj/computer.dmi', "power_key"), ICON_OVERLAY)
 
 /datum/technology/tcom/mainframes
 	name = "Mainframes"
@@ -62,7 +77,7 @@
 
 	x = 0.3
 	y = 0.4
-	icon = "solnet_relay"
+	icon = "bus"
 
 	required_technologies = list("telecomm_parts")
 	cost = 1750
@@ -76,7 +91,7 @@
 
 	x = 0.6
 	y = 0.4
-	icon = "subspace"
+	icon = "broadcaster"
 
 	required_technologies = list("telecomm_parts")
 	cost = 1500

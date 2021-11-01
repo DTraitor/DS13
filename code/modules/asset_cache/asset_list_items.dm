@@ -62,9 +62,33 @@
 
 // If any new design appears it is added to the asset list in SSresearch
 /datum/asset/simple/research_designs/register()
+	assets.Cut()
 	for(var/I in SSresearch.designs_by_id)
 		var/datum/design/D = SSresearch.designs_by_id[I]
-		assets[D.ui_data["icon_name"]] = D.ui_data["icon"]
+		if(D.build_type & STORE)
+			assets[D.ui_data["icon_name"]] = D.ui_data["icon"]
+	.=..()
+
+/datum/asset/spritesheet/simple/research_technologies
+	name = "rdtech"
+
+/datum/asset/spritesheet/simple/research_technologies/register()
+	assets=list()
+	for(var/A in SSresearch.all_technologies)
+		var/datum/technology/T = SSresearch.all_technologies[A]
+		assets[T.id] = T.I
+	.=..()
+
+/datum/asset/spritesheet/simple/research_technologies_big
+	name = "rdtech_big"
+
+/datum/asset/spritesheet/simple/research_technologies_big/register()
+	assets=list()
+	for(var/A in SSresearch.all_technologies)
+		var/datum/technology/T = SSresearch.all_technologies[A]
+		T.I.Scale(T.I.Width()*3, T.I.Height()*3)
+		assets[T.id] = T.I
+	.=..()
 
 /datum/asset/simple/jquery
 	legacy = TRUE

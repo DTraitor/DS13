@@ -1,12 +1,16 @@
 /datum/technology/combat
+	tech_type = TECH_COMBAT
+	icon_file = 'icons/obj/ammo.dmi'
+
+/datum/technology/combat/security
 	name = "Security Equipment"
 	desc = "Security Equipment"
 	id = "sec_eq"
-	tech_type = TECH_COMBAT
 
 	x = 0.1
 	y = 0.5
-	icon = "stunbaton"
+	icon_file = 'icons/obj/weapons.dmi'
+	icon = "stunbaton_active"
 
 	required_technologies = list()
 	cost = 0
@@ -20,12 +24,17 @@
 
 	x = 0.1
 	y = 0.6
-	icon = "seccomputer"
+	//special way to generate an icon
 
 	required_technologies = list("sec_eq")
 	cost = 250
 
 	unlocks_designs = list("prisonmanage")
+
+/datum/technology/combat/pris_man/generate_icon()
+	I = icon('icons/obj/computer.dmi', "computer")
+	I.Blend(icon('icons/obj/computer.dmi', "explosive"), ICON_OVERLAY)
+	I.Blend(icon('icons/obj/computer.dmi', "security_key"), ICON_OVERLAY)
 
 /datum/technology/combat/add_eq
 	name = "Additional Security Equipment"
@@ -34,7 +43,8 @@
 
 	x = 0.2
 	y = 0.5
-	icon = "add_sec_eq"
+	icon_file = 'icons/obj/clothing/glasses.dmi'
+	icon = "securityhud"
 
 	required_technologies = list("sec_eq")
 	cost = 500
@@ -48,7 +58,8 @@
 
 	x = 0.3
 	y = 0.5
-	icon = "rigtaser"
+	icon_file = 'icons/obj/rig_modules.dmi'
+	icon = "taser"
 
 	required_technologies = list("add_eq")
 	cost = 750
@@ -62,7 +73,8 @@
 
 	x = 0.4
 	y = 0.5
-	icon = "recharger"
+	icon_file = 'icons/obj/stationobjs.dmi'
+	icon = "recharger0"
 
 	required_technologies = list("nleth_eq", "sup_power")
 	cost = 1250
@@ -76,7 +88,8 @@
 
 	x = 0.4
 	y = 0.4
-	icon = "shield"
+	icon_file = 'icons/obj/weapons.dmi'
+	icon = "advanced"
 
 	required_technologies = list("recharger")
 	cost = 1000
@@ -90,6 +103,7 @@
 
 	x = 0.5
 	y = 0.5
+	icon_file = 'icons/obj/gun.dmi'
 	icon = "divet"
 
 	required_technologies = list("recharger")
@@ -104,7 +118,7 @@
 
 	x = 0.5
 	y = 0.6
-	icon = "speedloader"
+	icon = "38"
 
 	required_technologies = list("divet")
 	cost = 750
@@ -118,7 +132,7 @@
 
 	x = 0.6
 	y = 0.5
-	icon = "pulse"
+	icon = "pulse_rounds"
 
 	required_technologies = list("divet")
 	cost = 2500
@@ -132,7 +146,7 @@
 
 	x = 0.6
 	y = 0.6
-	icon = "pulsehv"
+	icon = "pulse_rounds_hv"
 
 	required_technologies = list("pulse")
 	cost = 1500
@@ -146,6 +160,7 @@
 
 	x = 0.6
 	y = 0.4
+	icon_file = 'icons/obj/gun.dmi'
 	icon = "ripper"
 
 	required_technologies = list("pulse")
@@ -160,7 +175,7 @@
 
 	x = 0.7
 	y = 0.4
-	icon = "dblades"
+	icon = "diamondblade"
 
 	required_technologies = list("ripper")
 	cost = 750
@@ -174,7 +189,7 @@
 
 	x = 0.7
 	y = 0.6
-	icon = "javeline"
+	icon = "javelin-6"
 
 	required_technologies = list("pulse")
 	cost = 2000
@@ -188,9 +203,13 @@
 
 	x = 0.8
 	y = 0.5
-	icon = "seeker"
+	icon = "seekerclip"
 
 	required_technologies = list("pulse")
 	cost = 3500
 
 	unlocks_designs = list("seeker", "seeker_ammo")
+
+/datum/technology/combat/seeker/generate_icon()
+	.=..()
+	I.Blend(icon('icons/obj/ammo.dmi', "sc-5"), ICON_OVERLAY)

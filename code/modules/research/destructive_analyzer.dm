@@ -2,51 +2,41 @@
 	name = "Destructive Analyzer"
 	icon_state = "d_analyzer"
 	var/obj/item/weapon/loaded_item = null
-	var/decon_mod = 0
+	var/loading = FALSE
 	circuit = /obj/item/weapon/circuitboard/destructive_analyzer
 
 /obj/machinery/r_n_d/destructive_analyzer/Destroy()
 	. = ..()
 	if(linked_console)
 		linked_console.linked_destroy = null
-		linked_console.update_open_uis()
+		SStgui.update_uis(linked_console)
 		linked_console = null
-
-/obj/machinery/r_n_d/destructive_analyzer/RefreshParts()
-	var/T = 0
-	for(var/obj/item/weapon/stock_parts/S in component_parts)
-		T += S.rating
-	decon_mod = T
 
 /obj/machinery/r_n_d/destructive_analyzer/update_icon()
 	if(panel_open)
 		icon_state = "d_analyzer_t"
 	else if(busy)
 		icon_state = "d_analyzer_process"
+	else if(loading)
+		icon_state = "d_analyzer_la"
 	else if(loaded_item)
 		icon_state = "d_analyzer_l"
 	else
 		icon_state = "d_analyzer"
 
 /obj/machinery/r_n_d/destructive_analyzer/attackby(var/obj/item/O as obj, var/mob/user as mob)
-	if (shocked)
-		shock(user,50)
-
 	if (user.a_intent == I_HURT && istype(O, /obj/item/weapon/tool/screwdriver))
 		default_deconstruction_screwdriver(user, O)
 		update_icon()
 		if(linked_console)
 			linked_console.linked_destroy = null
-			linked_console.update_open_uis()
+			SStgui.update_uis(linked_console)
 			linked_console = null
 		return
 
 	if(default_part_replacement(user, O))
 		return
-
 	if(default_deconstruction_crowbar(user, O))
-		return
-	if (disabled)
 		return
 	if(panel_open)
 		to_chat(user, "<span class='notice'>You can't load \the [src] while it's opened.</span>")
@@ -54,34 +44,41 @@
 	if(!linked_console)
 		to_chat(user, "<span class='notice'>\The [src] must be linked to an R&D console first.</span>")
 		return
-	if (busy)
+	if (busy||loading)
 		to_chat(user, "<span class='warning'> The [src] is busy right now.</span>")
 		return
 	if (istype(O, /obj/item) && !loaded_item)
 		if(isrobot(user)) //Don't put your module items in there!
 			return
-		if(!O.origin_tech)
+		if(!O.origin_tech || !O.origin_tech.len)
 			to_chat(user, "<span class='warning'> This doesn't seem to have a tech origin!</span>")
 			return
-		if (O.origin_tech.len == 0 || O.holographic)
+		if (O.holographic)
 			to_chat(user, "<span class='warning'> You cannot deconstruct this item!</span>")
 			return
 		loaded_item = O
 		user.drop_item()
 		O.loc = src
-		busy = TRUE
+		loading = TRUE
+		if(linked_console)
+			SStgui.update_uis(linked_console)
 		to_chat(user, "<span class='notice'>You add the [O.name] to the [src]!</span>")
-		flick("d_analyzer_la", src)
+		update_icon()
 		spawn(10)
-			busy = FALSE
+			loading = FALSE
 			update_icon()
 		if(linked_console)
-			linked_console.update_open_uis()
-		return 1
-	return
+			var/icon/I = getFlatIcon(O)
+			for(var/datum/tgui/ui as anything in SStgui.get_open_uis(linked_console))
+				// Any item can be here. I had no other choice (excpet removing icon from RD Console UI)
+				ui.user << browse_rsc(I, "da-[sanitizeFileName("[O.type]")].png")
+			qdel(I) // We don't want to make infinite amount of icons
+			SStgui.update_uis(linked_console)
+		return TRUE
+	return FALSE
 
 /obj/machinery/r_n_d/destructive_analyzer/proc/deconstruct_item()
-	if(busy)
+	if(busy||loading)
 		to_chat(usr, "<span class='warning'>The destructive analyzer is busy at the moment.</span>")
 		return
 	if(!loaded_item)
@@ -90,14 +87,11 @@
 	busy = TRUE
 	update_icon()
 	if(linked_console)
-		linked_console.screen = "working"
-		SSnano.update_uis(linked_console)
+		SStgui.update_uis(linked_console)
 	addtimer(CALLBACK(src, .proc/finish_deconstructing), 24)
 
 /obj/machinery/r_n_d/destructive_analyzer/proc/finish_deconstructing()
 	busy = FALSE
-	if(hacked)
-		return
 
 	if(linked_console)
 		linked_console.files.check_item_for_tech(loaded_item)
@@ -112,6 +106,7 @@
 			update_icon()
 		else
 			S.use(1)
+			update_icon()
 	else
 		qdel(loaded_item)
 		loaded_item = null
@@ -119,15 +114,17 @@
 
 	use_power(250)
 	if(linked_console)
-		linked_console.screen = "main"
-		linked_console.update_open_uis()
+		SStgui.update_uis(linked_console)
+		linked_console.update_static_data(usr)
 
-/obj/machinery/r_n_d/destructive_analyzer/eject_item()
-	if(busy)
+/obj/machinery/r_n_d/destructive_analyzer/eject_item(mob/user)
+	if(busy||loading)
 		to_chat(usr, "<span class='warning'>The destructive analyzer is busy at the moment.</span>")
 		return
 
 	if(loaded_item)
-		loaded_item.forceMove(loc)
+		loaded_item.forceMove(get_turf(src))
+		if(Adjacent(user) && !issilicon(user))
+			user.put_in_hands(loaded_item)
 		loaded_item = null
 		update_icon()
