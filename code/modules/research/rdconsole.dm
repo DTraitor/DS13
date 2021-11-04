@@ -448,7 +448,7 @@ cause a ton of data to be lost, an admin can go send it back.
 				if(build_type == IMPRINTER)
 					t = linked_imprinter.check_mat(D, M)
 
-				materials += list("name" = capitalize(M), "amount" = D.materials[M]*coeff, "id" = M)
+				materials += list(list("name" = capitalize(M), "amount" = D.materials[M]*coeff, "id" = M))
 				c = min(t,c)
 
 			if(D.chemicals.len)
@@ -458,7 +458,7 @@ cause a ton of data to be lost, an admin can go send it back.
 					if(build_type == IMPRINTER)
 						t = linked_imprinter.check_mat(D, R)
 
-					chemicals += list("name" = CallReagentName(R), "amount" = D.chemicals[R]*coeff, "id" = R)
+					chemicals += list(list("name" = CallReagentName(R), "amount" = D.chemicals[R]*coeff, "id" = R))
 					c = min(t,c)
 
 			designs_list += list(list(
@@ -467,8 +467,8 @@ cause a ton of data to be lost, an admin can go send it back.
 				"desc" =			D.desc,
 				"category" =		cat,
 				"can_create" =		c,
-				"mats" =		materials,
-				"chems" =		chemicals,
+				"mats" =			materials,
+				"chems" =			chemicals,
 			))
 	return designs_list
 

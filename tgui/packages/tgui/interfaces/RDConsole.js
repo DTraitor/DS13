@@ -1,7 +1,8 @@
 import { useBackend, useSharedState } from '../backend';
-import { Box, AnimatedNumber, Button, LabeledList, ProgressBar, Section, Stack, Tabs, Icon } from '../components';
+import { Box, AnimatedNumber, Button, LabeledList, ProgressBar, Section, Stack, Tabs, Icon, Divider, Flex } from '../components';
 import { Window } from '../layouts';
 import { round } from 'common/math';
+import { Fragment } from 'inferno';
 
 export const RDConsole = (props, context) => {
   const { data } = useBackend(context);
@@ -72,7 +73,7 @@ const MainTab = (props, context) => {
   } = data;
 
   return (
-    <Stack vertical fill>
+    <Stack vertical fill height="95%">
       <Stack.Item>
         <Stack fill>
           <Stack.Item>
@@ -495,7 +496,7 @@ const MachineTab = (props, context) => {
   const [currentTab, setCurrentTab] = useSharedState(context, props.machine_data.machine_id, "Misc");
 
   return (
-    <Stack justify="space-between" fill>
+    <Stack justify="space-between" height="95%">
       <Stack.Item grow basis={0}>
         <Section fill title={title}>
           <Tabs>
@@ -512,30 +513,78 @@ const MachineTab = (props, context) => {
               ))}
             </Stack>
           </Tabs>
-          <LabeledList>
+          <Flex direction="column">
             {possible_designs
               && possible_designs.map((design, i) => (
-                <Box key={design.id}>
+                <Fragment key={design.id}>
                   {design.category === currentTab ? (
-                    <LabeledList.Item label={design.name}>
-
-                    </LabeledList.Item>
+                    <Flex.Item>
+                      <Stack justify="space-between">
+                        <Stack.Item width="40%">
+                          {design.name}
+                          <br />
+                          <Box color="label">
+                            {design.desc}
+                          </Box>
+                        </Stack.Item>
+                        <Stack.Item grow>
+                          <Flex>
+                            <Flex.Item>
+                              <Button
+                                icon="wrench"
+                                onClick={() => act(buildName,
+                                  { build: design.id,
+                                    imprint: design.id })}>
+                                Build
+                              </Button>
+                            </Flex.Item>
+                            <Flex.Item>
+                              {design.can_create >= 5 && (
+                                <Button
+                                  mx={0.3}
+                                  onClick={() => act(buildFiveName,
+                                    { build: design.id, imprint: design.id })}>
+                                  x5
+                                </Button>
+                              )}
+                            </Flex.Item>
+                            <Flex.Item>
+                              {design.can_create >= 10 && (
+                                <Button
+                                  onClick={() => act(buildFiveName,
+                                    { build: design.id, imprint: design.id })}>
+                                  x10
+                                </Button>
+                              )}
+                            </Flex.Item>
+                          </Flex>
+                        </Stack.Item>
+                        <Stack.Item>
+                          {design.mats && design.mats.map((mat, i) => (
+                            <Box inline key={mat.id}>
+                              {mat.amount} {mat.name}
+                            </Box>
+                          ))}
+                        </Stack.Item>
+                      </Stack>
+                      <Divider />
+                    </Flex.Item>
                   ):null}
-                </Box>
+                </Fragment>
               ))}
-          </LabeledList>
+          </Flex>
         </Section>
       </Stack.Item>
-      <Stack.Item width={37}>
-        <Stack vertical>
+      <Stack.Item width="45%">
+        <Stack vertical fill>
           <Stack.Item>
             <MachineMaterialsTab machine_data={machine_data} title="Protolathe Material Storage" />
           </Stack.Item>
           <Stack.Item>
             <MachineReagentsTab machine_data={machine_data} title="Protolathe Reagent Storage" />
           </Stack.Item>
-          <Stack.Item>
-            <Section title="Queue" />
+          <Stack.Item grow>
+            <Section title="Queue" fill />
           </Stack.Item>
         </Stack>
       </Stack.Item>

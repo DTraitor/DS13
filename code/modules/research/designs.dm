@@ -52,7 +52,8 @@ other types of metals and chemistry for reagents).
 		temp_atom = Fabricate(null, 1, null)
 
 	AssembleDesignName(temp_atom)
-	AssembleDesignMaterials(temp_atom)
+//	No need for it right now
+//	AssembleDesignMaterials(temp_atom)
 	AssembleDesignTime()
 	AssembleDesignDesc(temp_atom)
 	AssembleDesignId()
