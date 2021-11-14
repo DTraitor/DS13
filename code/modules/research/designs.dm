@@ -14,11 +14,12 @@ other types of metals and chemistry for reagents).
 //Note: More then one of these can be added to a design.
 
 /datum/design						//Datum for object designs, used in construction
-	var/name = null					//Name of the created object. If null, it will be 'guessed' from build_path if possible.
-	var/item_name = null			//An item name before it is modified by various name-modifying procs
-	var/name_category = null		//If set, name is modified into "[name_category] ([item_name])"
-	var/desc = "No description set"	//Description of the created object. If null, it will use group_desc and name where applicable.
-	var/id = null					//ID of the created object for easy refernece. If null, uses typepath instead.
+	var/name						//Name of the created object. If null, it will be 'guessed' from build_path if possible.
+	var/item_name					//An item name before it is modified by various name-modifying procs
+	var/name_category				//If set, name is modified into "[name_category] ([item_name])"
+	var/desc						//Description of the created object. If null, it will use group_desc and name where applicable.
+	var/full_desc					//
+	var/id							//ID of the created object for easy refernece. If null, uses typepath instead.
 
 	var/list/whitelist 				//A list of ckeys who are the only ones that can buy this in stores. Not used in lathing
 	var/patron_only = FALSE			//If true, only patrons can buy this in stores
@@ -26,12 +27,12 @@ other types of metals and chemistry for reagents).
 
 	var/list/materials = list()		//List of materials. Format: "id" = amount.
 	var/list/chemicals = list()		//List of reagents. Format: "id" = amount. DON'T USE IN PROTOLATHE DESIGNS!
-	var/build_path = null			//The path of the object that gets created.
+	var/build_path					//The path of the object that gets created.
 	var/build_type = PROTOLATHE		//Flag as to what kind machine the design is built in. See defines.
 	var/category = "Misc"			//Used to sort designs
-	var/time = null					//How many ticks it requires to build, if null - calculated in AssembleDesignTime()
+	var/time						//How many ticks it requires to build, if null - calculated in AssembleDesignTime()
 
-	var/list/ui_data = null			//Pre-generated UI data, to be sent into NanoUI/TGUI interfaces.
+	var/list/ui_data				//Pre-generated UI data, to be sent into NanoUI/TGUI interfaces.
 
 	// An MPC file containing this design. You can use it directly, but only if it doesn't interact with the rest of MPC system. If it does, use copies.
 	var/datum/computer_file/binary/design/file
@@ -86,8 +87,16 @@ other types of metals and chemistry for reagents).
 /datum/design/proc/AssembleDesignDesc(atom/temp_atom)
 	if(desc)
 		return
-	if(!desc && temp_atom)
+	else
 		desc = temp_atom.desc
+		// In case atom has no description
+		if(!desc)
+			desc = "No description set"
+
+	// Using char here for future non-ASCII symbols
+	if(length_char(desc) > 100)
+		full_desc = desc
+		desc = TextPreview(desc, 101)
 
 //Extract matter and reagent requirements from the target object and any objects inside it.
 //Any materials specified in these designs are extras, added on top of what is extracted.

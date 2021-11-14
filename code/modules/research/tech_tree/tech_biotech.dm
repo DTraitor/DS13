@@ -14,7 +14,7 @@
 	required_technologies = list()
 	cost = 0
 
-	unlocks_designs = list("health_analyzer", "beaker", "large beaker")
+	unlocks_designs = list("health_analyzer", "beaker", "large_beaker")
 
 /datum/technology/bio/basic_medical_machines
 	name = "Basic Medical Machines"

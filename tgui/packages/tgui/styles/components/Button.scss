@@ -11,7 +11,7 @@ $color-default: colors.bg(colors.$primary) !default;
 $color-disabled: #999999 !default;
 $color-selected: colors.bg(colors.$green) !default;
 $color-caution: colors.bg(colors.$yellow) !default;
-$color-danger: colors.bg(colors.$red) !default;
+$color-danger: #c42b3c !default;
 $color-transparent-text: rgba(255, 255, 255, 0.5) !default;
 $border-radius: base.$border-radius !default;
 $bg-map: colors.$bg-map !default;
@@ -127,10 +127,10 @@ $bg-map: colors.$bg-map !default;
   color: $color-transparent-text;
 }
 
-.Button--disabled {
+.Button--color--disabled {
   background-color: $color-disabled !important;
 }
 
-.Button--selected {
+.Button--color--selected {
   @include button-color($color-selected);
 }

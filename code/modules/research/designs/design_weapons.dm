@@ -7,7 +7,6 @@ Guns:
 	//advanced flash
 +	C99 Supercollider Contact Beam
 +	210-V mining cutter
-+	211-V plasma cutter
 +	Advanced Combat Shield
 +	Winchester NK Divet pistol
 +	SWS Motorized Pulse Rifle
@@ -81,13 +80,6 @@ S	fuel tank (hydrazine)
 	materials = list(MATERIAL_STEEL = 7500, MATERIAL_GLASS = 2500)
 	build_path = /obj/item/weapon/gun/energy/cutter
 	price = 2000
-
-/datum/design/item/weapon/plasmacutter
-	name = "211-V plasma cutter"
-	id = "plasmacutter"
-	materials = list(MATERIAL_STEEL = 15000, MATERIAL_GLASS = 5000, "gold" = 400)
-	build_path = /obj/item/weapon/gun/energy/cutter/plasma
-	price = 4000
 
 /datum/design/item/weapon/advancedshield
 	name = "Advanced Combat Shield"
@@ -192,9 +184,9 @@ S	fuel tank (hydrazine)
 	build_path = /obj/item/ammo_magazine/divet/ap
 	build_type = PROTOLATHE
 
-/datum/design/item/ammo/fiftycal/ammo
+/datum/design/item/ammo/speedloader44
 	name = "speed loader (.44 magnum)"
-	id = "44cal"
+	id = "speedloader"
 	materials = list(MATERIAL_STEEL = 750)
 	build_path = /obj/item/ammo_magazine/c44
 	price = 1200

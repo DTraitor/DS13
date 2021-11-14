@@ -61,7 +61,9 @@
 		O.loc = src
 		loading = TRUE
 		if(linked_console)
-			SStgui.update_uis(linked_console)
+			var/list/uis = SStgui.get_open_uis(linked_console)
+			for(var/another_ui in uis)
+				linked_console.update_static_data(ui = another_ui)
 		to_chat(user, "<span class='notice'>You add the [O.name] to the [src]!</span>")
 		update_icon()
 		spawn(10)
@@ -72,8 +74,8 @@
 			for(var/datum/tgui/ui as anything in SStgui.get_open_uis(linked_console))
 				// Any item can be here. I had no other choice (excpet removing icon from RD Console UI)
 				ui.user << browse_rsc(I, "da-[sanitizeFileName("[O.type]")].png")
+				linked_console.update_static_data(ui = ui)
 			qdel(I) // We don't want to make infinite amount of icons
-			SStgui.update_uis(linked_console)
 		return TRUE
 	return FALSE
 
@@ -87,7 +89,9 @@
 	busy = TRUE
 	update_icon()
 	if(linked_console)
-		SStgui.update_uis(linked_console)
+		var/list/uis = SStgui.get_open_uis(linked_console)
+		for(var/another_ui in uis)
+			linked_console.update_static_data(ui = another_ui)
 	addtimer(CALLBACK(src, .proc/finish_deconstructing), 24)
 
 /obj/machinery/r_n_d/destructive_analyzer/proc/finish_deconstructing()
@@ -114,8 +118,9 @@
 
 	use_power(250)
 	if(linked_console)
-		SStgui.update_uis(linked_console)
-		linked_console.update_static_data(usr)
+		var/list/uis = SStgui.get_open_uis(linked_console)
+		for(var/ui in uis)
+			linked_console.update_static_data(ui = ui)
 
 /obj/machinery/r_n_d/destructive_analyzer/eject_item(mob/user)
 	if(busy||loading)
@@ -128,3 +133,6 @@
 			user.put_in_hands(loaded_item)
 		loaded_item = null
 		update_icon()
+		var/list/uis = SStgui.get_open_uis(linked_console)
+		for(var/ui in uis)
+			linked_console.update_static_data(ui = ui)

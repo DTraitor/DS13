@@ -15,9 +15,14 @@ using metal and glass, it uses glass and reagents (usually sulfuric acid).
 
 /obj/machinery/r_n_d/circuit_imprinter/Initialize()
 	. = ..()
-	materials[MATERIAL_GLASS]    = new /datum/rnd_material("Glass",    /obj/item/stack/material/glass)
-	materials[MATERIAL_GOLD]     = new /datum/rnd_material("Gold",     /obj/item/stack/material/gold)
-	materials[MATERIAL_DIAMOND]  = new /datum/rnd_material("Diamond",  /obj/item/stack/material/diamond)
+	materials[MATERIAL_GLASS]	= list("name" = "Glass", "amount" = 0, "sheet_type" = /obj/item/stack/material/glass)
+	materials[MATERIAL_GOLD]	= list("name" = "Gold", "amount" = 0, "sheet_type" = /obj/item/stack/material/gold)
+	materials[MATERIAL_DIAMOND]	= list("name" = "Diamond", "amount" = 0, "sheet_type" = /obj/item/stack/material/diamond)
+
+	for(var/A in materials)
+		var/obj/item/stack/material/M = materials[A]["sheet_type"]
+		materials[A]	+= list("sheet_size" = initial(M.perunit))
+
 
 /obj/machinery/r_n_d/circuit_imprinter/Destroy()
 	. = ..()
@@ -51,7 +56,7 @@ using metal and glass, it uses glass and reagents (usually sulfuric acid).
 /obj/machinery/r_n_d/circuit_imprinter/proc/check_mat(datum/design/being_built, M)
 	var/A = 0
 	if(materials[M])
-		A = materials[M].amount
+		A = materials[M]["amount"]
 		A /= max(1 , (being_built.materials[M]/efficiency_coeff))
 		return A
 	else
@@ -78,7 +83,10 @@ using metal and glass, it uses glass and reagents (usually sulfuric acid).
 		to_chat(user, "\The [src] must be linked to an R&D console first.")
 		return TRUE
 	if(O.is_open_container())
-		addtimer(CALLBACK(SStgui, /datum/controller/subsystem/tgui/proc/update_uis, linked_console))
+		spawn(0)
+			var/list/uis = SStgui.get_open_uis(linked_console)
+			for(var/ui in uis)
+				linked_console.update_static_data(ui = ui)
 		return FALSE
 	if(is_robot_module(O))
 		return FALSE
@@ -109,23 +117,29 @@ using metal and glass, it uses glass and reagents (usually sulfuric acid).
 	if(t)
 		if(do_after(usr, 16, src))
 			for(var/M in materials)
-				if(stack.stacktype == materials[M].sheet_type)
+				if(stack.stacktype == materials[M]["sheet_type"])
 					if(stack.use(amount))
-						materials[M].amount += amount * stack.perunit
+						materials[M]["amount"] += amount * stack.perunit
 						break
 	busy = 0
 	update_icon()
 	if(linked_console)
-		SStgui.update_uis(linked_console)
+		var/list/uis = SStgui.get_open_uis(linked_console)
+		for(var/ui in uis)
+			linked_console.update_static_data(ui = ui)
 
-/obj/machinery/r_n_d/circuit_imprinter/proc/queue_design(datum/design/D)
-	var/datum/rnd_queue_design/RNDD = new /datum/rnd_queue_design(D, 1)
+/obj/machinery/r_n_d/circuit_imprinter/proc/queue_design(datum/design/D, amount)
+	var/list/RNDD = list()
+	RNDD["name"] = D.name
+	if(amount > 1)
+		RNDD["name"] = "[RNDD["name"]] x[amount]"
 
-	if(queue.len) // Something is already being created, put us into queue
-		queue += RNDD
-	else if(!busy)
-		queue += RNDD
-		produce_design(RNDD)
+	RNDD["design"] = D.id
+	RNDD["amount"] = amount
+	// We need unique name in the list
+	queue["[RNDD["name"]]_[D.id]_[world.time]"] = RNDD
+	if(!busy)
+		produce_design("[RNDD["name"]]_[D.id]_[world.time]")
 
 /obj/machinery/r_n_d/circuit_imprinter/proc/clear_queue()
 	queue = list()
@@ -134,17 +148,20 @@ using metal and glass, it uses glass and reagents (usually sulfuric acid).
 	if(queue.len && !busy)
 		produce_design(queue[1])
 
-/obj/machinery/r_n_d/circuit_imprinter/proc/produce_design(datum/rnd_queue_design/RNDD)
-	var/datum/design/D = RNDD.design
+/obj/machinery/r_n_d/circuit_imprinter/proc/produce_design(P)
+	var/RNDD = queue[P]
+	var/datum/design/D = SSresearch.designs_by_id[RNDD["design"]]
+	var/amount = RNDD["amount"]
 	var/power = 2000
+	amount = max(1, min(10, amount))
 	for(var/M in D.materials)
-		power += round(D.materials[M] / 5)
+		power += round(D.materials[M] * amount / 5)
 	power = max(2000, power)
 	if (busy)
 		to_chat(usr, "<span class='warning'>The [name] is busy right now</span>")
 		return
 	if (!(D.build_type & IMPRINTER))
-		message_admins("Circuit imprinter exploit attempted by [key_name(usr, usr.client)]!")
+		log_and_message_admins("Circuit imprinter exploit attempted! Tried to print non Protolathe design!", usr, usr.loc)
 		return
 
 	busy = TRUE
@@ -152,28 +169,33 @@ using metal and glass, it uses glass and reagents (usually sulfuric acid).
 	use_power(power)
 
 	for(var/M in D.materials)
-		if(!check_mat(D, M))
+		if(check_mat(D, M) < amount)
 			visible_message("<span class='warning'>The [name] beeps, \"Not enough materials to complete prototype.\"</span>")
 			busy = FALSE
 			update_icon()
 			return
 
 	for(var/M in D.materials)
-		materials[M].amount = max(0, (materials[M].amount - (D.materials[M] / efficiency_coeff)))
+		materials[M]["amount"] = max(0, (materials[M]["amount"] - (D.materials[M] / efficiency_coeff)))
 	for(var/C in D.chemicals)
 		reagents.remove_reagent(C, D.chemicals[C]/efficiency_coeff)
 
-	addtimer(CALLBACK(src, .proc/create_design, RNDD), D.time)
+	addtimer(CALLBACK(src, .proc/create_design, P), D.time)
 
-/obj/machinery/r_n_d/circuit_imprinter/proc/create_design(datum/rnd_queue_design/RNDD)
-	var/datum/design/D = RNDD.design
-	new D.build_path(loc)
+/obj/machinery/r_n_d/circuit_imprinter/proc/create_design(P)
+	var/RNDD = queue[P]
+	var/datum/design/D = SSresearch.designs_by_id[RNDD["design"]]
+	var/amount = RNDD["amount"]
+	for(var/i = 1 to amount)
+		new D.build_path(loc)
 	busy = FALSE
 	update_icon()
-	queue -= RNDD
+	queue -= P
 
 	if(queue.len)
 		produce_design(queue[1])
 
 	if(linked_console)
-		SStgui.update_uis(linked_console)
+		var/list/uis = SStgui.get_open_uis(linked_console)
+		for(var/ui in uis)
+			linked_console.update_static_data(ui = ui)

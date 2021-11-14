@@ -33,8 +33,9 @@ The tech datums are the actual "tech trees" that you improve through researching
 **	Includes all the helper procs and basic tech processing.  **
 ***************************************************************/
 
-/datum/research								//Holder for all the existing, archived, and known tech. Individual to console.
-	var/list/known_designs = list()			//List of available designs (at base reliability).
+//Holder for all the existing, archived, and known tech. Individual to console.
+/datum/research
+	var/list/known_designs = list()	//List of available designs (at base reliability).
 	var/list/design_categories_protolathe = list()
 	var/list/design_categories_imprinter = list()
 
@@ -62,7 +63,7 @@ The tech datums are the actual "tech trees" that you improve through researching
 	return !!(T.id in researched_tech)
 
 /datum/research/proc/CanResearch(datum/technology/T)
-	if(T.cost > research_points)
+	if(T.cost > research_points || !(T.tech_type in tech_trees_shown))
 		return FALSE
 
 	for(var/t in T.required_technologies)
@@ -150,7 +151,7 @@ The tech datums are the actual "tech trees" that you improve through researching
 		for(var/item_tech in I.origin_tech)
 			if(item_tech == T.item_tech_req)
 				tech_trees_hidden -= T.id
-				tech_trees_shown |= T.id
+				tech_trees_shown[T.id] = 0
 				return
 
 // A simple helper proc to find the name of a tech with a given ID.
@@ -164,7 +165,6 @@ The tech datums are the actual "tech trees" that you improve through researching
 **						Technology Datums					  **
 **	Includes all the various technoliges and what they make.  **
 ***************************************************************/
-
 /obj/item/weapon/disk/tech_disk
 	name = "Empty Disk"
 	desc = "Wow. Is that a save icon?"
@@ -180,7 +180,8 @@ The tech datums are the actual "tech trees" that you improve through researching
 	pixel_x = rand(-5.0, 5)
 	pixel_y = rand(-5.0, 5)
 
-/datum/tech	//Datum of individual technologies.
+//Datum of individual technologies.
+/datum/tech
 	var/name = "name"          //Name of the technology.
 	var/shortname = "name"
 	var/desc = "description"   //General description of what it does and what it makes.

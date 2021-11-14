@@ -68,14 +68,14 @@ proc/get_craft_item(path)
 	for(var/I in SSresearch.designs_by_id)
 		var/datum/design/D = SSresearch.designs_by_id[I]
 		if(D.build_type & STORE)
-			assets[D.ui_data["icon_name"]] = D.ui_data["icon"]
+			assets[D.id] = D.ui_data["icon"]
 	.=..()
 
 /datum/asset/spritesheet/simple/research_technologies
 	name = "rdtech"
 
 /datum/asset/spritesheet/simple/research_technologies/register()
-	assets=list()
+	assets = list()
 	for(var/A in SSresearch.all_technologies)
 		var/datum/technology/T = SSresearch.all_technologies[A]
 		assets[T.id] = T.I
@@ -85,11 +85,25 @@ proc/get_craft_item(path)
 	name = "rdtech_big"
 
 /datum/asset/spritesheet/simple/research_technologies_big/register()
-	assets=list()
+	assets = list()
 	for(var/A in SSresearch.all_technologies)
 		var/datum/technology/T = SSresearch.all_technologies[A]
 		T.I.Scale(T.I.Width()*3, T.I.Height()*3)
 		assets[T.id] = T.I
+	.=..()
+
+/datum/asset/spritesheet/simple/rnd_designs
+	name = "rnd_designs"
+
+/datum/asset/spritesheet/simple/rnd_designs/register()
+	assets = list()
+	for(var/A in SSresearch.designs_by_id)
+		var/datum/design/D = SSresearch.designs_by_id[A]
+		var/atom/R = new D.build_path()
+		var/icon/I = getFlatIcon(R)
+		I.Scale(I.Width()*2, I.Height()*2)
+		if(D.build_type & PROTOLATHE || D.build_type & IMPRINTER)
+			assets[D.id] = I
 	.=..()
 
 /datum/asset/simple/jquery

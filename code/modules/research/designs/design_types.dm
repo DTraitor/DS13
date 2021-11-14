@@ -256,7 +256,6 @@ Botany:
 
 /datum/design/item/stock_part/RPED
 	name = "Rapid Part Exchange Device"
-	desc = "Special mechanical module made to store, sort, and apply standard machine parts."
 	id = "rped"
 	materials = list(MATERIAL_STEEL = 15000, MATERIAL_GLASS = 5000)
 	build_path = /obj/item/weapon/storage/part_replacer
@@ -274,14 +273,12 @@ Botany:
 
 /datum/design/item/sec_eq/stunbaton
 	name = "stunbaton"
-	desc = "A stun baton for incapacitating people with."
 	id = "stunbaton"
 	materials = list(MATERIAL_STEEL = 3000, MATERIAL_GLASS = 500)
 	build_path = /obj/item/weapon/melee/baton/loaded
 
 /datum/design/item/sec_eq/handcuffs
 	name = "handcuffs"
-	desc = "Use this to keep prisoners in line."
 	id = "handcuffs"
 	materials = list(MATERIAL_STEEL = 1000)
 	build_path = /obj/item/weapon/handcuffs
@@ -350,7 +347,6 @@ Botany:
 
 /datum/design/item/optical/mesons
 	name = "meson goggles"
-	desc = "Using the meson-scanning technology those glasses allow you to see through walls, floor or anything else."
 	id = "mesons"
 	build_path = /obj/item/clothing/glasses/meson
 	price = 750
@@ -373,14 +369,13 @@ Botany:
 
 /datum/design/item/mining/rocksaw
 	name = "Rock Saw"
-	id = "Rock Saw"
+	id = "Rock_Saw"
 	materials = list(MATERIAL_STEEL = 2000, MATERIAL_PLASTEEL = 1300, MATERIAL_GLASS = 500, MATERIAL_DIAMOND = 750)
 	build_path = /obj/item/weapon/tool/pickaxe/laser
 	price = 2000
 
 /datum/design/item/mining/excavation_drill
 	name = "Excavation Drill"
-	desc = "Basic archaeological drill combining ultrasonic excitation and bluespace manipulation to provide extreme precision."
 	id = "excavation_drill"
 	build_type = PROTOLATHE
 	materials = list(MATERIAL_STEEL = 5000, MATERIAL_GLASS = 1000)
@@ -388,7 +383,6 @@ Botany:
 
 /datum/design/item/mining/excavation_drill_diamond
 	name = "Diamond Excavation Drill"
-	desc = "Advanced archaeological drill combining ultrasonic excitation and bluespace manipulation to provide extreme precision."
 	id = "excavation_drill_diamond"
 	build_type = PROTOLATHE
 	materials = list(MATERIAL_STEEL = 3000, MATERIAL_GLASS = 1000, MATERIAL_DIAMOND = 3750)
@@ -396,7 +390,6 @@ Botany:
 
 /datum/design/item/mining/depth_scanner
 	name = "depth scanner"
-	desc = "Used to check spatial depth and density of rock outcroppings."
 	id = "depth_scanner"
 	materials = list(MATERIAL_STEEL = 1000,MATERIAL_GLASS = 1000)
 	build_path = /obj/item/device/depth_scanner
@@ -405,7 +398,6 @@ Botany:
 /datum/design/item/mining/ano_scanner
 	name = "Alden-Saraspova counter"
 	id = "ano_scanner"
-	desc = "Aids in triangulation of exotic particles."
 	materials = list(MATERIAL_STEEL = 10000,MATERIAL_GLASS = 5000)
 	build_path = /obj/item/device/ano_scanner
 	price = 300
@@ -417,7 +409,6 @@ Botany:
 
 /datum/design/item/medical/health_analyzer
 	name = "health analyzer"
-	desc = "A hand-held body scanner able to distinguish vital signs of the subject."
 	id = "health_analyzer"
 	materials = list(MATERIAL_STEEL = 1000, MATERIAL_GLASS = 300)
 	build_path = /obj/item/device/healthanalyzer
@@ -425,7 +416,6 @@ Botany:
 
 /datum/design/item/medical/adv_health_analyzer
 	name = "Advanced Health Analyzer"
-	desc = "A hand-held body scanner able to show full health information about person."
 	id = "adv_health_analyzer"
 	materials = list(MATERIAL_STEEL = 2000, MATERIAL_GLASS = 800, MATERIAL_GOLD = 300)
 	build_path = /obj/item/device/adv_health_analyzer
@@ -433,49 +423,42 @@ Botany:
 
 /datum/design/item/medical/defibrillators_back
 	name = "Defibrillators"
-	desc = "Defibrillators to revive people."
 	id = "defibrillators_back"
 	materials = list(MATERIAL_STEEL = 2000, MATERIAL_GLASS = 50)
 	build_path = /obj/item/weapon/defibrillator
 
 /datum/design/item/medical/defibrillators_belt
 	name = "Compact Defibrillators"
-	desc = "Defibrillators to revive people."
 	id = "defibrillators_compact"
 	materials = list(MATERIAL_STEEL = 2000, MATERIAL_GLASS = 50)
 	build_path = /obj/item/weapon/defibrillator/compact
 
 /datum/design/item/medical/mass_spectrometer
 	name = "mass spectrometer"
-	desc = "A device for analyzing chemicals in blood."
 	id = "mass_spectrometer"
 	build_path = /obj/item/device/mass_spectrometer
 	price = 300
 
 /datum/design/item/medical/adv_mass_spectrometer
 	name = "advanced mass spectrometer"
-	desc = "A device for analyzing chemicals in blood and their quantities."
 	id = "adv_mass_spectrometer"
 	build_path = /obj/item/device/mass_spectrometer/adv
 	price = 500
 
 /datum/design/item/medical/reagent_scanner
 	name = "reagent scanner"
-	desc = "A device for identifying chemicals."
 	id = "reagent_scanner"
 	build_path = /obj/item/device/reagent_scanner
 	price = 300
 
 /datum/design/item/medical/adv_reagent_scanner
 	name = "advanced reagent scanner"
-	desc = "A device for identifying chemicals and their proportions."
 	id = "adv_reagent_scanner"
 	build_path = /obj/item/device/reagent_scanner/adv
 	price = 500
 
 /datum/design/item/medical/nanopaste
 	name = "nanopaste"
-	desc = "A tube of paste containing swarms of repair nanites. Very effective in repairing robotic machinery."
 	id = "nanopaste"
 	materials = list(MATERIAL_STEEL = 7000, MATERIAL_GLASS = 7000)
 	build_path = /obj/item/stack/nanopaste
@@ -483,7 +466,6 @@ Botany:
 
 /datum/design/item/medical/hypospray
 	name = "hypospray"
-	desc = "A sterile, air-needle autoinjector for rapid administration of drugs"
 	id = "hypospray"
 	materials = list(MATERIAL_STEEL = 8000, MATERIAL_GLASS = 8000, MATERIAL_SILVER = 2000)
 	build_path = /obj/item/weapon/reagent_containers/hypospray/vial
@@ -495,7 +477,6 @@ Botany:
 
 /datum/design/item/surgery/scalpel_laser1
 	name = "Basic Laser Scalpel"
-	desc = "A scalpel augmented with a directed laser, for more precise cutting without blood entering the field. This one looks basic and could be improved."
 	id = "scalpel_laser1"
 	materials = list(MATERIAL_STEEL = 12500, MATERIAL_GLASS = 7500)
 	build_path = /obj/item/weapon/scalpel/laser1
@@ -503,14 +484,12 @@ Botany:
 
 /datum/design/item/surgery/scalpel_laser2
 	name = "Improved Laser Scalpel"
-	desc = "A scalpel augmented with a directed laser, for more precise cutting without blood entering the field. This one looks somewhat advanced."
 	id = "scalpel_laser2"
 	materials = list(MATERIAL_STEEL = 12500, MATERIAL_GLASS = 7500, MATERIAL_SILVER = 2500)
 	build_path = /obj/item/weapon/scalpel/laser2
 
 /datum/design/item/surgery/scalpel_laser3
 	name = "Advanced Laser Scalpel"
-	desc = "A scalpel augmented with a directed laser, for more precise cutting without blood entering the field. This one looks to be the pinnacle of precision energy cutlery!"
 	id = "scalpel_laser3"
 	materials = list(MATERIAL_STEEL = 12500, MATERIAL_GLASS = 7500, MATERIAL_SILVER = 2000, MATERIAL_GOLD = 1500)
 	build_path = /obj/item/weapon/scalpel/laser3
@@ -518,7 +497,6 @@ Botany:
 
 /datum/design/item/surgery/scalpel_manager
 	name = "Incision Management System"
-	desc = "A true extension of the surgeon's body, this marvel instantly and completely prepares an incision allowing for the immediate commencement of therapeutic steps."
 	id = "scalpel_manager"
 	materials = list (MATERIAL_STEEL = 12500, MATERIAL_GLASS = 7500, MATERIAL_SILVER = 1500, MATERIAL_GOLD = 1500, MATERIAL_DIAMOND = 750)
 	build_path = /obj/item/weapon/scalpel/manager
@@ -534,14 +512,13 @@ Botany:
 
 /datum/design/item/beaker/large
 	name = "large beaker"
-	id = "large beaker"
+	id = "large_beaker"
 	materials = list(MATERIAL_GLASS = 500)
 	build_path = /obj/item/weapon/reagent_containers/glass/beaker/large
 	price = 300
 
 /datum/design/item/beaker/noreact
 	name = "cryostasis beaker"
-	desc = "A cryostasis beaker that allows for chemical storage without reactions. Can hold up to 50 units."
 	id = "splitbeaker"
 	materials = list(MATERIAL_STEEL = 3000)
 	build_path = /obj/item/weapon/reagent_containers/glass/beaker/noreact
@@ -549,7 +526,6 @@ Botany:
 
 /datum/design/item/beaker/bluespace
 	name = "bluespace beaker"
-	desc = "A bluespace beaker, powered by experimental bluespace technology and Element Cuban combined with the Compound Pete. Can hold up to 300 units."
 	id = "bluespacebeaker"
 	materials = list(MATERIAL_STEEL = 3000, MATERIAL_PHORON = 3000, MATERIAL_DIAMOND = 500)
 	build_path = /obj/item/weapon/reagent_containers/glass/beaker/bluespace
@@ -654,7 +630,6 @@ Botany:
 
 /datum/design/item/tracking/gps
 	name = "triangulating device"
-	desc = "Triangulates approximate co-ordinates using a nearby satellite network."
 	id = "gps"
 	materials = list(MATERIAL_STEEL = 500)
 	build_path = /obj/item/device/gps
@@ -662,7 +637,6 @@ Botany:
 
 /datum/design/item/tracking/beacon_locator
 	name = "beacon tracking pinpointer"
-	desc = "Used to scan and locate signals on a particular frequency."
 	id = "beacon_locator"
 	materials = list(MATERIAL_STEEL = 1000,MATERIAL_GLASS = 500)
 	build_path = /obj/item/weapon/pinpointer/radio
@@ -673,7 +647,6 @@ Botany:
 
 /datum/design/item/tool/welding_mask
 	name = "Welding Mask"
-	desc = "A head-mounted face cover designed to protect the wearer completely from space-arc eye."
 	id = "weldingmask"
 	build_type = PROTOLATHE | STORE
 	materials = list(MATERIAL_STEEL = 4000, MATERIAL_GLASS = 1000)
@@ -681,7 +654,6 @@ Botany:
 
 /datum/design/item/tool/light_replacer
 	name = "light replacer"
-	desc = "A device to automatically replace lights. Refill with working lightbulbs."
 	id = "light_replacer"
 	materials = list(MATERIAL_STEEL = 1500, MATERIAL_SILVER = 150, MATERIAL_GLASS = 3000)
 	build_path = /obj/item/device/lightreplacer
@@ -689,7 +661,6 @@ Botany:
 
 /datum/design/item/tool/pneum_crow
 	name = "pneumatic crowbar"
-	desc = "When you realy need to crack open something."
 	id = "pneum_crow"
 	materials = list(MATERIAL_STEEL = 3200, MATERIAL_PLASTIC = 600, MATERIAL_SILVER = 50)
 	build_type = PROTOLATHE
@@ -697,7 +668,6 @@ Botany:
 
 /datum/design/item/tool/combi_driver
 	name = "combi driver"
-	desc = "Drive screws, drive bolts, drill bones, you can do everything with it."
 	id = "combi_driver"
 	materials = list(MATERIAL_STEEL = 1600, MATERIAL_PLASTIC = 1000, MATERIAL_SILVER = 50)
 	build_type = PROTOLATHE
@@ -705,14 +675,12 @@ Botany:
 
 /datum/design/item/tool/airlock_brace
 	name = "airlock brace"
-	desc = "Special door attachment that can be used to provide extra security."
 	id = "brace"
 	materials = list(MATERIAL_STEEL = 2000, MATERIAL_GLASS = 50)
 	build_path = /obj/item/weapon/airlock_brace
 
 /datum/design/item/tool/brace_jack
 	name = "maintenance jack"
-	desc = "A special maintenance tool that can be used to remove airlock braces."
 	id = "bracejack"
 	materials = list(MATERIAL_STEEL = 120)
 	build_path = /obj/item/weapon/tool/crowbar/brace_jack
@@ -720,7 +688,6 @@ Botany:
 
 /datum/design/item/tool/clamp
 	name = "stasis clamp"
-	desc = "A magnetic clamp which can halt the flow of gas in a pipe, via a localised stasis field."
 	id = "stasis_clamp"
 	materials = list(MATERIAL_STEEL = 500, MATERIAL_GLASS = 500)
 	build_path = /obj/item/clamp
@@ -728,7 +695,6 @@ Botany:
 
 /datum/design/item/tool/price_scanner
 	name = "price scanner"
-	desc = "Using an up-to-date database of various costs and prices, this device estimates the market price of an item up to 0.001% accuracy."
 	id = "price_scanner"
 	materials = list(MATERIAL_STEEL = 3000, MATERIAL_GLASS = 3000, MATERIAL_SILVER = 250)
 	build_path = /obj/item/device/price_scanner
@@ -736,7 +702,6 @@ Botany:
 
 /datum/design/item/tool/advanced_welder
 	name = "advanced welding tool"
-	desc = "This welding tool feels heavier in your possession than is normal."
 	id = "experimental_welder"
 	materials = list(MATERIAL_STEEL = 120, MATERIAL_GLASS = 50)
 	build_path = /obj/item/weapon/tool/weldingtool/advanced
@@ -744,7 +709,6 @@ Botany:
 
 /datum/design/item/tool/oxycandle
 	name = "oxycandle"
-	desc = "a device which, via a chemical reaction, can pressurise small areas."
 	id = "oxycandle"
 	materials = list(MATERIAL_STEEL = 3000)
 	chemicals = list(/datum/reagent/sodiumchloride = 20, /datum/reagent/acetone = 20)
@@ -753,13 +717,12 @@ Botany:
 
 /datum/design/item/tool/plasmasaw
 	name = "SH-B1 Plasma Saw"
-	id = "SH-B1 Plasma Saw"
+	id = "SH-B1_Plasma_Saw"
 	materials = list(MATERIAL_STEEL = 1500, MATERIAL_GLASS = 500, MATERIAL_DIAMOND = 500)
 	build_path = /obj/item/weapon/tool/saw/plasma
 	price = 1000
 
 /datum/design/item/smes_coil
-	desc = "A superconductive magnetic coil used to store power in magnetic fields."
 	build_type = PROTOLATHE
 	category = "SMES Coils"
 	materials = list(MATERIAL_STEEL = 2000, MATERIAL_GLASS = 2000, MATERIAL_GOLD = 1000, MATERIAL_SILVER = 1000)
@@ -1013,7 +976,6 @@ Botany:
 
 /datum/design/item/integrated_printer
 	name = "Integrated Circuit Printer"
-	desc = "This machine provides all the necessary things for circuitry."
 	id = "icprinter"
 	materials = list(MATERIAL_STEEL = 10000, MATERIAL_GLASS = 5000)
 	category = "Integrated Circuits"
@@ -1022,7 +984,6 @@ Botany:
 
 /datum/design/item/integrated_printer/integrated_printer_upgrade_advanced
 	name = "Integrated Circuit Printer Upgrade Disk"
-	desc = "This disk allows for integrated circuit printers to print advanced circuitry designs."
 	id = "icupgradv"
 	materials = list(MATERIAL_STEEL = 10000, MATERIAL_GLASS = 10000)
 	build_type = PROTOLATHE
@@ -1030,7 +991,6 @@ Botany:
 
 /datum/design/item/integrated_printer/integrated_printer_upgrade_clone
 	name = "Integrated Circuit Printer Clone Disk"
-	desc = "This disk allows for integrated circuit printers to copy and clone designs instantaneously."
 	id = "icupclo"
 	materials = list(MATERIAL_STEEL = 10000, MATERIAL_GLASS = 10000)
 	build_type = PROTOLATHE

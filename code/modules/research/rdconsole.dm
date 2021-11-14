@@ -33,9 +33,11 @@ cause a ton of data to be lost, an admin can go send it back.
 	var/obj/machinery/r_n_d/protolathe/linked_lathe = null				//Linked Protolathe
 	var/obj/machinery/r_n_d/circuit_imprinter/linked_imprinter = null	//Linked Circuit Imprinter
 
-	var/id = 0                //ID of the computer (for server restrictions).
-	var/sync = TRUE           //If sync = 0, it doesn't show up on Server Control Console
-	var/can_research = TRUE   //Is this console capable of researching
+	var/id = 0				//ID of the computer (for server restrictions).
+	var/sync = TRUE			//If sync = 0, it doesn't show up on Server Control Console
+	var/can_research = TRUE	//Is this console capable of researching
+	var/category = 4		//Stores current console category
+	var/list/cats = list("Misc", "Misc", TECH_ENGINEERING)	//Stores protolathe, imprinter design category and tech tree tab
 
 	req_access = list(access_research)	//Data and setting manipulation requires scientist access.
 
@@ -92,7 +94,9 @@ cause a ton of data to be lost, an admin can go send it back.
 	else
 		.=..()
 
-	SStgui.update_uis(src)
+	var/list/uis = SStgui.get_open_uis(src)
+	for(var/another_ui in uis)
+		update_static_data(ui = another_ui)
 
 /obj/machinery/computer/rdconsole/attack_hand(mob/user as mob)
 	if(..())
@@ -111,7 +115,7 @@ cause a ton of data to be lost, an admin can go send it back.
 
 /obj/machinery/computer/rdconsole/ui_assets(mob/user)
 	return list(
-		get_asset_datum(/datum/asset/simple/research_designs),
+		get_asset_datum(/datum/asset/spritesheet/simple/rnd_designs),
 		get_asset_datum(/datum/asset/spritesheet/simple/research_technologies),
 		get_asset_datum(/datum/asset/spritesheet/simple/research_technologies_big)
 	)
@@ -125,70 +129,10 @@ cause a ton of data to be lost, an admin can go send it back.
 /obj/machinery/computer/rdconsole/ui_data(mob/user)
 	var/list/data = list()
 	data["sync"] = sync
-	data["research_points"] = files.research_points
-
-	data["has_protolathe"] = linked_lathe ? TRUE : FALSE
-	if(linked_lathe)
-		data["lathe_data"] = get_protolathe_data()
-
-		var/list/queue_list = list()
-		queue_list["can_restart"] = (linked_lathe.queue.len && !linked_lathe.busy)
-		queue_list["queue"] = list()
-		for(var/datum/rnd_queue_design/RNDD in linked_lathe.queue)
-			queue_list["queue"] += RNDD.name
-		data["lathe_queue_data"] = queue_list
 
 	data["has_imprinter"] = linked_imprinter ? TRUE : FALSE
-	if(linked_imprinter)
-		data["imprinter_data"] = get_imprinter_data()
-
-		var/list/queue_list = list()
-		queue_list["can_restart"] = (linked_imprinter.queue.len && !linked_imprinter.busy)
-		queue_list["queue"] = list()
-		for(var/datum/rnd_queue_design/RNDD in linked_imprinter.queue)
-			queue_list["queue"] += RNDD.name
-		data["imprinter_queue_data"] = queue_list
-
+	data["has_protolathe"] = linked_lathe ? TRUE : FALSE
 	data["has_destroy"] = linked_destroy ? TRUE : FALSE
-	if(linked_destroy)
-		var/list/destroy_list = list(
-			"has_item" = FALSE,
-			"is_processing" = FALSE,
-			"loading_item" = linked_destroy.loading
-		)
-		if(linked_destroy.loaded_item)
-			var/list/tech_names = list(TECH_MATERIAL = "Materials", TECH_ENGINEERING = "Engineering", TECH_PHORON = "Phoron", TECH_POWER = "Power", TECH_BLUESPACE = "Blue-space", TECH_BIO = "Biotech", TECH_COMBAT = "Combat", TECH_MAGNET = "Electromagnetic", TECH_DATA = "Programming", TECH_ILLEGAL = "Illegal", TECH_NECRO = "Marker", TECH_ROBOT = "Roboticist")
-
-			var/list/temp_tech = linked_destroy.loaded_item.origin_tech
-			var/list/item_data = list()
-
-			for(var/T in temp_tech)
-				var/tech_name = tech_names[T]
-				if(!tech_name)
-					tech_name = T
-
-				item_data += list(list(
-					"id" =		T,
-					"name" =	tech_name,
-					"level" =	temp_tech[T],
-				))
-
-			// This calculates how much research points we missed because we already researched items with such orig_tech levels
-			var/tech_points_mod = files.experiments.get_object_research_value(linked_destroy.loaded_item) / files.experiments.get_object_research_value(linked_destroy.loaded_item, ignoreRepeat = TRUE)
-
-			destroy_list = list(
-				"has_item" =			TRUE,
-				"item_name" =			capitalize(linked_destroy.loaded_item.name),
-				"item_desc" =			linked_destroy.loaded_item.desc,
-				"icon_path" =			sanitizeFileName("[linked_destroy.loaded_item.type]"),
-				"item_tech_points" =	files.experiments.get_object_research_value(linked_destroy.loaded_item),
-				"item_tech_mod" = 		round(tech_points_mod*100),
-				"is_processing" =		linked_destroy.busy,
-				"loading_item" = 		linked_destroy.loading,
-				"tech_data" = 			item_data
-			)
-
-		data["destroy_data"] = destroy_list
 
 	return data
 
@@ -196,90 +140,165 @@ cause a ton of data to be lost, an admin can go send it back.
 	var/list/data = list()
 	data["can_research"] = can_research
 
-	if(linked_lathe)
+	data["research_points"] = files.research_points
+
+	data["console_tab"] = category
+
+	if(linked_lathe && category == PROTOLATHE)
+		data["lathe_data"] = get_protolathe_data()
+
+		data["lathe_queue_data"] = list()
+		data["lathe_can_restart_queue"] = (linked_lathe.queue.len && !linked_lathe.busy)
+		for(var/RNDD in linked_lathe.queue)
+			data["lathe_queue_data"] += linked_lathe.queue[RNDD]["name"]
+
 		data["lathe_possible_designs"] = get_possible_designs_data(PROTOLATHE)
 		data["lathe_all_cats"] = files.design_categories_protolathe
+		data["lathe_cat"] = cats[PROTOLATHE]
 
-	if(linked_imprinter)
+	if(linked_imprinter && category == IMPRINTER)
+		data["imprinter_data"] = get_imprinter_data()
+
+		data["imprinter_queue_data"] = list()
+		data["imprinter_can_restart_queue"] = (linked_imprinter.queue.len && !linked_imprinter.busy)
+		for(var/RNDD in linked_imprinter.queue)
+			data["imprinter_queue_data"] += linked_imprinter.queue[RNDD]["name"]
+
 		data["imprinter_possible_designs"] = get_possible_designs_data(IMPRINTER)
 		data["imprinter_all_cats"] = files.design_categories_imprinter
+		data["imprinter_cat"] = cats[IMPRINTER]
 
-	var/list/line_list = list()
+	if(category == 4)
+		var/list/tech_tree_list = list()
+		for(var/tech_tree_id in files.tech_trees_shown)
+			var/datum/tech/Tech_Tree = SSresearch.tech_trees[tech_tree_id]
+			var/list/tech_tree_data = list(
+				"id" =			Tech_Tree.id,
+				"name" =		capitalize(Tech_Tree.name),
+				"shortname" =	capitalize(Tech_Tree.shortname),
+				"level" =		files.tech_trees_shown[tech_tree_id],
+				"maxlevel" =	Tech_Tree.maxlevel,
+			)
+			tech_tree_list += list(tech_tree_data)
 
-	var/list/tech_tree_list = list()
-	for(var/tech_tree_id in files.tech_trees_shown)
-		var/datum/tech/Tech_Tree = SSresearch.tech_trees[tech_tree_id]
-		var/list/tech_tree_data = list(
-			"id" =			Tech_Tree.id,
-			"name" =		capitalize(Tech_Tree.name),
-			"shortname" =	capitalize(Tech_Tree.shortname),
-			"level" =		files.tech_trees_shown[tech_tree_id],
-			"maxlevel" =	Tech_Tree.maxlevel,
-		)
-		tech_tree_list += list(tech_tree_data)
+		data["tech_trees"] = tech_tree_list
 
-	data["tech_trees"] = tech_tree_list
+		if(linked_destroy)
+			var/list/destroy_list = list(
+				"has_item" = FALSE,
+				"is_processing" = FALSE,
+				"loading_item" = linked_destroy.loading
+			)
+			if(linked_destroy.loaded_item)
+				var/list/tech_names = list(TECH_MATERIAL = "Materials", TECH_ENGINEERING = "Engineering", TECH_PHORON = "Phoron", TECH_POWER = "Power", TECH_BLUESPACE = "Blue-space", TECH_BIO = "Biotech", TECH_COMBAT = "Combat", TECH_MAGNET = "Electromagnetic", TECH_DATA = "Programming", TECH_ILLEGAL = "Illegal", TECH_NECRO = "Marker", TECH_ROBOT = "Roboticist")
 
-	var/list/tech_list = list()
-	for(var/tech_id in files.all_technologies)
-		var/datum/technology/Tech = SSresearch.all_technologies[tech_id]
-		var/unlocks = list()
-		var/req_techs_lock = list()
-		var/req_techs_unlock = list()
-		for(var/A in Tech.unlocks_designs)
-			var/datum/design/temp = SSresearch.designs_by_id[A]
-			unlocks |= capitalize(temp.name)
-		for(var/A in Tech.required_technologies)
-			var/datum/technology/temp = SSresearch.all_technologies[A]
-			if(files.IsResearched(temp))
-				req_techs_unlock |= capitalize(temp.name)
-			else
-				req_techs_lock |= capitalize(temp.name)
-		var/list/tech_data = list(
-			"id" =				Tech.id,
-			"name" =			capitalize(Tech.name),
-			"desc" =			Tech.desc,
-			"tech_type" =		Tech.tech_type,
-			"x" =				round(Tech.x*100),
-			"y" =				round(Tech.y*100),
-			"cost" =			Tech.cost,
-			"isresearched" =	files.IsResearched(Tech),
-			"canresearch" = 	files.CanResearch(Tech),
-			"req_techs_lock" =	req_techs_lock,
-			"req_techs_unlock" =req_techs_unlock,
-			"unlocks_design" =	unlocks,
-		)
-		tech_list += list(tech_data)
+				var/list/temp_tech = linked_destroy.loaded_item.origin_tech
+				var/list/item_data = list()
 
-		for(var/req_tech_id in Tech.required_technologies)
-			if(req_tech_id in files.all_technologies)
-				var/datum/technology/OTech = SSresearch.all_technologies[req_tech_id]
-				if(OTech.tech_type == Tech.tech_type && !Tech.no_lines)
-					var/line_x = (min(round(OTech.x*100), round(Tech.x*100)))
-					var/line_y = (min(round(OTech.y*100), round(Tech.y*100)))
-					var/width = (abs(round(OTech.x*100) - round(Tech.x*100)))
-					var/height = (abs(round(OTech.y*100) - round(Tech.y*100)))
+				for(var/T in temp_tech)
+					var/tech_name = tech_names[T]
+					if(!tech_name)
+						tech_name = T
 
-					var/istop = FALSE
-					if(OTech.y > Tech.y)
-						istop = TRUE
-					var/isright = FALSE
-					if(OTech.x < Tech.x)
-						isright = TRUE
+					item_data += list(list(
+						"id" =		T,
+						"name" =	tech_name,
+						"level" =	temp_tech[T],
+					))
 
-					var/list/line_data = list(
-						"category" =	OTech.tech_type,
-						"line_x" =		line_x,
-						"line_y" =		line_y,
-						"width" =		width,
-						"height" =		height,
-						"istop" =		istop,
-						"isright" =		isright,
-					)
-					line_list += list(line_data)
+				// This calculates how much research points we missed because we already researched items with such orig_tech levels
+				var/tech_points_mod = files.experiments.get_object_research_value(linked_destroy.loaded_item) / files.experiments.get_object_research_value(linked_destroy.loaded_item, ignoreRepeat = TRUE)
 
-	data["techs"] = tech_list
-	data["lines"] = line_list
+				destroy_list = list(
+					"has_item" =			TRUE,
+					"item_name" =			capitalize(linked_destroy.loaded_item.name),
+					"item_desc" =			linked_destroy.loaded_item.desc,
+					"icon_path" =			sanitizeFileName("[linked_destroy.loaded_item.type]"),
+					"item_tech_points" =	files.experiments.get_object_research_value(linked_destroy.loaded_item),
+					"item_tech_mod" = 		round(tech_points_mod*100),
+					"is_processing" =		linked_destroy.busy,
+					"loading_item" = 		linked_destroy.loading,
+					"tech_data" = 			item_data
+				)
+
+			data["destroy_data"] = destroy_list
+
+	if(category == 3)
+		var/list/line_list = list()
+		var/list/tech_list = list()
+		var/list/tech_tree_list = list()
+
+		for(var/tech_tree_id in files.tech_trees_shown)
+			var/datum/tech/Tech_Tree = SSresearch.tech_trees[tech_tree_id]
+			var/list/tech_tree_data = list(
+				"id" =			Tech_Tree.id,
+				"shortname" =	capitalize(Tech_Tree.shortname),
+			)
+			tech_tree_list += list(tech_tree_data)
+		data["tech_trees"] = tech_tree_list
+		data["tech_cat"] = cats[3]
+
+		for(var/tech_id in files.all_technologies)
+			var/datum/technology/Tech = SSresearch.all_technologies[tech_id]
+			if(Tech.tech_type != cats[3])
+				continue
+			var/unlocks = list()
+			var/req_techs_lock = list()
+			var/req_techs_unlock = list()
+			for(var/A in Tech.unlocks_designs)
+				var/datum/design/temp = SSresearch.designs_by_id[A]
+				unlocks |= capitalize(temp.name)
+			for(var/A in Tech.required_technologies)
+				var/datum/technology/temp = SSresearch.all_technologies[A]
+				if(files.IsResearched(temp))
+					req_techs_unlock |= capitalize(temp.name)
+				else
+					req_techs_lock |= capitalize(temp.name)
+			var/list/tech_data = list(
+				"id" =				Tech.id,
+				"name" =			capitalize(Tech.name),
+				"desc" =			Tech.desc,
+				"tech_type" =		Tech.tech_type,
+				"x" =				round(Tech.x*100),
+				"y" =				round(Tech.y*100),
+				"cost" =			Tech.cost,
+				"isresearched" =	files.IsResearched(Tech),
+				"canresearch" = 	files.CanResearch(Tech),
+				"req_techs_lock" =	req_techs_lock,
+				"req_techs_unlock" =req_techs_unlock,
+				"unlocks_design" =	unlocks,
+			)
+			tech_list += list(tech_data)
+
+			for(var/req_tech_id in Tech.required_technologies)
+				if(req_tech_id in files.all_technologies)
+					var/datum/technology/OTech = SSresearch.all_technologies[req_tech_id]
+					if(OTech.tech_type == Tech.tech_type && !Tech.no_lines)
+						var/line_x = (min(round(OTech.x*100), round(Tech.x*100)))
+						var/line_y = (min(round(OTech.y*100), round(Tech.y*100)))
+						var/width = (abs(round(OTech.x*100) - round(Tech.x*100)))
+						var/height = (abs(round(OTech.y*100) - round(Tech.y*100)))
+
+						var/istop = FALSE
+						if(OTech.y > Tech.y)
+							istop = TRUE
+						var/isright = FALSE
+						if(OTech.x < Tech.x)
+							isright = TRUE
+
+						var/list/line_data = list(
+							"category" =	OTech.tech_type,
+							"line_x" =		line_x,
+							"line_y" =		line_y,
+							"width" =		width,
+							"height" =		height,
+							"istop" =		istop,
+							"isright" =		isright,
+						)
+						line_list += list(line_data)
+
+		data["techs"] = tech_list
+		data["lines"] = line_list
 
 	return data
 
@@ -287,6 +306,19 @@ cause a ton of data to be lost, an admin can go send it back.
 	if(..())
 		return
 	switch(action)
+		if("change_tab")
+			category = text2num(params["tab"])
+
+		if("change_design_cat")
+			if(text2num(params["machine"]) == PROTOLATHE)
+				cats[PROTOLATHE] = params["tab"]
+
+			else if(text2num(params["machine"]) == IMPRINTER)
+				cats[IMPRINTER] = params["tab"]
+
+			else if(text2num(params["machine"]) == 3)
+				cats[3] = params["tab"]
+
 		if("eject")
 			var/amount = text2num(params["amount"])
 			if(!amount)
@@ -299,11 +331,23 @@ cause a ton of data to be lost, an admin can go send it back.
 			else if(text2num(params["machine"]) == IMPRINTER)
 				linked_imprinter?.eject_sheet(params["id"], round(amount))
 
+		if("build")
+			var/amount=text2num(params["amount"])
+			if(params["id"] in files.known_designs)
+				var/datum/design/being_built = SSresearch.designs_by_id[params["id"]]
+				if(amount)
+					switch(text2num(params["machine"]))
+						if(PROTOLATHE)
+							linked_lathe?.queue_design(being_built, amount)
+						if(IMPRINTER)
+							linked_imprinter?.queue_design(being_built, amount)
+			else
+				log_and_message_admins("Possible hacker detected. User tried to print research design that wasn't yet researched. Design id: [params["id"]]", usr, usr.loc)
+
 		if("research_tech")
 			if(params["tech_id"] in files.all_technologies)
 				var/datum/technology/T = SSresearch.all_technologies[params["tech_id"]]
 				files.UnlockTechology(T)
-				update_static_data(usr, ui)
 
 		if("resync_machines")
 			SyncRDevices()
@@ -316,10 +360,14 @@ cause a ton of data to be lost, an admin can go send it back.
 				if(IMPRINTER)
 					linked_imprinter.linked_console = null
 					linked_imprinter = null
+					if(category == IMPRINTER)
+						category = 1
 
 				if(PROTOLATHE)
 					linked_lathe.linked_console = null
 					linked_lathe = null
+					if(category == PROTOLATHE)
+						category = 1
 
 				// Destructive analyzer
 				if(3)
@@ -334,9 +382,9 @@ cause a ton of data to be lost, an admin can go send it back.
 
 			switch(params["machine"])
 				if(PROTOLATHE)
-					linked_lathe.reagents.remove_reagents_of_type(text2path(params["type"]), round(amount))
+					linked_lathe?.reagents.remove_reagents_of_type(text2path(params["type"]), round(amount))
 				if(IMPRINTER)
-					linked_imprinter.reagents.remove_reagents_of_type(text2path(params["type"]), round(amount))
+					linked_imprinter?.reagents.remove_reagents_of_type(text2path(params["type"]), round(amount))
 
 		if("deconstruct")
 			linked_destroy?.deconstruct_item()
@@ -344,7 +392,9 @@ cause a ton of data to be lost, an admin can go send it back.
 		if("eject_decon")
 			linked_destroy?.eject_item(usr)
 
-	SStgui.update_uis(src)
+	var/list/uis = SStgui.get_open_uis(src)
+	for(var/another_ui in uis)
+		update_static_data(ui = another_ui)
 
 /obj/machinery/computer/rdconsole/emp_act(var/remaining_charges, var/mob/user)
 	if(!emagged)
@@ -388,11 +438,11 @@ cause a ton of data to be lost, an admin can go send it back.
 	protolathe_list["reagents"] = protolathe_reagent_list
 	var/list/material_list = list()
 	for(var/M in linked_lathe.materials)
-		if(linked_lathe.materials[M].amount)
+		if(linked_lathe.materials[M]["amount"])
 			material_list += list(list(
 				"id" =		M,
-				"name" =	linked_lathe.materials[M].name,
-				"amount" =	linked_lathe.materials[M].amount,
+				"name" =	linked_lathe.materials[M]["name"],
+				"amount" =	linked_lathe.materials[M]["amount"],
 			))
 	protolathe_list["materials"] = material_list
 	return protolathe_list
@@ -415,11 +465,11 @@ cause a ton of data to be lost, an admin can go send it back.
 	imprinter_list["reagents"] = printer_reagent_list
 	var/list/material_list = list()
 	for(var/M in linked_imprinter.materials)
-		if(linked_imprinter.materials[M].amount)
+		if(linked_imprinter.materials[M]["amount"])
 			material_list += list(list(
 				"id" =		M,
-				"name" =	linked_imprinter.materials[M].name,
-				"amount" =	linked_imprinter.materials[M].amount,
+				"name" =	linked_imprinter.materials[M]["name"],
+				"amount" =	linked_imprinter.materials[M]["amount"],
 			))
 	imprinter_list["materials"] = material_list
 	return imprinter_list
@@ -434,7 +484,7 @@ cause a ton of data to be lost, an admin can go send it back.
 	var/list/designs_list = list()
 	for(var/I in files.known_designs)
 		var/datum/design/D = SSresearch.designs_by_id[I]
-		if(D.build_type & build_type)
+		if(D.build_type & build_type && D.category == cats[build_type])
 			var/cat = "Unspecified"
 			if(D.category)
 				cat = D.category
@@ -448,7 +498,7 @@ cause a ton of data to be lost, an admin can go send it back.
 				if(build_type == IMPRINTER)
 					t = linked_imprinter.check_mat(D, M)
 
-				materials += list(list("name" = capitalize(M), "amount" = D.materials[M]*coeff, "id" = M))
+				materials += list(list("name" = capitalize(M), "amount" = D.materials[M]*coeff, "id" = M, "can_make" = t >= 1 ? TRUE:FALSE))
 				c = min(t,c)
 
 			if(D.chemicals.len)
@@ -462,13 +512,16 @@ cause a ton of data to be lost, an admin can go send it back.
 					c = min(t,c)
 
 			designs_list += list(list(
-				"id" =				D.id,
-				"name" =			D.name,
-				"desc" =			D.desc,
-				"category" =		cat,
-				"can_create" =		c,
-				"mats" =			materials,
-				"chems" =			chemicals,
+				"id" =			D.id,
+				"name" =		D.name,
+				"desc" =		D.desc,
+				"full_desc" =	D.full_desc,
+				"category" =	cat,
+				"can_create" =	c,
+				"mats" =		materials,
+				"chems" =		chemicals,
+				"icon_width" =	D.ui_data["icon_width"]*2,
+				"icon_height" = D.ui_data["icon_height"]*2
 			))
 	return designs_list
 

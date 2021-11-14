@@ -173,7 +173,7 @@
 	required_technologies = list("res_tech")
 	cost = 1000
 
-	unlocks_designs = list("miningcutter", "Rock Saw", "plasma_energy")
+	unlocks_designs = list("miningcutter", "Rock_Saw", "plasma_energy")
 
 /*/datum/technology/engineering/ore_proc
 	name = "Ore Processing"
@@ -203,7 +203,7 @@
 	required_technologies = list("basic_mining", "recharger")
 	cost = 2000
 
-	unlocks_designs = list("mining drill head", "mining drill brace", "plasmacutter", "linecutter", "contactbeam", "forcegun")
+	unlocks_designs = list("mining drill head", "mining drill brace", "linecutter", "contactbeam", "forcegun")
 
 /datum/technology/engineering/mining_ammo
 	name = "Mining Ammuntion"
@@ -248,7 +248,7 @@
 	required_technologies = list("adv_eng")
 	cost = 2000
 
-	unlocks_designs = list("SH-B1 Plasma Saw", "pneum_crow", "combi_driver", "experimental_welder", "price_scanner")
+	unlocks_designs = list("SH-B1_Plasma_Saw", "pneum_crow", "combi_driver", "experimental_welder", "price_scanner")
 
 /datum/technology/engineering/airlock_brace
 	name = "Airlock Brace"

@@ -1,61 +1,80 @@
 import { useBackend, useSharedState } from '../backend';
-import { Box, AnimatedNumber, Button, LabeledList, ProgressBar, Section, Stack, Tabs, Icon, Divider, Flex } from '../components';
+import { Box, AnimatedNumber, Button, LabeledList, ProgressBar, Section, Stack, Tabs, Icon, Divider, Flex, Tooltip } from '../components';
 import { Window } from '../layouts';
 import { round } from 'common/math';
 import { Fragment } from 'inferno';
 
 export const RDConsole = (props, context) => {
-  const { data } = useBackend(context);
-  const [tab_main, setTab_main] = useSharedState(context, 'tab_main', 1);
+  const { data, act } = useBackend(context);
 
   const {
     lathe_data,
     lathe_all_cats,
     lathe_possible_designs,
+    lathe_queue_data,
+    lathe_cat,
     imprinter_data,
     imprinter_possible_designs,
     imprinter_all_cats,
+    imprinter_queue_data,
+    imprinter_cat,
+    has_protolathe,
+    has_imprinter,
+    console_tab,
   } = data;
 
   return (
     <Window
       width={1000}
       height={800}
-      scrollable={false}>
+      scrollable={false}
+      theme="rdconsole">
       <Window.Content>
         <Tabs>
           <Tabs.Tab
-            selected={tab_main === 1}
-            onClick={() => setTab_main(1)}>
+            selected={console_tab === 4}
+            onClick={() => act("change_tab", { "tab": 4 })}>
             Main
           </Tabs.Tab>
           <Tabs.Tab
-            selected={tab_main === 2}
-            onClick={() => setTab_main(2)}>
+            selected={console_tab === 3}
+            onClick={() => act("change_tab", { "tab": 3 })}>
             Research
           </Tabs.Tab>
           <Tabs.Tab
-            selected={tab_main === 3}
-            onClick={() => setTab_main(3)}>
+            selected={console_tab === 2}
+            disabled={!has_protolathe}
+            onClick={() => act("change_tab", { "tab": 2 })}>
             Protolathe
           </Tabs.Tab>
           <Tabs.Tab
-            selected={tab_main ===4}
-            onClick={() => setTab_main(4)}>
+            selected={console_tab === 1}
+            disabled={!has_imprinter}
+            onClick={() => act("change_tab", { "tab": 1 })}>
             Circuit Imprinter
           </Tabs.Tab>
         </Tabs>
-        {tab_main === 1 && (
+        {console_tab === 4 && (
           <MainTab />
         )}
-        {tab_main === 2 && (
+        {console_tab === 3 && (
           <Research />
         )}
-        {tab_main === 3 && (
-          <MachineTab title="Protolathe Menu" machine_data={lathe_data} possible_designs={lathe_possible_designs} all_cats={lathe_all_cats} />
+        {console_tab === 2 && (
+          <MachineTab title="Protolathe"
+            machine_data={lathe_data}
+            possible_designs={lathe_possible_designs}
+            queue_data={lathe_queue_data}
+            all_cats={lathe_all_cats}
+            current_cat={lathe_cat} />
         )}
-        {tab_main === 4 && (
-          <MachineTab title="Circuit Imprinter Menu" machine_data={imprinter_data} possible_designs={imprinter_possible_designs} all_cats={imprinter_all_cats} />
+        {console_tab === 1 && (
+          <MachineTab title="Circuit Imprinter"
+            machine_data={imprinter_data}
+            possible_designs={imprinter_possible_designs}
+            queue_data={imprinter_queue_data}
+            all_cats={imprinter_all_cats}
+            current_cat={imprinter_cat} />
         )}
       </Window.Content>
     </Window>
@@ -200,7 +219,8 @@ const DestructiveAnalyzer = (props, context) => {
                             </Stack>
                           </Stack.Item>
                           <Stack.Item>
-                            <Box inline bold>Research points: </Box> <Box inline color="orange">{destroy_data.item_tech_points} points</Box>
+                            <Box inline bold>Research points: </Box>
+                            <Box inline color="orange">{destroy_data.item_tech_points} points</Box>
                           </Stack.Item>
                           <Stack.Item>
                             <Box inline bold>Research value:</Box> <Box inline color="orange">{destroy_data.item_tech_mod}%</Box>
@@ -233,114 +253,6 @@ const DestructiveAnalyzer = (props, context) => {
   );
 };
 
-const MachineMaterialsTab = (props, context) => {
-  const { act } = useBackend(context);
-
-  const {
-    machine_data,
-    title,
-  } = props;
-
-  return (
-    <Section title={title}>
-      <LabeledList>
-        <LabeledList.Item labelColor="white" label="Total Materials">
-          <ProgressBar
-            minValue={0}
-            maxValue={machine_data.max_material_storage}
-            value={machine_data.total_materials}>
-            <AnimatedNumber value={machine_data.total_materials} /> cm³/
-            {machine_data.max_material_storage} cm³
-          </ProgressBar>
-        </LabeledList.Item>
-        {machine_data.materials
-          && machine_data.materials.map((material, i) => (
-            <LabeledList.Item key={material.name} labelColor="orange" label={material.name} buttons={
-              <>
-                {material.amount >= 2000 ? (
-                  <Button onClick={() => act("eject", { machine: machine_data.machine_id, id: material.id, amount: 1 })} mx={0.5}>
-                    Eject x1
-                  </Button>
-                ):null}
-                {material.amount >= 10000 ? (
-                  <Button onClick={() => act("eject", { machine: machine_data.machine_id, id: material.id, amount: 5 })}>
-                    Eject x5
-                  </Button>
-                ):null}
-                {material.amount >= 2000 ? (
-                  <Button.Input
-                    maxValue={round(parseInt(material.amount,
-                      10)/2000, 1)}
-                    value={1}
-                    content={"Eject [Max:"+round(parseInt(material.amount,
-                      10)/2000, 1)+"]"}
-                    onCommit={(e, value) => act('eject', {
-                      id: material.id,
-                      machine: machine_data.machine_id,
-                      amount: value })} />
-                ):null}
-              </>
-            }>
-              <Box inline><AnimatedNumber value={material.amount} /> cm³</Box>
-            </LabeledList.Item>
-          ))}
-      </LabeledList>
-    </Section>
-  );
-};
-
-const MachineReagentsTab = (props, context) => {
-  const { act } = useBackend(context);
-
-  const {
-    machine_data,
-    title,
-  } = props;
-
-  return (
-    <Section title={title}>
-      <LabeledList>
-        <LabeledList.Item labelColor="white" label="Total Reagents">
-          <ProgressBar
-            minValue={0}
-            maxValue={machine_data.maximum_volume}
-            value={machine_data.total_volume}>
-            <AnimatedNumber value={machine_data.total_volume} />u
-            /{machine_data.maximum_volume}u
-          </ProgressBar>
-        </LabeledList.Item>
-        {machine_data.reagents
-          && machine_data.reagents.map((reagent, i) => (
-            <LabeledList.Item key={reagent.name} labelColor="orange" label={reagent.name} buttons={
-              <>
-                <Button onClick={() => act("purge", { machine: machine_data.machine_id, type: reagent.type, volume: 1 })} mx={0.5}>
-                  Purge 1u
-                </Button>
-                {reagent.volume >= 5 ? (
-                  <Button onClick={() => act("purge", { machine: machine_data.machine_id, type: reagent.type, volume: 5 })} mx={0.5}>
-                    Purge 5u
-                  </Button>
-                ):null}
-                <Button.Input
-                  maxValue={round(parseInt(reagent.volume,
-                    10), 1)}
-                  value={1}
-                  content={"Purge [Max: "+round(parseInt(reagent.volume,
-                    10), 1)+"]"}
-                  onCommit={(e, value) => act('purge', {
-                    type: reagent.type,
-                    machine: machine_data.machine_id,
-                    volume: value })} />
-              </>
-            }>
-              <AnimatedNumber value={reagent.volume} />u
-            </LabeledList.Item>
-          ))}
-      </LabeledList>
-    </Section>
-  );
-};
-
 const TechLevelsInfo = (props, context) => {
   const { data } = useBackend(context);
 
@@ -368,7 +280,6 @@ const TechLevelsInfo = (props, context) => {
 
 const Research = (props, context) => {
   const { act, data } = useBackend(context);
-  const [selected_tech_tree, set_selected_tech_tree] = useSharedState(context, 'selected_tech_tree', 'engineering');
   const [selected_tech, set_selected_tech] = useSharedState(context, 'selected_tech');
 
   const {
@@ -376,18 +287,23 @@ const Research = (props, context) => {
     techs,
     lines,
     research_points,
+    tech_cat,
   } = data;
 
   return (
     <Stack vertical>
       <Stack.Item>
-        <Section fill height={45} title="Research Menu" buttons={<Box>Research Points: <span style={{ color: "orange" }}>{research_points}</span></Box>}>
+        <Section
+          fill
+          height={45}
+          title="Research Menu"
+          buttons={<Box>Research Points: <span style={{ color: "orange" }}>{research_points}</span></Box>}>
           <Tabs>
             {tech_trees && tech_trees.map((tech_tree, i) => (
               <Box key={tech_tree.id}>
                 <Tabs.Tab
-                  selected={tech_tree.id === selected_tech_tree}
-                  onClick={() => set_selected_tech_tree(tech_tree.id)}>
+                  selected={tech_tree.id === tech_cat}
+                  onClick={() => act("change_design_cat", { "machine": 3, "tab": tech_tree.id })}>
                   {tech_tree.shortname}
                 </Tabs.Tab>
               </Box>
@@ -395,7 +311,7 @@ const Research = (props, context) => {
           </Tabs>
           {lines && lines.map((line, i) => (
             <Box key={i}>
-              {line.category === selected_tech_tree ? (
+              {line.category === tech_cat ? (
                 <Box position="absolute"
                   width={line.width+"%"}
                   height={line.height+"%"}
@@ -407,10 +323,11 @@ const Research = (props, context) => {
           ))}
           {techs && techs.map((tech, i) => (
             <Box key={tech.id}>
-              {tech.tech_type === selected_tech_tree ? (
+              {tech.tech_type === tech_cat ? (
                 <Button
                   position="absolute"
-                  className={(selected_tech && tech.id===selected_tech.id?"Button--color--caution":(tech.isresearched?"Button--selected":(tech.canresearch?"Button--color--default":"sciCantResearch")))+" sciNoPadding"}
+                  p={0}
+                  color={(selected_tech && tech.id===selected_tech.id?"caution":(tech.isresearched?"selected":(tech.canresearch?"default":"danger")))}
                   left={tech.x-1.5+"%"}
                   bottom={tech.y+7+"%"}
                   width="32px"
@@ -433,7 +350,7 @@ const Research = (props, context) => {
       </Stack.Item>
       <Stack.Item>
         {selected_tech?(
-          <Section height={14.5} title={selected_tech.name}>
+          <Section height={14.3} title={selected_tech.name}>
             <Stack>
               <Stack.Item>
                 <Stack>
@@ -478,7 +395,7 @@ const Research = (props, context) => {
             </Stack>
           </Section>
         ):(
-          <Section fill height={14.5} title="No Technology Selected" />
+          <Section fill height={14.3} title="No Technology Selected" />
         )}
       </Stack.Item>
     </Stack>
@@ -491,103 +408,267 @@ const MachineTab = (props, context) => {
     title,
     machine_data,
     possible_designs,
+    queue_data,
     all_cats,
+    current_cat,
   } = props;
-  const [currentTab, setCurrentTab] = useSharedState(context, props.machine_data.machine_id, "Misc");
+  const [materialReagent, setMaterialReagent] = useSharedState(context, props.machine_data.machine_id+"_materialReagent", 0);
 
   return (
     <Stack justify="space-between" height="95%">
       <Stack.Item grow basis={0}>
-        <Section fill title={title}>
-          <Tabs>
-            <Stack wrap="wrap">
-              {all_cats && all_cats.map((category, i) => (
-                <Stack.Item key={category}>
-                  <Tabs.Tab
-                    my={0.5}
-                    selected={currentTab === category}
-                    onClick={() => setCurrentTab(category)}>
-                    {category}
-                  </Tabs.Tab>
-                </Stack.Item>
-              ))}
-            </Stack>
-          </Tabs>
-          <Flex direction="column">
-            {possible_designs
-              && possible_designs.map((design, i) => (
-                <Fragment key={design.id}>
-                  {design.category === currentTab ? (
-                    <Flex.Item>
-                      <Stack justify="space-between">
-                        <Stack.Item width="40%">
-                          {design.name}
-                          <br />
-                          <Box color="label">
-                            {design.desc}
-                          </Box>
-                        </Stack.Item>
-                        <Stack.Item grow>
-                          <Flex>
-                            <Flex.Item>
-                              <Button
-                                icon="wrench"
-                                onClick={() => act(buildName,
-                                  { build: design.id,
-                                    imprint: design.id })}>
-                                Build
-                              </Button>
-                            </Flex.Item>
-                            <Flex.Item>
-                              {design.can_create >= 5 && (
-                                <Button
-                                  mx={0.3}
-                                  onClick={() => act(buildFiveName,
-                                    { build: design.id, imprint: design.id })}>
-                                  x5
-                                </Button>
-                              )}
-                            </Flex.Item>
-                            <Flex.Item>
-                              {design.can_create >= 10 && (
-                                <Button
-                                  onClick={() => act(buildFiveName,
-                                    { build: design.id, imprint: design.id })}>
-                                  x10
-                                </Button>
-                              )}
-                            </Flex.Item>
-                          </Flex>
-                        </Stack.Item>
-                        <Stack.Item>
-                          {design.mats && design.mats.map((mat, i) => (
-                            <Box inline key={mat.id}>
-                              {mat.amount} {mat.name}
-                            </Box>
-                          ))}
-                        </Stack.Item>
-                      </Stack>
-                      <Divider />
-                    </Flex.Item>
-                  ):null}
-                </Fragment>
-              ))}
-          </Flex>
-        </Section>
-      </Stack.Item>
-      <Stack.Item width="45%">
         <Stack vertical fill>
           <Stack.Item>
-            <MachineMaterialsTab machine_data={machine_data} title="Protolathe Material Storage" />
-          </Stack.Item>
-          <Stack.Item>
-            <MachineReagentsTab machine_data={machine_data} title="Protolathe Reagent Storage" />
+            <Tabs>
+              <Stack wrap="wrap">
+                {all_cats && all_cats.map((category, i) => (
+                  <Stack.Item key={category}>
+                    <Tabs.Tab
+                      my={0.5}
+                      selected={current_cat === category}
+                      onClick={() => act("change_design_cat", { "machine": machine_data.machine_id, "tab": category })}>
+                      {category}
+                    </Tabs.Tab>
+                  </Stack.Item>
+                ))}
+              </Stack>
+            </Tabs>
           </Stack.Item>
           <Stack.Item grow>
-            <Section title="Queue" fill />
+            <Section fill title={title+" Menu"} scrollable>
+              <Flex direction="column">
+                <Divider />
+                {possible_designs
+                  && possible_designs.map((design, i) => (
+                    <Fragment key={design.id}>
+                      {design.category === current_cat ? (
+                        <Flex.Item>
+                          <Stack justify="space-between">
+                            <Stack.Item width="55%">
+                              <Flex>
+                                <Flex.Item>
+                                  <div class={"rnd_designs"+design.icon_width+"x"+design.icon_height+" "+design.id+" sciImageZoom"} />
+                                </Flex.Item>
+                                <Flex.Item>
+                                  {design.name}
+                                  <br />
+                                  <Box color="label" position="relative">
+                                    {design.full_desc ? (
+                                      <Tooltip content={design.full_desc} position="bottom">
+                                        <Box>{design.desc}</Box>
+                                      </Tooltip>
+                                    ):(
+                                      <Box>
+                                        {design.desc}
+                                      </Box>
+                                    )}
+                                  </Box>
+                                </Flex.Item>
+                              </Flex>
+                            </Stack.Item>
+                            <Stack.Item grow>
+                              <Flex vertical>
+                                <Flex.Item>
+                                  {design.can_create >= 5 && (
+                                    <Button
+                                      icon="wrench"
+                                      onClick={() => act("build",
+                                        { "id": design.id,
+                                          "machine": machine_data.machine_id,
+                                          "amount": 1 })}>
+                                      Build
+                                    </Button>
+                                  )}
+                                </Flex.Item>
+                                <Flex.Item>
+                                  {design.can_create >= 5 && (
+                                    <Button
+                                      mx={0.3}
+                                      onClick={() => act("build",
+                                        { "id": design.id,
+                                          "machine": machine_data.machine_id,
+                                          "amount": 5 })}>
+                                      x5
+                                    </Button>
+                                  )}
+                                </Flex.Item>
+                                <Flex.Item>
+                                  {design.can_create >= 10 && (
+                                    <Button
+                                      onClick={() => act("build",
+                                        { "id": design.id,
+                                          "machine": machine_data.machine_id,
+                                          "amount": 10 })}>
+                                      x10
+                                    </Button>
+                                  )}
+                                </Flex.Item>
+                              </Flex>
+                            </Stack.Item>
+                            <Stack.Item mr={1} width="17.5%">
+                              {design.mats && design.mats.map((mat, i) => (
+                                <Box key={mat.id} textColor={mat.can_make ? "white":"red"}>
+                                  {mat.amount} {mat.name}
+                                </Box>
+                              ))}
+                            </Stack.Item>
+                          </Stack>
+                          <Divider />
+                        </Flex.Item>
+                      ):null}
+                    </Fragment>
+                  ))}
+              </Flex>
+            </Section>
+          </Stack.Item>
+        </Stack>
+      </Stack.Item>
+      <Stack.Item width="43.4%">
+        <Stack vertical fill>
+          <Stack.Item height="38%">
+            {materialReagent === 0 ?(
+              <MachineMaterialsTab machine_data={machine_data} title={title+" Material Storage"} />
+            ):(
+              <MachineReagentsTab machine_data={machine_data} title={title+" Reagent Storage"} />
+            )}
+          </Stack.Item>
+          <Stack.Item grow>
+            <Section title="Queue" fill buttons={
+              <Fragment>
+                <Button>
+                  Clear Queue
+                </Button>
+                <Button>
+                  Restart Queue
+                </Button>
+              </Fragment>
+            }>
+              <LabeledList>
+                {queue_data
+                  && queue_data.map((queue, i) => (
+                    <LabeledList.Item label={queue} key={queue}>
+                      <Button>
+                        Remove
+                      </Button>
+                    </LabeledList.Item>
+                  ))}
+              </LabeledList>
+            </Section>
           </Stack.Item>
         </Stack>
       </Stack.Item>
     </Stack>
+  );
+};
+
+const MachineMaterialsTab = (props, context) => {
+  const { act } = useBackend(context);
+
+  const {
+    machine_data,
+    title,
+  } = props;
+
+  const [materialReagent, setMaterialReagent] = useSharedState(context, props.machine_data.machine_id+"_materialReagent");
+
+  return (
+    <Section title={title} fill buttons={<Button icon="chevron-right" iconPosition="right" onClick={() => setMaterialReagent(1)}>Reagent Storage</Button>}>
+      <LabeledList>
+        <LabeledList.Item labelColor="white" label="Total Materials">
+          <ProgressBar
+            minValue={0}
+            maxValue={machine_data.max_material_storage}
+            value={machine_data.total_materials}>
+            <AnimatedNumber value={machine_data.total_materials} /> cm³/
+            {machine_data.max_material_storage} cm³
+          </ProgressBar>
+        </LabeledList.Item>
+        {machine_data.materials
+          && machine_data.materials.map((material, i) => (
+            <LabeledList.Item key={material.name} labelColor="orange" label={material.name} buttons={
+              <>
+                {material.amount >= 2000 ? (
+                  <Button onClick={() => act("eject", { machine: machine_data.machine_id, id: material.id, amount: 1 })} mx={0.5}>
+                    Eject x1
+                  </Button>
+                ):null}
+                {material.amount >= 10000 ? (
+                  <Button onClick={() => act("eject", { machine: machine_data.machine_id, id: material.id, amount: 5 })}>
+                    Eject x5
+                  </Button>
+                ):null}
+                {material.amount >= 2000 ? (
+                  <Button.Input
+                    maxValue={round(parseInt(material.amount,
+                      10)/2000)}
+                    value={1}
+                    content={"Eject [Max:"+round(parseInt(material.amount,
+                      10)/2000)+"]"}
+                    onCommit={(e, value) => act('eject', {
+                      id: material.id,
+                      machine: machine_data.machine_id,
+                      amount: value })} />
+                ):null}
+              </>
+            }>
+              <Box inline><AnimatedNumber value={material.amount} /> cm³</Box>
+            </LabeledList.Item>
+          ))}
+      </LabeledList>
+    </Section>
+  );
+};
+
+const MachineReagentsTab = (props, context) => {
+  const { act } = useBackend(context);
+
+  const {
+    machine_data,
+    title,
+  } = props;
+
+  const [materialReagent, setMaterialReagent] = useSharedState(context, props.machine_data.machine_id+"_materialReagent");
+
+  return (
+    <Section title={title} fill buttons={<Button icon="chevron-right" iconPosition="right" onClick={() => setMaterialReagent(0)}>Material Storage</Button>}>
+      <LabeledList>
+        <LabeledList.Item labelColor="white" label="Total Reagents">
+          <ProgressBar
+            minValue={0}
+            maxValue={machine_data.maximum_volume}
+            value={machine_data.total_volume}>
+            <AnimatedNumber value={machine_data.total_volume}
+            />u/{machine_data.maximum_volume}u
+          </ProgressBar>
+        </LabeledList.Item>
+        {machine_data.reagents
+          && machine_data.reagents.map((reagent, i) => (
+            <LabeledList.Item key={reagent.name} labelColor="orange" label={reagent.name} buttons={
+              <>
+                <Button onClick={() => act("purge", { machine: machine_data.machine_id, type: reagent.type, volume: 1 })} mx={0.5}>
+                  Purge 1u
+                </Button>
+                {reagent.volume >= 5 ? (
+                  <Button onClick={() => act("purge", { machine: machine_data.machine_id, type: reagent.type, volume: 5 })} mx={0.5}>
+                    Purge 5u
+                  </Button>
+                ):null}
+                <Button.Input
+                  maxValue={round(parseInt(reagent.volume,
+                    10))}
+                  value={1}
+                  content={"Purge [Max: "+round(parseInt(reagent.volume,
+                    10))+"]"}
+                  onCommit={(e, value) => act('purge', {
+                    type: reagent.type,
+                    machine: machine_data.machine_id,
+                    volume: value })} />
+              </>
+            }>
+              <AnimatedNumber value={reagent.volume} />u
+            </LabeledList.Item>
+          ))}
+      </LabeledList>
+    </Section>
   );
 };

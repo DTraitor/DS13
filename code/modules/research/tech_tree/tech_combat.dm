@@ -123,7 +123,7 @@
 	required_technologies = list("divet")
 	cost = 750
 
-	unlocks_designs = list("44cal")
+	unlocks_designs = list("speedloader")
 
 /datum/technology/combat/pulse
 	name = "SWS Motorized Pulse Rifle"
