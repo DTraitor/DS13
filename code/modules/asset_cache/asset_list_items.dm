@@ -78,16 +78,6 @@ proc/get_craft_item(path)
 	assets = list()
 	for(var/A in SSresearch.all_technologies)
 		var/datum/technology/T = SSresearch.all_technologies[A]
-		assets[T.id] = T.I
-	.=..()
-
-/datum/asset/spritesheet/simple/research_technologies_big
-	name = "rdtech_big"
-
-/datum/asset/spritesheet/simple/research_technologies_big/register()
-	assets = list()
-	for(var/A in SSresearch.all_technologies)
-		var/datum/technology/T = SSresearch.all_technologies[A]
 		T.I.Scale(T.I.Width()*3, T.I.Height()*3)
 		assets[T.id] = T.I
 	.=..()

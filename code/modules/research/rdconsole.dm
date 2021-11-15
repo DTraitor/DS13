@@ -116,8 +116,7 @@ cause a ton of data to be lost, an admin can go send it back.
 /obj/machinery/computer/rdconsole/ui_assets(mob/user)
 	return list(
 		get_asset_datum(/datum/asset/spritesheet/simple/rnd_designs),
-		get_asset_datum(/datum/asset/spritesheet/simple/research_technologies),
-		get_asset_datum(/datum/asset/spritesheet/simple/research_technologies_big)
+		get_asset_datum(/datum/asset/spritesheet/simple/research_technologies)
 	)
 
 /obj/machinery/computer/rdconsole/tgui_interact(mob/user, datum/tgui/ui)
@@ -345,7 +344,7 @@ cause a ton of data to be lost, an admin can go send it back.
 				log_and_message_admins("Possible hacker detected. User tried to print research design that wasn't yet researched. Design id: [params["id"]]", usr, usr.loc)
 
 		if("research_tech")
-			if(params["tech_id"] in files.all_technologies)
+			if(params["tech_id"] in files.all_technologies && can_research)
 				var/datum/technology/T = SSresearch.all_technologies[params["tech_id"]]
 				files.UnlockTechology(T)
 
@@ -354,6 +353,8 @@ cause a ton of data to be lost, an admin can go send it back.
 
 		if("togglesync") //Prevents the console from being synced by other consoles. Can still send data.
 			sync = !sync
+			SStgui.update_uis(src)
+			return // We dont need to send static data again
 
 		if("disconnect")
 			switch(text2num(params["machine"]))

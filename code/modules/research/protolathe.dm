@@ -140,7 +140,7 @@
 	RNDD["design"] = D.id
 	RNDD["amount"] = amount
 	// We need unique name in the list
-	queue["[RNDD["name"]]_[D.id]_[world.time]"] = RNDD
+	queue["[D.id]_x[RNDD["amount"]]_[world.time]"] = RNDD
 	if(!busy)
 		produce_design("[RNDD["name"]]_[D.id]_[world.time]")
 
@@ -164,7 +164,7 @@
 		to_chat(usr, "<span class='warning'>The [name] is busy right now</span>")
 		return
 	if (!(D.build_type & PROTOLATHE))
-		log_and_message_admins("Protolathe exploit attempted! Tried to print non Protolathe design!", usr, usr.loc)
+		log_and_message_admins("Protolathe exploit attempted! Tried to print non-protolathe design!", usr, usr.loc)
 		return
 
 	busy = TRUE
@@ -179,7 +179,7 @@
 			return
 
 	for(var/M in D.materials)
-		materials[M]["amount"] = max(0, (materials[M]["amount"] - (D.materials[M] / efficiency_coeff)))
+		materials[M]["amount"] = max(0, (materials[M]["amount"] - (D.materials[M]*amount / efficiency_coeff)))
 	for(var/C in D.chemicals)
 		reagents.remove_reagent(C, D.chemicals[C]/efficiency_coeff)
 	addtimer(CALLBACK(src, .proc/create_design, P), (D.time / efficiency_coeff) * amount)

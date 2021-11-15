@@ -161,7 +161,7 @@ using metal and glass, it uses glass and reagents (usually sulfuric acid).
 		to_chat(usr, "<span class='warning'>The [name] is busy right now</span>")
 		return
 	if (!(D.build_type & IMPRINTER))
-		log_and_message_admins("Circuit imprinter exploit attempted! Tried to print non Protolathe design!", usr, usr.loc)
+		log_and_message_admins("Circuit imprinter exploit attempted! Tried to print non-imprinter design!", usr, usr.loc)
 		return
 
 	busy = TRUE
@@ -176,7 +176,7 @@ using metal and glass, it uses glass and reagents (usually sulfuric acid).
 			return
 
 	for(var/M in D.materials)
-		materials[M]["amount"] = max(0, (materials[M]["amount"] - (D.materials[M] / efficiency_coeff)))
+		materials[M]["amount"] = max(0, (materials[M]["amount"] - (D.materials[M]*amount / efficiency_coeff)))
 	for(var/C in D.chemicals)
 		reagents.remove_reagent(C, D.chemicals[C]/efficiency_coeff)
 

@@ -21,6 +21,7 @@ export const RDConsole = (props, context) => {
     has_protolathe,
     has_imprinter,
     console_tab,
+    can_research,
   } = data;
 
   return (
@@ -36,23 +37,29 @@ export const RDConsole = (props, context) => {
             onClick={() => act("change_tab", { "tab": 4 })}>
             Main
           </Tabs.Tab>
-          <Tabs.Tab
+          {can_research ? (
+            <Tabs.Tab
             selected={console_tab === 3}
             onClick={() => act("change_tab", { "tab": 3 })}>
-            Research
-          </Tabs.Tab>
-          <Tabs.Tab
-            selected={console_tab === 2}
-            disabled={!has_protolathe}
-            onClick={() => act("change_tab", { "tab": 2 })}>
-            Protolathe
-          </Tabs.Tab>
-          <Tabs.Tab
-            selected={console_tab === 1}
-            disabled={!has_imprinter}
-            onClick={() => act("change_tab", { "tab": 1 })}>
-            Circuit Imprinter
-          </Tabs.Tab>
+              Research
+            </Tabs.Tab>
+          ):null}
+          {has_protolathe ? (
+            <Tabs.Tab
+              selected={console_tab === 2}
+              disabled={!has_protolathe}
+              onClick={() => act("change_tab", { "tab": 2 })}>
+              Protolathe
+            </Tabs.Tab>
+          ):null}
+          {has_imprinter ? (
+            <Tabs.Tab
+              selected={console_tab === 1}
+              disabled={!has_imprinter}
+              onClick={() => act("change_tab", { "tab": 1 })}>
+              Circuit Imprinter
+            </Tabs.Tab>
+          ):null}
         </Tabs>
         {console_tab === 4 && (
           <MainTab />
@@ -219,8 +226,7 @@ const DestructiveAnalyzer = (props, context) => {
                             </Stack>
                           </Stack.Item>
                           <Stack.Item>
-                            <Box inline bold>Research points: </Box>
-                            <Box inline color="orange">{destroy_data.item_tech_points} points</Box>
+                            <Box inline bold>Research points:</Box> <Box inline color="orange">{destroy_data.item_tech_points} points</Box>
                           </Stack.Item>
                           <Stack.Item>
                             <Box inline bold>Research value:</Box> <Box inline color="orange">{destroy_data.item_tech_mod}%</Box>
@@ -247,7 +253,12 @@ const DestructiveAnalyzer = (props, context) => {
           )}
         </Box>
       ):(
-        <Box fontSize={5} textColor="red">No Destructive Analyzer Linked</Box>
+        <Box fontSize={5} textAlign="center" textColor="red">
+          <Icon name="unlink" color="white" size={5} mt={3} />
+          <Box>
+            No Destructive Analyzer Linked
+          </Box>
+        </Box>
       )}
     </Section>
   );
@@ -341,7 +352,7 @@ const Research = (props, context) => {
                   }
                   tooltipPosition="bottom-start"
                   onClick={() => set_selected_tech(tech)}>
-                  <Box className={"rdtech32x32 "+tech.id} />
+                  <Box className={"rdtech "+tech.id+" sciScale"} />
                 </Button>
               ):null}
             </Box>
@@ -355,7 +366,7 @@ const Research = (props, context) => {
               <Stack.Item>
                 <Stack>
                   <Stack.Item>
-                    <div class={"rdtech_big96x96 "+selected_tech.id} />
+                    <div class={"rdtech "+selected_tech.id} />
                   </Stack.Item>
                   <Stack.Item>
                     {selected_tech.desc}
@@ -447,7 +458,7 @@ const MachineTab = (props, context) => {
                             <Stack.Item width="55%">
                               <Flex>
                                 <Flex.Item>
-                                  <div class={"rnd_designs"+design.icon_width+"x"+design.icon_height+" "+design.id+" sciImageZoom"} />
+                                  <div class={"rnd_designs"+design.icon_width+"x"+design.icon_height+" "+design.id} />
                                 </Flex.Item>
                                 <Flex.Item>
                                   {design.name}
@@ -533,7 +544,7 @@ const MachineTab = (props, context) => {
             )}
           </Stack.Item>
           <Stack.Item grow>
-            <Section title="Queue" fill buttons={
+            <Section title="Queue" fill scrollable buttons={
               <Fragment>
                 <Button>
                   Clear Queue

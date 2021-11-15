@@ -66,15 +66,15 @@
 				linked_console.update_static_data(ui = another_ui)
 		to_chat(user, "<span class='notice'>You add the [O.name] to the [src]!</span>")
 		update_icon()
-		spawn(10)
-			loading = FALSE
-			update_icon()
+		sleep(10)
+		loading = FALSE
+		update_icon()
 		if(linked_console)
 			var/icon/I = getFlatIcon(O)
-			for(var/datum/tgui/ui as anything in SStgui.get_open_uis(linked_console))
+			for(var/datum/tgui/another_ui as anything in SStgui.get_open_uis(linked_console))
 				// Any item can be here. I had no other choice (excpet removing icon from RD Console UI)
-				ui.user << browse_rsc(I, "da-[sanitizeFileName("[O.type]")].png")
-				linked_console.update_static_data(ui = ui)
+				another_ui.user << browse_rsc(I, "da-[sanitizeFileName("[O.type]")].png")
+				linked_console.update_static_data(ui = another_ui)
 			qdel(I) // We don't want to make infinite amount of icons
 		return TRUE
 	return FALSE
