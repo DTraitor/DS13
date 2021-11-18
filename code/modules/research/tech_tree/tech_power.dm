@@ -43,7 +43,7 @@
 	id = "sup_power"
 
 	x = 0.6
-	y = 0.4
+	y = 0.375
 	icon = "scell"
 
 	required_technologies = list("adv_power")
@@ -61,7 +61,7 @@
 	id = "hyp_power"
 
 	x = 0.8
-	y = 0.4
+	y = 0.375
 	icon = "hpcell"
 
 	required_technologies = list("sup_power")
@@ -125,7 +125,7 @@
 	id = "adv_power_storage"
 
 	x = 0.2
-	y = 0.5
+	y = 0.4875
 	icon = "smes"
 
 	required_technologies = list("power_storage")
@@ -144,7 +144,7 @@
 	id = "sup_power_gen"
 
 	x = 0.4
-	y = 0.4
+	y = 0.375
 	icon = "portgen2"
 
 	required_technologies = list("adv_power_gen", "sup_power")
@@ -158,7 +158,7 @@
 	id = "fusion"
 
 	x = 0.2
-	y = 0.4
+	y = 0.375
 	icon_file = 'icons/obj/machines/power/fusion.dmi'
 	icon = "core"
 

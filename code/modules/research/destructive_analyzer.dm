@@ -30,7 +30,8 @@
 		update_icon()
 		if(linked_console)
 			linked_console.linked_destroy = null
-			SStgui.update_uis(linked_console)
+			if(linked_console.cats[4] == 4)
+				SStgui.update_uis(linked_console, TRUE)
 			linked_console = null
 		return
 
@@ -60,10 +61,8 @@
 		user.drop_item()
 		O.loc = src
 		loading = TRUE
-		if(linked_console)
-			var/list/uis = SStgui.get_open_uis(linked_console)
-			for(var/another_ui in uis)
-				linked_console.update_static_data(ui = another_ui)
+		if(linked_console?.cats[4] == 4)
+			SStgui.update_uis(linked_console, TRUE)
 		to_chat(user, "<span class='notice'>You add the [O.name] to the [src]!</span>")
 		update_icon()
 		sleep(10)
@@ -74,8 +73,8 @@
 			for(var/datum/tgui/another_ui as anything in SStgui.get_open_uis(linked_console))
 				// Any item can be here. I had no other choice (excpet removing icon from RD Console UI)
 				another_ui.user << browse_rsc(I, "da-[sanitizeFileName("[O.type]")].png")
-				linked_console.update_static_data(ui = another_ui)
 			qdel(I) // We don't want to make infinite amount of icons
+			SStgui.update_uis(linked_console, TRUE)
 		return TRUE
 	return FALSE
 
@@ -89,9 +88,7 @@
 	busy = TRUE
 	update_icon()
 	if(linked_console)
-		var/list/uis = SStgui.get_open_uis(linked_console)
-		for(var/another_ui in uis)
-			linked_console.update_static_data(ui = another_ui)
+		SStgui.update_uis(linked_console, TRUE)
 	addtimer(CALLBACK(src, .proc/finish_deconstructing), 24)
 
 /obj/machinery/r_n_d/destructive_analyzer/proc/finish_deconstructing()
@@ -118,9 +115,7 @@
 
 	use_power(250)
 	if(linked_console)
-		var/list/uis = SStgui.get_open_uis(linked_console)
-		for(var/ui in uis)
-			linked_console.update_static_data(ui = ui)
+		SStgui.update_uis(linked_console, TRUE)
 
 /obj/machinery/r_n_d/destructive_analyzer/eject_item(mob/user)
 	if(busy||loading)
@@ -133,6 +128,4 @@
 			user.put_in_hands(loaded_item)
 		loaded_item = null
 		update_icon()
-		var/list/uis = SStgui.get_open_uis(linked_console)
-		for(var/ui in uis)
-			linked_console.update_static_data(ui = ui)
+		SStgui.update_uis(linked_console, TRUE)

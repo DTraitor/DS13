@@ -36,32 +36,9 @@ cause a ton of data to be lost, an admin can go send it back.
 	var/id = 0				//ID of the computer (for server restrictions).
 	var/sync = TRUE			//If sync = 0, it doesn't show up on Server Control Console
 	var/can_research = TRUE	//Is this console capable of researching
-	var/category = 4		//Stores current console category
-	var/list/cats = list("Misc", "Misc", TECH_ENGINEERING)	//Stores protolathe, imprinter design category and tech tree tab
+	var/list/cats = list("Misc", "Misc", TECH_ENGINEERING, 4, null)	//Stores protolathe, imprinter design category, tech tree tab, console tab and selected tech id
 
 	req_access = list(access_research)	//Data and setting manipulation requires scientist access.
-
-/obj/machinery/computer/rdconsole/proc/CallReagentName(var/reagent_type)
-	var/datum/reagent/R = reagent_type
-	return ispath(reagent_type, /datum/reagent) ? initial(R.name) : "Unknown"
-
-/obj/machinery/computer/rdconsole/proc/SyncRDevices() //Makes sure it is properly sync'ed up with the devices attached to it (if any).
-	for(var/obj/machinery/r_n_d/D in range(4, src))
-		if(D.linked_console != null || D.panel_open)
-			continue
-		if(istype(D, /obj/machinery/r_n_d/destructive_analyzer))
-			if(linked_destroy == null)
-				linked_destroy = D
-				D.linked_console = src
-		else if(istype(D, /obj/machinery/r_n_d/protolathe))
-			if(linked_lathe == null)
-				linked_lathe = D
-				D.linked_console = src
-		else if(istype(D, /obj/machinery/r_n_d/circuit_imprinter))
-			if(linked_imprinter == null)
-				linked_imprinter = D
-				D.linked_console = src
-	return
 
 /obj/machinery/computer/rdconsole/Initialize()
 	.=..()
@@ -94,9 +71,7 @@ cause a ton of data to be lost, an admin can go send it back.
 	else
 		.=..()
 
-	var/list/uis = SStgui.get_open_uis(src)
-	for(var/another_ui in uis)
-		update_static_data(ui = another_ui)
+	SStgui.update_uis(src, TRUE)
 
 /obj/machinery/computer/rdconsole/attack_hand(mob/user as mob)
 	if(..())
@@ -115,7 +90,7 @@ cause a ton of data to be lost, an admin can go send it back.
 
 /obj/machinery/computer/rdconsole/ui_assets(mob/user)
 	return list(
-		get_asset_datum(/datum/asset/spritesheet/simple/rnd_designs),
+		get_asset_datum(/datum/asset/spritesheet/research_designs),
 		get_asset_datum(/datum/asset/spritesheet/simple/research_technologies)
 	)
 
@@ -128,7 +103,7 @@ cause a ton of data to be lost, an admin can go send it back.
 /obj/machinery/computer/rdconsole/ui_data(mob/user)
 	var/list/data = list()
 	data["sync"] = sync
-
+	data["can_research"] = can_research
 	data["has_imprinter"] = linked_imprinter ? TRUE : FALSE
 	data["has_protolathe"] = linked_lathe ? TRUE : FALSE
 	data["has_destroy"] = linked_destroy ? TRUE : FALSE
@@ -137,13 +112,12 @@ cause a ton of data to be lost, an admin can go send it back.
 
 /obj/machinery/computer/rdconsole/ui_static_data(mob/user)
 	var/list/data = list()
-	data["can_research"] = can_research
 
 	data["research_points"] = files.research_points
 
-	data["console_tab"] = category
+	data["console_tab"] = cats[4]
 
-	if(linked_lathe && category == PROTOLATHE)
+	if(linked_lathe && cats[4] == PROTOLATHE)
 		data["lathe_data"] = get_protolathe_data()
 
 		data["lathe_queue_data"] = list()
@@ -155,7 +129,7 @@ cause a ton of data to be lost, an admin can go send it back.
 		data["lathe_all_cats"] = files.design_categories_protolathe
 		data["lathe_cat"] = cats[PROTOLATHE]
 
-	if(linked_imprinter && category == IMPRINTER)
+	if(linked_imprinter && cats[4] == IMPRINTER)
 		data["imprinter_data"] = get_imprinter_data()
 
 		data["imprinter_queue_data"] = list()
@@ -167,12 +141,11 @@ cause a ton of data to be lost, an admin can go send it back.
 		data["imprinter_all_cats"] = files.design_categories_imprinter
 		data["imprinter_cat"] = cats[IMPRINTER]
 
-	if(category == 4)
+	if(cats[4] == 4)
 		var/list/tech_tree_list = list()
 		for(var/tech_tree_id in files.tech_trees_shown)
 			var/datum/tech/Tech_Tree = SSresearch.tech_trees[tech_tree_id]
 			var/list/tech_tree_data = list(
-				"id" =			Tech_Tree.id,
 				"name" =		capitalize(Tech_Tree.name),
 				"shortname" =	capitalize(Tech_Tree.shortname),
 				"level" =		files.tech_trees_shown[tech_tree_id],
@@ -222,7 +195,7 @@ cause a ton of data to be lost, an admin can go send it back.
 
 			data["destroy_data"] = destroy_list
 
-	if(category == 3)
+	if(cats[4] == 3)
 		var/list/line_list = list()
 		var/list/tech_list = list()
 		var/list/tech_tree_list = list()
@@ -254,18 +227,15 @@ cause a ton of data to be lost, an admin can go send it back.
 				else
 					req_techs_lock |= capitalize(temp.name)
 			var/list/tech_data = list(
-				"id" =				Tech.id,
-				"name" =			capitalize(Tech.name),
-				"desc" =			Tech.desc,
-				"tech_type" =		Tech.tech_type,
-				"x" =				round(Tech.x*100),
-				"y" =				round(Tech.y*100),
-				"cost" =			Tech.cost,
-				"isresearched" =	files.IsResearched(Tech),
-				"canresearch" = 	files.CanResearch(Tech),
-				"req_techs_lock" =	req_techs_lock,
-				"req_techs_unlock" =req_techs_unlock,
-				"unlocks_design" =	unlocks,
+				"id" =			Tech.id,
+				"name" =		capitalize(Tech.name),
+				"desc" =		Tech.desc,
+				"tech_type" =	Tech.tech_type,
+				"x" =			round(Tech.x*100),
+				"y" =			round(Tech.y*100),
+				"cost" =		Tech.cost,
+				"isresearched" =files.IsResearched(Tech),
+				"canresearch" = files.CanResearch(Tech),
 			)
 			tech_list += list(tech_data)
 
@@ -299,6 +269,36 @@ cause a ton of data to be lost, an admin can go send it back.
 		data["techs"] = tech_list
 		data["lines"] = line_list
 
+		if(cats[5])
+			var/datum/technology/Tech = SSresearch.all_technologies[cats[5]]
+			var/unlocks = list()
+			var/req_techs_lock = list()
+			var/req_techs_unlock = list()
+
+			for(var/A in Tech.unlocks_designs)
+				var/datum/design/temp = SSresearch.designs_by_id[A]
+				unlocks |= capitalize(temp.name)
+
+			for(var/A in Tech.required_technologies)
+				var/datum/technology/temp = SSresearch.all_technologies[A]
+				if(files.IsResearched(temp))
+					req_techs_unlock |= capitalize(temp.name)
+				else
+					req_techs_lock |= capitalize(temp.name)
+
+			var/list/tech_data = list(
+			"id" =				Tech.id,
+			"name" =			capitalize(Tech.name),
+			"desc" =			Tech.desc,
+			"cost" =			Tech.cost,
+			"isresearched" =	files.IsResearched(Tech),
+			"canresearch" = 	files.CanResearch(Tech),
+			"req_techs_lock" =	req_techs_lock,
+			"req_techs_unlock" =req_techs_unlock,
+			"unlocks_design" =	unlocks)
+
+			data["selected_tech"] = tech_data
+
 	return data
 
 /obj/machinery/computer/rdconsole/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
@@ -306,17 +306,68 @@ cause a ton of data to be lost, an admin can go send it back.
 		return
 	switch(action)
 		if("change_tab")
-			category = text2num(params["tab"])
+			if(params["machine"] && params["tab"])
+				if(cats[text2num(params["machine"])] != params["tab"])
+					cats[text2num(params["machine"])] = params["tab"]
+					playsound(src, get_sfx("keyboard"), VOLUME_HIGH)
 
-		if("change_design_cat")
-			if(text2num(params["machine"]) == PROTOLATHE)
-				cats[PROTOLATHE] = params["tab"]
+		if("set_selected_tech")
+			if(cats[5] != params["tech_id"])
+				cats[5] = params["tech_id"]
+				playsound(src, get_sfx("keyboard"), VOLUME_HIGH)
+			else
+				return
 
-			else if(text2num(params["machine"]) == IMPRINTER)
-				cats[IMPRINTER] = params["tab"]
+		if("change_design_cat_arrow")
+			if(params["dir"] == "right")
+				if(text2num(params["machine"]) == PROTOLATHE)
+					var/cat = files.design_categories_protolathe.Find(cats[PROTOLATHE])
+					if(cat < files.design_categories_protolathe.len)
+						cats[PROTOLATHE] = files.design_categories_protolathe[cat+1]
+					else
+						cats[PROTOLATHE] = files.design_categories_protolathe[1]
+					playsound(src, get_sfx("keyboard"), VOLUME_HIGH)
 
-			else if(text2num(params["machine"]) == 3)
-				cats[3] = params["tab"]
+				else if(text2num(params["machine"]) == IMPRINTER)
+					var/cat = files.design_categories_imprinter.Find(cats[IMPRINTER])
+					if(cat < files.design_categories_imprinter.len)
+						cats[IMPRINTER] = files.design_categories_imprinter[cat+1]
+					else
+						cats[IMPRINTER] = files.design_categories_imprinter[1]
+					playsound(src, get_sfx("keyboard"), VOLUME_HIGH)
+
+				else if(text2num(params["machine"]) == 3)
+					var/cat = files.tech_trees_shown.Find(cats[3])
+					if(cat < files.tech_trees_shown.len)
+						cats[3] = files.tech_trees_shown[cat+1]
+					else
+						cats[3] = files.tech_trees_shown[1]
+					playsound(src, get_sfx("keyboard"), VOLUME_HIGH)
+
+			else
+				if(text2num(params["machine"]) == PROTOLATHE)
+					var/cat = files.design_categories_protolathe.Find(cats[PROTOLATHE])
+					if(cat > 1)
+						cats[PROTOLATHE] = files.design_categories_protolathe[cat-1]
+					else
+						cats[PROTOLATHE] = files.design_categories_protolathe[files.design_categories_protolathe.len]
+					playsound(src, get_sfx("keyboard"), VOLUME_HIGH)
+
+				else if(text2num(params["machine"]) == IMPRINTER)
+					var/cat = files.design_categories_imprinter.Find(cats[IMPRINTER])
+					if(cat > 1)
+						cats[IMPRINTER] = files.design_categories_imprinter[cat-1]
+					else
+						cats[IMPRINTER] = files.design_categories_imprinter[files.design_categories_imprinter.len]
+					playsound(src, get_sfx("keyboard"), VOLUME_HIGH)
+
+				else if(text2num(params["machine"]) == 3)
+					var/cat = files.tech_trees_shown.Find(cats[3])
+					if(cat > 1)
+						cats[3] = files.tech_trees_shown[cat-1]
+					else
+						cats[3] = files.tech_trees_shown[files.tech_trees_shown.len]
+					playsound(src, get_sfx("keyboard"), VOLUME_HIGH)
 
 		if("eject")
 			var/amount = text2num(params["amount"])
@@ -329,6 +380,8 @@ cause a ton of data to be lost, an admin can go send it back.
 
 			else if(text2num(params["machine"]) == IMPRINTER)
 				linked_imprinter?.eject_sheet(params["id"], round(amount))
+
+			playsound(src, get_sfx("keystroke"), VOLUME_HIGH)
 
 		if("build")
 			var/amount=text2num(params["amount"])
@@ -343,37 +396,47 @@ cause a ton of data to be lost, an admin can go send it back.
 			else
 				log_and_message_admins("Possible hacker detected. User tried to print research design that wasn't yet researched. Design id: [params["id"]]", usr, usr.loc)
 
+			playsound(src, get_sfx("keystroke"), VOLUME_HIGH)
+
 		if("research_tech")
-			if(params["tech_id"] in files.all_technologies && can_research)
+			if((params["tech_id"] in files.all_technologies) && can_research)
 				var/datum/technology/T = SSresearch.all_technologies[params["tech_id"]]
-				files.UnlockTechology(T)
+				if(files.UnlockTechology(T))
+					playsound(src, get_sfx("keystroke"), VOLUME_HIGH)
 
 		if("resync_machines")
 			SyncRDevices()
+			playsound(src, get_sfx("keyboard"), VOLUME_HIGH)
 
-		if("togglesync") //Prevents the console from being synced by other consoles. Can still send data.
+		if("togglesync")
 			sync = !sync
-			SStgui.update_uis(src)
-			return // We dont need to send static data again
+			playsound(src, get_sfx("keyboard"), VOLUME_HIGH)
+			return TRUE // We dont need to send static data again
+
+		if("sync")
+			sync_tech()
+			playsound(src, get_sfx("keyboard"), VOLUME_HIGH)
 
 		if("disconnect")
 			switch(text2num(params["machine"]))
 				if(IMPRINTER)
 					linked_imprinter.linked_console = null
 					linked_imprinter = null
-					if(category == IMPRINTER)
-						category = 1
+					if(cats[4] == IMPRINTER)
+						cats[3] = 1
 
 				if(PROTOLATHE)
 					linked_lathe.linked_console = null
 					linked_lathe = null
-					if(category == PROTOLATHE)
-						category = 1
+					if(cats[4] == PROTOLATHE)
+						cats[4] = 1
 
 				// Destructive analyzer
 				if(3)
 					linked_destroy.linked_console = null
 					linked_destroy = null
+
+			playsound(src, get_sfx("keyboard"), VOLUME_HIGH)
 
 		if("purge")
 			var/amount = text2num(params["volume"])
@@ -387,15 +450,17 @@ cause a ton of data to be lost, an admin can go send it back.
 				if(IMPRINTER)
 					linked_imprinter?.reagents.remove_reagents_of_type(text2path(params["type"]), round(amount))
 
+			playsound(src, get_sfx("keystroke"), VOLUME_HIGH)
+
 		if("deconstruct")
 			linked_destroy?.deconstruct_item()
+			playsound(src, get_sfx("keystroke"), VOLUME_HIGH)
 
 		if("eject_decon")
 			linked_destroy?.eject_item(usr)
+			playsound(src, get_sfx("keyboard"), VOLUME_HIGH)
 
-	var/list/uis = SStgui.get_open_uis(src)
-	for(var/another_ui in uis)
-		update_static_data(ui = another_ui)
+	SStgui.update_uis(src, TRUE)
 
 /obj/machinery/computer/rdconsole/emp_act(var/remaining_charges, var/mob/user)
 	if(!emagged)
@@ -404,9 +469,27 @@ cause a ton of data to be lost, an admin can go send it back.
 		to_chat(user, "<span class='notice'>You you disable the security protocols.</span>")
 		return 1
 
-/obj/machinery/computer/rdconsole/proc/find_devices()
-	SyncRDevices()
-	SStgui.update_uis(src)
+/obj/machinery/computer/rdconsole/proc/CallReagentName(var/reagent_type)
+	var/datum/reagent/R = reagent_type
+	return ispath(reagent_type, /datum/reagent) ? initial(R.name) : "Unknown"
+
+/obj/machinery/computer/rdconsole/proc/SyncRDevices() //Makes sure it is properly sync'ed up with the devices attached to it (if any).
+	for(var/obj/machinery/r_n_d/D in range(4, src))
+		if(D.linked_console != null || D.panel_open)
+			continue
+		if(istype(D, /obj/machinery/r_n_d/destructive_analyzer))
+			if(linked_destroy == null)
+				linked_destroy = D
+				D.linked_console = src
+		else if(istype(D, /obj/machinery/r_n_d/protolathe))
+			if(linked_lathe == null)
+				linked_lathe = D
+				D.linked_console = src
+		else if(istype(D, /obj/machinery/r_n_d/circuit_imprinter))
+			if(linked_imprinter == null)
+				linked_imprinter = D
+				D.linked_console = src
+	return
 
 /obj/machinery/computer/rdconsole/proc/sync_tech()
 	for(var/obj/machinery/r_n_d/server/S in SSresearch.servers)
@@ -419,7 +502,6 @@ cause a ton of data to be lost, an admin can go send it back.
 			server_processed = TRUE
 		if(server_processed)
 			S.produce_heat(100)
-	SStgui.update_uis(src)
 
 /obj/machinery/computer/rdconsole/proc/get_protolathe_data()
 	var/list/protolathe_list = list(
@@ -486,11 +568,7 @@ cause a ton of data to be lost, an admin can go send it back.
 	for(var/I in files.known_designs)
 		var/datum/design/D = SSresearch.designs_by_id[I]
 		if(D.build_type & build_type && D.category == cats[build_type])
-			var/cat = "Unspecified"
-			if(D.category)
-				cat = D.category
-			var/materials = list()
-			var/chemicals = list()
+			var/list/design_data = D.ui_data.Copy()
 			var/c = 50
 			var/t
 			for(var/M in D.materials)
@@ -499,7 +577,8 @@ cause a ton of data to be lost, an admin can go send it back.
 				if(build_type == IMPRINTER)
 					t = linked_imprinter.check_mat(D, M)
 
-				materials += list(list("name" = capitalize(M), "amount" = D.materials[M]*coeff, "id" = M, "can_make" = t >= 1 ? TRUE:FALSE))
+				design_data["mats"] += list(list("name" = capitalize(M), "amount" = D.materials[M]*coeff, "id" = M, "can_make" = t >= 1 ? TRUE:FALSE))
+
 				c = min(t,c)
 
 			if(D.chemicals.len)
@@ -509,21 +588,13 @@ cause a ton of data to be lost, an admin can go send it back.
 					if(build_type == IMPRINTER)
 						t = linked_imprinter.check_mat(D, R)
 
-					chemicals += list(list("name" = CallReagentName(R), "amount" = D.chemicals[R]*coeff, "id" = R))
+					design_data["chems"] += list(list("name" = CallReagentName(R), "amount" = D.chemicals[R]*coeff, "id" = R, "can_make" = t >= 1 ? TRUE:FALSE))
+
 					c = min(t,c)
 
-			designs_list += list(list(
-				"id" =			D.id,
-				"name" =		D.name,
-				"desc" =		D.desc,
-				"full_desc" =	D.full_desc,
-				"category" =	cat,
-				"can_create" =	c,
-				"mats" =		materials,
-				"chems" =		chemicals,
-				"icon_width" =	D.ui_data["icon_width"]*2,
-				"icon_height" = D.ui_data["icon_height"]*2
-			))
+			design_data["can_create"] = c
+			designs_list += list(design_data)
+
 	return designs_list
 
 /obj/machinery/computer/rdconsole/core

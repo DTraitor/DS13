@@ -146,36 +146,22 @@ other types of metals and chemistry for reagents).
 	else
 		return sanitizeSafe(input = sanitizeFileName("[design_type]", list("/"="-")), max_length = MAX_MESSAGE_LEN, encode = FALSE, trim = TRUE, extra = TRUE, allow_links = FALSE)
 
-
 /datum/design/proc/AssembleDesignUIData(atom/temp)
-	ui_data = list("id" = id, "name" = name, "item_name" = (item_name ? item_name : name), "desc" = desc, "time" = time, "category" = category, "price" = price)
+	ui_data = list(
+		"id" = id,
+		"name" = name,
+		"desc" = desc,
+		"full_desc" = full_desc,
+		"category" = category,
+		"price" = price)
 
-	var/filename = sanitizeFileName("[id].png")
 	var/icon/I = getFlatIcon(temp)
 
-	ui_data["icon_name"] = filename
+	I.Scale(I.Width()*3, I.Height()*3)
+
 	ui_data["icon"] = I
 	ui_data["icon_width"] = I.Width()
 	ui_data["icon_height"] = I.Height()
-
-	if(length(materials))
-		var/list/RS = list()
-		for(var/mat in materials)
-			RS.Add(list(list("name" = mat, "req" = materials[mat])))
-		ui_data["materials"] = RS
-
-	if(length(chemicals))
-		var/list/RS = list()
-
-		for(var/reagent in chemicals)
-			var/datum/reagent/RG = new reagent(TRUE)//Passing in true here prevents a runtime errror
-			var/chemical_name = "UNKNOWN"
-			if(RG)
-				chemical_name = RG.name
-
-			RS.Add(list(list("id" = reagent, "name" = chemical_name, "req" = chemicals[reagent])))
-
-		ui_data["chemicals"] = RS
 
 /datum/design/proc/AssembleDesignFile()
 	var/datum/computer_file/binary/design/design_file = new

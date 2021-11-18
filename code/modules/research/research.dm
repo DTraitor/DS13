@@ -90,6 +90,8 @@ The tech datums are the actual "tech trees" that you improve through researching
 
 		AddDesign2Known(D)
 
+	return TRUE
+
 /datum/research/proc/download_from(datum/research/O)
 	tech_trees_shown |= O.tech_trees_shown
 	tech_trees_hidden -= O.tech_trees_shown

@@ -1,8 +1,9 @@
 import { useBackend, useSharedState } from '../backend';
-import { Box, AnimatedNumber, Button, LabeledList, ProgressBar, Section, Stack, Tabs, Icon, Divider, Flex, Tooltip } from '../components';
+import { Box, AnimatedNumber, Button, LabeledList, ProgressBar, Section, Stack, Tabs, Icon, Divider, Flex, Tooltip, Table } from '../components';
 import { Window } from '../layouts';
 import { round } from 'common/math';
 import { Fragment } from 'inferno';
+import { KEY_1, KEY_2, KEY_3, KEY_4, KEY_RIGHT, KEY_LEFT } from 'common/keycodes';
 
 export const RDConsole = (props, context) => {
   const { data, act } = useBackend(context);
@@ -30,17 +31,37 @@ export const RDConsole = (props, context) => {
       height={800}
       scrollable={false}
       theme="rdconsole">
-      <Window.Content>
+      <Window.Content
+        onKeyDown={e => {
+          if (e.keyCode === KEY_1) {
+            act("change_tab", { "machine": 4, "tab": 4 });
+          }
+          if (e.keyCode === KEY_2) {
+            act("change_tab", { "machine": 4, "tab": 3 });
+          }
+          if (e.keyCode === KEY_3) {
+            act("change_tab", { "machine": 4, "tab": 2 });
+          }
+          if (e.keyCode === KEY_4) {
+            act("change_tab", { "machine": 4, "tab": 1 });
+          }
+          if (e.keyCode === KEY_RIGHT) {
+            act("change_design_cat_arrow", { "dir": "right", "machine": console_tab });
+          }
+          if (e.keyCode === KEY_LEFT) {
+            act("change_design_cat_arrow", { "dir": "left", "machine": console_tab });
+          }
+        }}>
         <Tabs>
           <Tabs.Tab
             selected={console_tab === 4}
-            onClick={() => act("change_tab", { "tab": 4 })}>
+            onClick={() => act("change_tab", { "machine": 4, "tab": 4 })}>
             Main
           </Tabs.Tab>
           {can_research ? (
             <Tabs.Tab
-            selected={console_tab === 3}
-            onClick={() => act("change_tab", { "tab": 3 })}>
+              selected={console_tab === 3}
+              onClick={() => act("change_tab", { "machine": 4, "tab": 3 })}>
               Research
             </Tabs.Tab>
           ):null}
@@ -48,7 +69,7 @@ export const RDConsole = (props, context) => {
             <Tabs.Tab
               selected={console_tab === 2}
               disabled={!has_protolathe}
-              onClick={() => act("change_tab", { "tab": 2 })}>
+              onClick={() => act("change_tab", { "machine": 4, "tab": 2 })}>
               Protolathe
             </Tabs.Tab>
           ):null}
@@ -56,10 +77,15 @@ export const RDConsole = (props, context) => {
             <Tabs.Tab
               selected={console_tab === 1}
               disabled={!has_imprinter}
-              onClick={() => act("change_tab", { "tab": 1 })}>
+              onClick={() => act("change_tab", { "machine": 4, "tab": 1 })}>
               Circuit Imprinter
             </Tabs.Tab>
           ):null}
+          <Tabs.Tab
+            selected={console_tab === 5}
+            onClick={() => act("change_tab", { "machine": 4, "tab": 5 })}>
+            Testing
+          </Tabs.Tab>
         </Tabs>
         {console_tab === 4 && (
           <MainTab />
@@ -82,6 +108,9 @@ export const RDConsole = (props, context) => {
             queue_data={imprinter_queue_data}
             all_cats={imprinter_all_cats}
             current_cat={imprinter_cat} />
+        )}
+        {console_tab === 5 && (
+          <TestingTab />
         )}
       </Window.Content>
     </Window>
@@ -106,18 +135,27 @@ const MainTab = (props, context) => {
             <Section fill title="Settings">
               <Stack vertical>
                 <Stack.Item>
-                  <Button icon="sync" disabled={!sync} tooltip="Synchronizes technologies and designs with connected server."
-                    tooltipPosition="bottom-start">
+                  <Button
+                    icon="sync"
+                    disabled={!sync}
+                    tooltip="Synchronizes technologies and designs with connected server."
+                    tooltipPosition="bottom-start"
+                    onClick={() => act("sync")}>
                     Sync Database with Network
                   </Button>
                 </Stack.Item>
                 <Stack.Item>
-                  <Button.Checkbox checked={sync} onClick={() => act("togglesync")} icon="lightbulb">
+                  <Button.Checkbox
+                    checked={sync}
+                    onClick={() => act("togglesync")}
+                    icon="lightbulb">
                     Connection to Research Network
                   </Button.Checkbox>
                 </Stack.Item>
                 <Stack.Item>
-                  <Button icon="lock" tooltip="Locks console to prevent unauthorized use."
+                  <Button
+                    icon="lock"
+                    tooltip="Locks console to prevent unauthorized use."
                     tooltipPosition="bottom-start">
                     Lock Console
                   </Button>
@@ -170,92 +208,93 @@ const DestructiveAnalyzer = (props, context) => {
       {has_destroy ? (
         <Box>
           {destroy_data.loading_item ? (
-            <Box textAlign="center"><br /><br />
-              <Icon name="spinner" size="17" spin /><br /><br /><br />
-              <Box fontSize={3}>Item is being loaded</Box>
+            <Box textAlign="center">
+              <Icon mt={4} name="spinner" size={18} spin />
+              <Box fontSize={7} mt={2.3}>Item is being loaded</Box>
             </Box>
           ):(
             <Box>
               {destroy_data.has_item ? (
                 <Box>
                   {destroy_data.is_processing ? (
-                    <Box textAlign="center"><br /><br />
-                      <Icon name="spinner" size="17" spin /><br /><br /><br />
-                      <Box fontSize={3}>Item is being deconstructed</Box>
+                    <Box textAlign="center">
+                      <Icon mt={4} name="spinner" size={18} spin />
+                      <Box fontSize={6}>Item is being deconstructed</Box>
                     </Box>
                   ):(
-                    <Stack fontSize={1.3}>
-                      <Stack.Item>
-                        <img src={"da-"+destroy_data.icon_path+".png"} style={
-                          "display: inline-block;"
-                          + "width: 96px;"
-                          + "height: 96px;"
-                          + "vertical-align: middle;"
-                          + "-ms-interpolation-mode: nearest-neighbor;"
-                        } />
-                      </Stack.Item>
-                      <Stack.Item>
-                        <Stack vertical>
-                          <Stack.Item bold>
-                            {destroy_data.item_name}
-                          </Stack.Item>
+                    <Stack vertical fontSize={1.3}>
+                      <Stack.Item pr={3}>
+                        <Stack>
                           <Stack.Item>
-                            <Box width={50}>
-                              {destroy_data.item_desc}
-                            </Box>
+                            <img src={"da-"+destroy_data.icon_path+".png"} class="sciDeconIcon" />
                           </Stack.Item>
-                          <Stack.Item>
+                          <Stack.Item width="80%">
                             <Stack vertical>
-                              {destroy_data.tech_data
-                                && destroy_data.tech_data.map((tech, i) => (
-                                  <Stack.Item key={tech.id}>
-                                    <ProgressBar minValue={0}
-                                      value={tech.level}
-                                      maxValue={20}>
-                                      <Stack justify="space-between">
-                                        <Stack.Item>
-                                          {tech.name}
-                                        </Stack.Item>
-                                        <Stack.Item>
-                                          {tech.level}
-                                        </Stack.Item>
-                                      </Stack>
-                                    </ProgressBar>
-                                  </Stack.Item>
-                                ))}
+                              <Stack.Item bold>
+                                {destroy_data.item_name}
+                              </Stack.Item>
+                              <Stack.Item>
+                                <Box>
+                                  {destroy_data.item_desc}
+                                </Box>
+                              </Stack.Item>
                             </Stack>
                           </Stack.Item>
-                          <Stack.Item>
-                            <Box inline bold>Research points:</Box> <Box inline color="orange">{destroy_data.item_tech_points} points</Box>
-                          </Stack.Item>
-                          <Stack.Item>
-                            <Box inline bold>Research value:</Box> <Box inline color="orange">{destroy_data.item_tech_mod}%</Box>
+                          <Stack.Item ml={3}>
+                            <Stack vertical>
+                              <Stack.Item>
+                                <Button icon="eject" fluid fontSize={2.3} onClick={() => act('eject_decon')}>Eject Item</Button>
+                              </Stack.Item>
+                              <Stack.Item>
+                                <Button icon="atom" fluid fontSize={2.3} onClick={() => act('deconstruct')}>Deconstruct Item</Button>
+                              </Stack.Item>
+                            </Stack>
                           </Stack.Item>
                         </Stack>
                       </Stack.Item>
-                      <Stack.Item>
+                      <Stack.Item px={3}>
                         <Stack vertical>
-                          <Stack.Item>
-                            <Button onClick={() => act('eject_decon')}>Eject Item</Button>
-                          </Stack.Item>
-                          <Stack.Item>
-                            <Button onClick={() => act('deconstruct')}>Deconstruct Item</Button>
-                          </Stack.Item>
+                          {destroy_data.tech_data
+                            && destroy_data.tech_data.map((tech, i) => (
+                              <Stack.Item key={tech.id}>
+                                <ProgressBar minValue={0}
+                                  value={tech.level}
+                                  maxValue={20}>
+                                  <Stack justify="space-between">
+                                    <Stack.Item>
+                                      {tech.name}
+                                    </Stack.Item>
+                                    <Stack.Item>
+                                      {tech.level}
+                                    </Stack.Item>
+                                  </Stack>
+                                </ProgressBar>
+                              </Stack.Item>
+                            ))}
                         </Stack>
+                      </Stack.Item>
+                      <Stack.Item px={3}>
+                        <Box inline fontSize={1.7} bold>Research points:</Box> <Box fontSize={1.7} inline color="orange">{destroy_data.item_tech_points} points</Box>
+                      </Stack.Item>
+                      <Stack.Item px={3}>
+                        <Box inline fontSize={1.7} bold>Research value:</Box> <Box fontSize={1.7} inline color="orange">{destroy_data.item_tech_mod}%</Box>
                       </Stack.Item>
                     </Stack>
                   )}
                 </Box>
               ):(
-                <Box>No item loaded</Box>
+                <Box align="center">
+                  <Icon mt={6} name="low-vision" size={18} />
+                  <Box fontSize={8}>No item loaded</Box>
+                </Box>
               )}
             </Box>
           )}
         </Box>
       ):(
-        <Box fontSize={5} textAlign="center" textColor="red">
-          <Icon name="unlink" color="white" size={5} mt={3} />
-          <Box>
+        <Box textAlign="center" textColor="red">
+          <Icon name="unlink" color="white" size={20} mt={3} />
+          <Box fontSize={6}>
             No Destructive Analyzer Linked
           </Box>
         </Box>
@@ -291,33 +330,31 @@ const TechLevelsInfo = (props, context) => {
 
 const Research = (props, context) => {
   const { act, data } = useBackend(context);
-  const [selected_tech, set_selected_tech] = useSharedState(context, 'selected_tech');
 
   const {
     tech_trees,
     techs,
     lines,
     research_points,
+    selected_tech,
     tech_cat,
   } = data;
 
   return (
-    <Stack vertical>
-      <Stack.Item>
+    <Stack vertical fill height="95%">
+      <Stack.Item height={45}>
         <Section
           fill
-          height={45}
           title="Research Menu"
-          buttons={<Box>Research Points: <span style={{ color: "orange" }}>{research_points}</span></Box>}>
+          buttons={<Box bold fontSize="14px">Research Points: <Box inline color="orange">{research_points}</Box></Box>}>
           <Tabs>
             {tech_trees && tech_trees.map((tech_tree, i) => (
-              <Box key={tech_tree.id}>
-                <Tabs.Tab
-                  selected={tech_tree.id === tech_cat}
-                  onClick={() => act("change_design_cat", { "machine": 3, "tab": tech_tree.id })}>
-                  {tech_tree.shortname}
-                </Tabs.Tab>
-              </Box>
+              <Tabs.Tab
+                key={tech_tree.id}
+                selected={tech_tree.id === tech_cat}
+                onClick={() => act("change_tab", { "machine": 3, "tab": tech_tree.id })}>
+                {tech_tree.shortname}
+              </Tabs.Tab>
             ))}
           </Tabs>
           {lines && lines.map((line, i) => (
@@ -327,7 +364,7 @@ const Research = (props, context) => {
                   width={line.width+"%"}
                   height={line.height+"%"}
                   left={line.line_x+"%"}
-                  bottom={line.line_y+10+"%"}
+                  bottom={line.line_y+"%"}
                   className={(line.istop?"sciBorderTop":"sciBorderBottom")+" "+(line.isright?"sciBorderRight":"sciBorderLeft")} />
               ):null}
             </Box>
@@ -339,10 +376,10 @@ const Research = (props, context) => {
                   position="absolute"
                   p={0}
                   color={(selected_tech && tech.id===selected_tech.id?"caution":(tech.isresearched?"selected":(tech.canresearch?"default":"danger")))}
-                  left={tech.x-1.5+"%"}
-                  bottom={tech.y+7+"%"}
-                  width="32px"
-                  height="32px"
+                  left={tech.x-1.7+"%"}
+                  bottom={tech.y-3.4+"%"}
+                  width="36px"
+                  height="36px"
                   tooltip={
                     <Box>
                       {tech.name}
@@ -351,31 +388,35 @@ const Research = (props, context) => {
                     </Box>
                   }
                   tooltipPosition="bottom-start"
-                  onClick={() => set_selected_tech(tech)}>
-                  <Box className={"rdtech "+tech.id+" sciScale"} />
+                  onDblClick={() => act('research_tech', { tech_id: tech.id })}
+                  onClick={() => act('set_selected_tech', { tech_id: tech.id })}>
+                  <Box mt="2px" ml="2px" className={"rdtech96x96 "+tech.id+" sciScale32"} />
                 </Button>
               ):null}
             </Box>
           ))}
         </Section>
       </Stack.Item>
-      <Stack.Item>
+      <Stack.Item grow>
         {selected_tech?(
-          <Section height={14.3} title={selected_tech.name}>
-            <Stack>
-              <Stack.Item>
+          <Section fill title={selected_tech.name} buttons={
+            <Box bold fontSize="14px"> Cost: <span style={{ color: "orange" }}>{selected_tech.cost}</span></Box>
+          }>
+            <Stack fill>
+              <Stack.Item width="45%" mr={2}>
                 <Stack>
                   <Stack.Item>
-                    <div class={"rdtech "+selected_tech.id} />
+                    <div class={"rdtech96x96 "+selected_tech.id} />
                   </Stack.Item>
                   <Stack.Item>
                     {selected_tech.desc}
-                    <Box> Cost: <span style={{ color: "orange" }}>{selected_tech.cost}</span></Box>
                   </Stack.Item>
                 </Stack>
               </Stack.Item>
-              <Stack.Item>
-                Unlocks Designs:
+              <Stack.Item width="15%">
+                <Box bold>
+                  Unlocks Designs:
+                </Box>
                 {selected_tech.unlocks_design
                 && selected_tech.unlocks_design.map((design, i) => (
                   <Box key={design}>
@@ -383,8 +424,10 @@ const Research = (props, context) => {
                   </Box>
                 ))}
               </Stack.Item>
-              <Stack.Item>
-                Required Technology:
+              <Stack.Item width="20%">
+                <Box bold>
+                  Required Technology:
+                </Box>
                 {selected_tech.req_techs_unlock
                 && selected_tech.req_techs_unlock.map((req_tech, i) => (
                   <Box key={req_tech}>
@@ -398,15 +441,19 @@ const Research = (props, context) => {
                   </Box>
                 ))}
               </Stack.Item>
-              <Stack.Item>
-                <Button onClick={() => act('research_tech', { tech_id: selected_tech.id })}>
+              <Stack.Item grow>
+                <Button
+                  fluid
+                  fontSize={2.4}
+                  textAlign="center"
+                  onClick={() => act('research_tech', { tech_id: selected_tech.id })}>
                   Research
                 </Button>
               </Stack.Item>
             </Stack>
           </Section>
         ):(
-          <Section fill height={14.3} title="No Technology Selected" />
+          <Section fill title="No Technology Selected" />
         )}
       </Stack.Item>
     </Stack>
@@ -414,7 +461,7 @@ const Research = (props, context) => {
 };
 
 const MachineTab = (props, context) => {
-  const { act } = useBackend(context);
+  const { data, act } = useBackend(context);
   const {
     title,
     machine_data,
@@ -423,6 +470,9 @@ const MachineTab = (props, context) => {
     all_cats,
     current_cat,
   } = props;
+  const {
+    console_tab,
+  } = data;
   const [materialReagent, setMaterialReagent] = useSharedState(context, props.machine_data.machine_id+"_materialReagent", 0);
 
   return (
@@ -437,7 +487,7 @@ const MachineTab = (props, context) => {
                     <Tabs.Tab
                       my={0.5}
                       selected={current_cat === category}
-                      onClick={() => act("change_design_cat", { "machine": machine_data.machine_id, "tab": category })}>
+                      onClick={() => act("change_tab", { "machine": machine_data.machine_id, "tab": category })}>
                       {category}
                     </Tabs.Tab>
                   </Stack.Item>
@@ -457,8 +507,8 @@ const MachineTab = (props, context) => {
                           <Stack justify="space-between">
                             <Stack.Item width="55%">
                               <Flex>
-                                <Flex.Item>
-                                  <div class={"rnd_designs"+design.icon_width+"x"+design.icon_height+" "+design.id} />
+                                <Flex.Item mb={-6} mr={-4}>
+                                  <Box className={"rnd_designs"+design.icon_width+"x"+design.icon_height+" "+design.id+" sciScale64"} />
                                 </Flex.Item>
                                 <Flex.Item>
                                   {design.name}
@@ -597,7 +647,7 @@ const MachineMaterialsTab = (props, context) => {
         {machine_data.materials
           && machine_data.materials.map((material, i) => (
             <LabeledList.Item key={material.name} labelColor="orange" label={material.name} buttons={
-              <>
+              <Fragment>
                 {material.amount >= 2000 ? (
                   <Button onClick={() => act("eject", { machine: machine_data.machine_id, id: material.id, amount: 1 })} mx={0.5}>
                     Eject x1
@@ -620,7 +670,7 @@ const MachineMaterialsTab = (props, context) => {
                       machine: machine_data.machine_id,
                       amount: value })} />
                 ):null}
-              </>
+              </Fragment>
             }>
               <Box inline><AnimatedNumber value={material.amount} /> cm³</Box>
             </LabeledList.Item>
@@ -655,7 +705,7 @@ const MachineReagentsTab = (props, context) => {
         {machine_data.reagents
           && machine_data.reagents.map((reagent, i) => (
             <LabeledList.Item key={reagent.name} labelColor="orange" label={reagent.name} buttons={
-              <>
+              <Fragment>
                 <Button onClick={() => act("purge", { machine: machine_data.machine_id, type: reagent.type, volume: 1 })} mx={0.5}>
                   Purge 1u
                 </Button>
@@ -674,12 +724,28 @@ const MachineReagentsTab = (props, context) => {
                     type: reagent.type,
                     machine: machine_data.machine_id,
                     volume: value })} />
-              </>
+              </Fragment>
             }>
               <AnimatedNumber value={reagent.volume} />u
             </LabeledList.Item>
           ))}
       </LabeledList>
+    </Section>
+  );
+};
+
+const TestingTab = (props, context) => {
+
+  return (
+    <Section fill title="Test">
+      <Box class="wrapper">
+        <Box class="one">One</Box>
+        <Box class="two">Two</Box>
+        <Box class="three">Three</Box>
+        <Box class="four">Four</Box>
+        <Box class="five">Five</Box>
+        <Box class="six">Six</Box>
+      </Box>
     </Section>
   );
 };

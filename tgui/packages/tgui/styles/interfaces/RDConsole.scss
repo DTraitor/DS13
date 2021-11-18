@@ -1,3 +1,5 @@
+@use 'sass:math';
+
 .sciBorderTop {
   border-top-style: solid;
   border-top-color: white;
@@ -22,8 +24,51 @@
   border-left-width: 1px;
 }
 
-.sciScale {
-  // 96x96 into 32x32
-  transform: scale((1/3));
+.sciScale32 {
+  // 96x96 into 32x32 (usually)
+  transform: scale(math.div(1, 3)); // 0.333
   transform-origin: top left;
+}
+
+.sciScale64 {
+  // 96x96 into 64x64 (usually)
+  transform: scale(math.div(1, 1.5)); // 0.666
+  transform-origin: top left;
+}
+
+.sciDeconIcon {
+  display: inline-block;
+  width: 96px;
+  height: 96px;
+  vertical-align: middle;
+  -ms-interpolation-mode: nearest-neighbor;
+}
+
+.wrapper {
+  display: -ms-grid;
+  grid-auto-rows: minmax(100px, 1fr);
+}
+.one {
+  -ms-grid-column: 1;
+  -ms-grid-row: 1;
+}
+.two {
+  -ms-grid-column: 1;
+  -ms-grid-row: 2;
+}
+.three {
+  -ms-grid-column: 2;
+  -ms-grid-row: 1;
+}
+.four {
+  -ms-grid-column: 2;
+  -ms-grid-row: 2;
+}
+.five {
+  -ms-grid-column: 3;
+  -ms-grid-row: 2;
+}
+.six {
+  -ms-grid-column: 5;
+  -ms-grid-row: 5;
 }

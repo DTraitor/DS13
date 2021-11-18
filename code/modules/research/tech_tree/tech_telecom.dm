@@ -9,7 +9,7 @@
 	tech_type = TECH_BLUESPACE
 
 	x = 0.5
-	y = 0.3
+	y = 0.275
 	icon_file = 'icons/obj/stock_parts.dmi'
 	icon = "subspace_ansible"
 
@@ -43,7 +43,7 @@
 	id = "rcon"
 
 	x = 0.5
-	y = 0.5
+	y = 0.525
 	//special way to generate an icon
 
 	required_technologies = list("tcom_monitoring", "adv_power_storage")

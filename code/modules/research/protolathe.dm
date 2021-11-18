@@ -28,7 +28,11 @@
 	. = ..()
 	if(linked_console)
 		linked_console.linked_lathe = null
-		SStgui.update_uis(linked_console)
+		if(linked_console.cats[4] == PROTOLATHE)
+			linked_console.cats[4] = 1
+			SStgui.update_uis(linked_console, TRUE)
+		else
+			SStgui.update_uis(linked_console)
 		linked_console = null
 
 /obj/machinery/r_n_d/protolathe/RefreshParts()
@@ -72,7 +76,11 @@
 		update_icon()
 		if(linked_console)
 			linked_console.linked_lathe = null
-			SStgui.update_uis(linked_console)
+			if(linked_console.cats[4] == PROTOLATHE)
+				linked_console.cats[4] = 1
+				SStgui.update_uis(linked_console, TRUE)
+			else
+				SStgui.update_uis(linked_console)
 			linked_console = null
 		return
 	if(default_deconstruction_crowbar(user, O))
@@ -81,9 +89,7 @@
 		return
 	if(O.is_open_container())
 		spawn(0)
-			var/list/uis = SStgui.get_open_uis(linked_console)
-			for(var/ui in uis)
-				linked_console.update_static_data(ui = ui)
+			SStgui.update_uis(linked_console, TRUE)
 		return FALSE
 	if(panel_open)
 		to_chat(user, "<span class='notice'>You can't load \the [src] while it's opened.</span>")
@@ -127,9 +133,7 @@
 	busy = FALSE
 	update_icon()
 	if(linked_console)
-		var/list/uis = SStgui.get_open_uis(linked_console)
-		for(var/ui in uis)
-			linked_console.update_static_data(ui = ui)
+		SStgui.update_uis(linked_console, TRUE)
 
 /obj/machinery/r_n_d/protolathe/proc/queue_design(datum/design/D, amount)
 	var/list/RNDD = list()
@@ -140,9 +144,10 @@
 	RNDD["design"] = D.id
 	RNDD["amount"] = amount
 	// We need unique name in the list
-	queue["[D.id]_x[RNDD["amount"]]_[world.time]"] = RNDD
+	var/list_name = "[D.id]_x[RNDD["amount"]]_[world.time]"
+	queue[list_name] = RNDD
 	if(!busy)
-		produce_design("[RNDD["name"]]_[D.id]_[world.time]")
+		produce_design(list_name)
 
 /obj/machinery/r_n_d/protolathe/proc/clear_queue()
 	queue = list()
@@ -198,6 +203,4 @@
 		produce_design(queue[1])
 
 	if(linked_console)
-		var/list/uis = SStgui.get_open_uis(linked_console)
-		for(var/ui in uis)
-			linked_console.update_static_data(ui = ui)
+		SStgui.update_uis(linked_console, TRUE)

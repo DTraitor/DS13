@@ -59,41 +59,49 @@ proc/get_craft_item(path)
 		qdel(A)
 		return GLOB.craftitems[path]
 
-/datum/asset/simple/research_designs
-	keep_local_name = TRUE
+/datum/asset/simple/patron_content/register()
+	log_debug("Registering patron content")
+	var/total = 0
+	for (var/typepath in subtypesof(/datum/patron_item))
+		log_debug("Registering [typepath]")
+		total++
+		var/datum/patron_item/PI = new typepath()
 
-// If any new design appears it is added to the asset list in SSresearch
-/datum/asset/simple/research_designs/register()
-	assets.Cut()
-	for(var/I in SSresearch.designs_by_id)
-		var/datum/design/D = SSresearch.designs_by_id[I]
-		if(D.build_type & STORE)
-			assets[D.id] = D.ui_data["icon"]
+		GLOB.patron_items += PI
+
+	log_debug("Done Registering patron content. Total: [total]")
+	log_debug("---------------------------------")
+
+	//Now we load and assign the whitelists
+	load_patron_item_whitelists()
+
+	//These procs update and sort various other things after the patron items have added themselves to them
+	sort_loadout_categories()
+	SSdatabase.update_store_designs()
+
+	GLOB.custom_items_loaded = TRUE
+	if (LOADOUT_LOADED)
+		handle_pending_loadouts()
+
+	.=..()
+
+/datum/asset/spritesheet/research_designs
+	name = "rnd_designs"
+
+/datum/asset/spritesheet/research_designs/register()
+	for(var/A in SSresearch.designs_by_id)
+		var/datum/design/D = SSresearch.designs_by_id[A]
+		Insert(A, D.ui_data["icon"])
 	.=..()
 
 /datum/asset/spritesheet/simple/research_technologies
 	name = "rdtech"
 
 /datum/asset/spritesheet/simple/research_technologies/register()
-	assets = list()
 	for(var/A in SSresearch.all_technologies)
 		var/datum/technology/T = SSresearch.all_technologies[A]
 		T.I.Scale(T.I.Width()*3, T.I.Height()*3)
-		assets[T.id] = T.I
-	.=..()
-
-/datum/asset/spritesheet/simple/rnd_designs
-	name = "rnd_designs"
-
-/datum/asset/spritesheet/simple/rnd_designs/register()
-	assets = list()
-	for(var/A in SSresearch.designs_by_id)
-		var/datum/design/D = SSresearch.designs_by_id[A]
-		var/atom/R = new D.build_path()
-		var/icon/I = getFlatIcon(R)
-		I.Scale(I.Width()*2, I.Height()*2)
-		if(D.build_type & PROTOLATHE || D.build_type & IMPRINTER)
-			assets[D.id] = I
+		assets[A] = T.I
 	.=..()
 
 /datum/asset/simple/jquery
@@ -142,35 +150,6 @@ proc/get_craft_item(path)
 		"stamp-cent" = 'icons/stamp_icons/large_stamp-centcom.png',
 		"stamp-syndicate" = 'icons/stamp_icons/large_stamp-syndicate.png'
 	)
-
-
-
-
-/datum/asset/simple/patron_content/register()
-	log_debug("Registering patron content")
-	var/total = 0
-	for (var/typepath in subtypesof(/datum/patron_item))
-		log_debug("Registering [typepath]")
-		total++
-		var/datum/patron_item/PI = new typepath()
-
-		GLOB.patron_items += PI
-
-	log_debug("Done Registering patron content. Total: [total]")
-	log_debug("---------------------------------")
-
-	//Now we load and assign the whitelists
-	load_patron_item_whitelists()
-
-	//These procs update and sort various other things after the patron items have added themselves to them
-	sort_loadout_categories()
-	SSdatabase.update_store_designs()
-
-	GLOB.custom_items_loaded = TRUE
-	if (LOADOUT_LOADED)
-		handle_pending_loadouts()
-
-	.=..()
 
 /datum/asset/simple/chem_master
 	keep_local_name = TRUE

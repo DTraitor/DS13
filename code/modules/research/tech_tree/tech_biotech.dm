@@ -41,7 +41,7 @@
 	id = "hydroponics"
 
 	x = 0.1
-	y = 0.4
+	y = 0.375
 	icon_file = 'icons/obj/hydroponics_machines.dmi'
 	icon = "hydrotray3"
 
@@ -56,7 +56,7 @@
 	id = "adv_hydroponics"
 
 	x = 0.1
-	y = 0.3
+	y = 0.25
 	icon_file = 'icons/obj/hydroponics_machines.dmi'
 	icon = "traitcopier"
 
@@ -71,7 +71,7 @@
 	id = "food_process"
 
 	x = 0.2
-	y = 0.4
+	y = 0.375
 	icon_file = 'icons/obj/kitchen.dmi'
 	icon = "mw"
 
@@ -86,7 +86,7 @@
 	id = "implants"
 
 	x = 0.2
-	y = 0.6
+	y = 0.625
 	icon_file = 'icons/obj/items.dmi'
 	icon = "implantcase-r"
 
@@ -147,7 +147,7 @@
 	id = "track_dev"
 
 	x = 0.4
-	y = 0.4
+	y = 0.375
 	icon = "locator"
 
 	required_technologies = list("add_med_tools")
@@ -176,7 +176,7 @@
 	id = "hypospray"
 
 	x = 0.6
-	y = 0.4
+	y = 0.375
 	icon_file = 'icons/obj/syringe.dmi'
 	icon = "hypo"
 
@@ -191,7 +191,7 @@
 	id = "chemical_guns"
 
 	x = 0.7
-	y = 0.4
+	y = 0.375
 	icon_file = 'icons/obj/gun.dmi'
 	icon = "rapidsyringegun"
 
@@ -206,7 +206,7 @@
 	id = "scalpelmanager"
 
 	x = 0.7
-	y = 0.6
+	y = 0.625
 	icon_file = 'icons/obj/surgery.dmi'
 	icon = "scalpel_manager_on"
 
@@ -235,7 +235,7 @@
 	id = "beakers"
 
 	x = 0.6
-	y = 0.6
+	y = 0.625
 	icon_file = 'icons/obj/chemical.dmi'
 	icon = "beakerbluespace"
 

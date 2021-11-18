@@ -23,7 +23,7 @@
 	id = "pris_man"
 
 	x = 0.1
-	y = 0.6
+	y = 0.625
 	//special way to generate an icon
 
 	required_technologies = list("sec_eq")
@@ -87,7 +87,7 @@
 	id = "shield"
 
 	x = 0.4
-	y = 0.4
+	y = 0.375
 	icon_file = 'icons/obj/weapons.dmi'
 	icon = "advanced"
 
@@ -117,7 +117,7 @@
 	id = "speedloader"
 
 	x = 0.5
-	y = 0.6
+	y = 0.625
 	icon = "38"
 
 	required_technologies = list("divet")
@@ -145,7 +145,7 @@
 	id = "pulsehv"
 
 	x = 0.6
-	y = 0.6
+	y = 0.625
 	icon = "pulse_rounds_hv"
 
 	required_technologies = list("pulse")
@@ -159,7 +159,7 @@
 	id = "ripper"
 
 	x = 0.6
-	y = 0.4
+	y = 0.375
 	icon_file = 'icons/obj/gun.dmi'
 	icon = "ripper"
 
@@ -174,7 +174,7 @@
 	id = "dblades"
 
 	x = 0.7
-	y = 0.4
+	y = 0.375
 	icon = "diamondblade"
 
 	required_technologies = list("ripper")
@@ -188,7 +188,7 @@
 	id = "javeline"
 
 	x = 0.7
-	y = 0.6
+	y = 0.625
 	icon = "javelin-6"
 
 	required_technologies = list("pulse")

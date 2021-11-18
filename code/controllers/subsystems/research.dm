@@ -108,8 +108,6 @@ SUBSYSTEM_DEF(research)
 		else
 			D.AssembleDesignInfo()
 			designs_by_id[D.id] = D
-			var/datum/asset/simple/research_designs/RD = get_asset_datum(/datum/asset/simple/research_designs)
-			RD.register()
 
 	else
 		late_designs_init += D

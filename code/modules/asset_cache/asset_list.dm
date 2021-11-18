@@ -251,7 +251,7 @@ GLOBAL_LIST_EMPTY(asset_datums)
 
 /datum/asset/spritesheet/simple
 	_abstract = /datum/asset/spritesheet/simple
-	var/list/assets
+	var/list/assets = list()
 
 /datum/asset/spritesheet/simple/register()
 	for (var/key in assets)

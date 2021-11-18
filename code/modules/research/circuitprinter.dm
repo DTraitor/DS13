@@ -28,7 +28,11 @@ using metal and glass, it uses glass and reagents (usually sulfuric acid).
 	. = ..()
 	if(linked_console)
 		linked_console.linked_imprinter = null
-		SStgui.update_uis(linked_console)
+		if(linked_console.cats[4] == IMPRINTER)
+			linked_console.cats[4] = 1
+			SStgui.update_uis(linked_console, TRUE)
+		else
+			SStgui.update_uis(linked_console)
 		linked_console = null
 
 /obj/machinery/r_n_d/circuit_imprinter/RefreshParts()
@@ -69,7 +73,11 @@ using metal and glass, it uses glass and reagents (usually sulfuric acid).
 		update_icon()
 		if(linked_console)
 			linked_console.linked_imprinter = null
-			SStgui.update_uis(linked_console)
+			if(linked_console.cats[4] == IMPRINTER)
+				linked_console.cats[4] = 1
+				SStgui.update_uis(linked_console, TRUE)
+			else
+				SStgui.update_uis(linked_console)
 			linked_console = null
 		return
 	if(default_deconstruction_crowbar(user, O))
@@ -84,9 +92,7 @@ using metal and glass, it uses glass and reagents (usually sulfuric acid).
 		return TRUE
 	if(O.is_open_container())
 		spawn(0)
-			var/list/uis = SStgui.get_open_uis(linked_console)
-			for(var/ui in uis)
-				linked_console.update_static_data(ui = ui)
+			SStgui.update_uis(linked_console, TRUE)
 		return FALSE
 	if(is_robot_module(O))
 		return FALSE
@@ -124,9 +130,7 @@ using metal and glass, it uses glass and reagents (usually sulfuric acid).
 	busy = 0
 	update_icon()
 	if(linked_console)
-		var/list/uis = SStgui.get_open_uis(linked_console)
-		for(var/ui in uis)
-			linked_console.update_static_data(ui = ui)
+		SStgui.update_uis(linked_console, TRUE)
 
 /obj/machinery/r_n_d/circuit_imprinter/proc/queue_design(datum/design/D, amount)
 	var/list/RNDD = list()
@@ -196,6 +200,4 @@ using metal and glass, it uses glass and reagents (usually sulfuric acid).
 		produce_design(queue[1])
 
 	if(linked_console)
-		var/list/uis = SStgui.get_open_uis(linked_console)
-		for(var/ui in uis)
-			linked_console.update_static_data(ui = ui)
+		SStgui.update_uis(linked_console, TRUE)
