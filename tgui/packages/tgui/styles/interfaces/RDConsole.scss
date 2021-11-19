@@ -46,29 +46,21 @@
 
 .wrapper {
   display: -ms-grid;
-  grid-auto-rows: minmax(100px, 1fr);
+  -ms-grid-columns: repeat(3, 1fr);
+  -ms-grid-rows: minmax(100px, auto);
 }
 .one {
+  grid-column: 1;
+  grid-row: 1;
   -ms-grid-column: 1;
   -ms-grid-row: 1;
 }
-.two {
-  -ms-grid-column: 1;
-  -ms-grid-row: 2;
+
+.sciGridSize {
+  width: 48px;
+  height: 48px;
 }
-.three {
-  -ms-grid-column: 2;
-  -ms-grid-row: 1;
-}
-.four {
-  -ms-grid-column: 2;
-  -ms-grid-row: 2;
-}
-.five {
-  -ms-grid-column: 3;
-  -ms-grid-row: 2;
-}
-.six {
-  -ms-grid-column: 5;
-  -ms-grid-row: 5;
+
+.sciAlign {
+  align-self: center;
 }

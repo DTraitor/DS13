@@ -70,10 +70,13 @@
 		update_icon()
 		if(linked_console)
 			var/icon/I = getFlatIcon(O)
+			var/key = "da-[sanitizeFileName("[loaded_item.type]")].png"
+			if(!SSassets.cache[key])
+				SSassets.transport.register_asset(key, I)
 			for(var/datum/tgui/another_ui as anything in SStgui.get_open_uis(linked_console))
 				// Any item can be here. I had no other choice (excpet removing icon from RD Console UI)
-				another_ui.user << browse_rsc(I, "da-[sanitizeFileName("[O.type]")].png")
-			qdel(I) // We don't want to make infinite amount of icons
+				SSassets.transport.send_assets(another_ui.user, key)
+			qdel(I)
 			SStgui.update_uis(linked_console, TRUE)
 		return TRUE
 	return FALSE

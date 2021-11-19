@@ -78,7 +78,10 @@ cause a ton of data to be lost, an admin can go send it back.
 		return
 	if(linked_destroy?.loaded_item)
 		var/icon/I = getFlatIcon(linked_destroy.loaded_item)
-		user << browse_rsc(I, "da-[sanitizeFileName("[linked_destroy.loaded_item.type]")].png")
+		var/key = "da-[sanitizeFileName("[linked_destroy.loaded_item.type]")].png"
+		if(!SSassets.cache[key])
+			SSassets.transport.register_asset(key, I, TRUE)
+		SSassets.transport.send_assets(user, key)
 		qdel(I) // We don't want to make infinite amount of icons
 	tgui_interact(user)
 

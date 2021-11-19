@@ -735,16 +735,31 @@ const MachineReagentsTab = (props, context) => {
 };
 
 const TestingTab = (props, context) => {
+  let gridHeight = 14;
+  let gridWidth = 20;
+  let columnEmpty = [];
+  let rowEmpty = [];
+
+  for (let i = 1; i <= gridWidth; i++) {
+    columnEmpty.push(<Box className="sciGridSize" style={{ "-ms-grid-column": i, "-ms-grid-row": 1 }} />);
+  }
+
+  for (let i = 2; i <= gridHeight; i++) {
+    rowEmpty.push(<Box className="sciGridSize" style={{ "-ms-grid-column": 1, "-ms-grid-row": i }} />);
+  }
 
   return (
-    <Section fill title="Test">
-      <Box class="wrapper">
-        <Box class="one">One</Box>
-        <Box class="two">Two</Box>
-        <Box class="three">Three</Box>
-        <Box class="four">Four</Box>
-        <Box class="five">Five</Box>
-        <Box class="six">Six</Box>
+    <Section fill title="Test" height="95%">
+      <Box className="wrapper">
+        {columnEmpty}
+        {rowEmpty}
+        {// Buttons below
+        }
+        <Button width="36px" height="36px" style={{ "-ms-grid-column": 3, "-ms-grid-row": 7 }}>Test</Button>
+        <Button width="36px" height="36px" style={{ "-ms-grid-column": 3, "-ms-grid-row": 9 }}>Test</Button>
+        <Button width="36px" height="36px" style={{ "-ms-grid-column": 5, "-ms-grid-row": 9 }}>Test</Button>
+        <Button width="36px" height="36px" style={{ "-ms-grid-column": 7, "-ms-grid-row": 9 }}>Test</Button>
+        <Button width="36px" height="36px" style={{ "-ms-grid-column": 9, "-ms-grid-row": 9 }}>Test</Button>
       </Box>
     </Section>
   );
