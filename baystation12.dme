@@ -1,6 +1,6 @@
 // DM Environment file for baystation12.dme.
 // All manual changes should be made outside the BEGIN_ and END_ blocks.
- // New source code should be placed in .dm files: choose File/New --> Code File.
+// New source code should be placed in .dm files: choose File/New --> Code File.
 // BEGIN_INTERNALS
 // END_INTERNALS
 // BEGIN_FILE_DIR
@@ -2867,7 +2867,6 @@
 #include "code\modules\research\message_server.dm"
 #include "code\modules\research\protolathe.dm"
 #include "code\modules\research\rd-readme.dm"
-#include "code\modules\research\rdconsole.dm"
 #include "code\modules\research\rdmachines.dm"
 #include "code\modules\research\research.dm"
 #include "code\modules\research\server.dm"
@@ -2877,6 +2876,8 @@
 #include "code\modules\research\designs\design_rig_module.dm"
 #include "code\modules\research\designs\design_types.dm"
 #include "code\modules\research\designs\design_weapons.dm"
+#include "code\modules\research\rdconsole\rdconsole_main.dm"
+#include "code\modules\research\rdconsole\rdconsole_ui.dm"
 #include "code\modules\research\tech_tree\tech_biotech.dm"
 #include "code\modules\research\tech_tree\tech_combat.dm"
 #include "code\modules\research\tech_tree\tech_data.dm"

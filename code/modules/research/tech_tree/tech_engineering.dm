@@ -7,8 +7,8 @@
 	id = "basic_engineering"
 
 
-	x = 0.1
-	y = 0.5
+	x = 2
+	y = 5
 	icon_file = 'icons/obj/tools.dmi'
 	icon = "wrench"
 
@@ -17,13 +17,32 @@
 
 	unlocks_designs = list("micro_mani", "basic_matter_bin", "basic_micro_laser", "light_replacer", "weldingmask", "autolathe", "arcademachine", "oriontrail", "boombox")
 
+/datum/technology/engineering/monitoring
+	name = "Monitoring"
+	desc = "Monitoring"
+	id = "monitoring"
+
+	x = 4.5
+	y = 5
+	//special way to generate an icon
+
+	required_technologies = list("basic_engineering")
+	cost = 500
+
+	unlocks_designs = list("atmosalerts", "air_management")
+
+/datum/technology/engineering/monitoring/generate_icon()
+	I = icon('icons/obj/computer.dmi', "computer")
+	I.Blend(icon('icons/obj/computer.dmi', "alert:0"), ICON_OVERLAY)
+	I.Blend(icon('icons/obj/computer.dmi', "atmos_key"), ICON_OVERLAY)
+
 /datum/technology/engineering/gas_heat
 	name = "Gas Heating and Cooling"
 	desc = "Gas Heating and Cooling"
 	id = "gas_heat"
 
-	x = 0.2
-	y = 0.6
+	x = 4.5
+	y = 3.5
 	icon_file = 'icons/obj/atmos.dmi'
 	icon = "sheater-heat"
 
@@ -37,8 +56,8 @@
 	desc = "PFM-100 Industrial Torch"
 	id = "flamethrower"
 
-	x = 0.2
-	y = 0.7
+	x = 4.5
+	y = 2
 	icon_file = 'icons/obj/ammo.dmi'
 	icon = "hydecanister_e"
 
@@ -52,8 +71,8 @@
 	desc = "Advanced Parts"
 	id = "adv_parts"
 
-	x = 0.6
-	y = 0.5
+	x = 11
+	y = 5
 	icon_file = 'icons/obj/stock_parts.dmi'
 	icon = "advanced_matter_bin"
 
@@ -67,8 +86,8 @@
 	desc = "Super Parts"
 	id = "super_parts"
 
-	x = 0.5
-	y = 0.5
+	x = 10
+	y = 5
 	icon_file = 'icons/obj/stock_parts.dmi'
 	icon = "super_matter_bin"
 
@@ -77,32 +96,13 @@
 
 	unlocks_designs = list("pico_mani", "super_matter_bin", "ultra_micro_laser", "phasic_sensor")
 
-/datum/technology/engineering/monitoring
-	name = "Monitoring"
-	desc = "Monitoring"
-	id = "monitoring"
-
-	x = 0.2
-	y = 0.5
-	//special way to generate an icon
-
-	required_technologies = list("basic_engineering")
-	cost = 500
-
-	unlocks_designs = list("atmosalerts", "air_management")
-
-/datum/technology/engineering/monitoring/generate_icon()
-	I = icon('icons/obj/computer.dmi', "computer")
-	I.Blend(icon('icons/obj/computer.dmi', "alert:0"), ICON_OVERLAY)
-	I.Blend(icon('icons/obj/computer.dmi', "atmos_key"), ICON_OVERLAY)
-
 /datum/technology/engineering/res_tech
 	name = "Research Technologies"
 	desc = "Research Technologies"
 	id = "res_tech"
 
-	x = 0.3
-	y = 0.5
+	x = 6.5
+	y = 5
 	//special way to generate an icon
 
 	required_technologies = list("monitoring")
@@ -120,8 +120,8 @@
 	desc = "Xenoarcheology"
 	id = "xenoarch"
 
-	x = 0.3
-	y = 0.6
+	x = 6.5
+	y = 3
 	icon_file = 'icons/obj/pda.dmi'
 	icon = "crap"
 
@@ -135,8 +135,8 @@
 	desc = "Excavation Drill"
 	id = "excavation_drill"
 
-	x = 0.6
-	y = 0.6
+	x = 10
+	y = 3
 	icon_file = 'icons/obj/xenoarchaeology.dmi'
 	icon = "excavationdrill7"
 
@@ -150,8 +150,8 @@
 	desc = "Diamond Excavation Drill"
 	id = "excavation_drill_diamond"
 
-	x = 0.6
-	y = 0.7
+	x = 10
+	y = 1
 	icon_file = 'icons/obj/xenoarchaeology.dmi'
 	icon = "Dexcavationdrill7"
 
@@ -165,8 +165,8 @@
 	desc = "Basic Mining"
 	id = "basic_mining"
 
-	x = 0.3
-	y = 0.4
+	x = 6.5
+	y = 7
 	icon_file = 'icons/obj/weapons.dmi'
 	icon = "ds_rocksaw1"
 
@@ -180,8 +180,8 @@
 	desc = "Ore Processing"
 	id = "ore_proc"
 
-	x = 0.3
-	y = 0.3
+	x = 3
+	y = 3
 	icon_file = 'icons/obj/machines/mining_machines.dmi'
 	icon = "furnace"
 
@@ -195,8 +195,8 @@
 	desc = "Advanced Mining"
 	id = "adv_mining"
 
-	x = 0.6
-	y = 0.4
+	x = 10
+	y = 7
 	icon_file = 'icons/obj/tools.dmi'
 	icon = "plasmacutter"
 
@@ -210,8 +210,8 @@
 	desc = "Mining Ammuntion"
 	id = "mining_ammo"
 
-	x = 0.6
-	y = 0.3
+	x = 10
+	y = 9
 	icon_file = 'icons/obj/ammo.dmi'
 	icon = "contact_energy"
 
@@ -225,8 +225,8 @@
 	desc = "Advanced Engineering"
 	id = "adv_eng"
 
-	x = 0.7
-	y = 0.5
+	x = 12
+	y = 5
 	icon_file = 'icons/obj/storage.dmi'
 	icon = "RPED"
 
@@ -240,8 +240,8 @@
 	desc = "Advanced Tools"
 	id = "adv_tools"
 
-	x = 0.8
-	y = 0.5
+	x = 14
+	y = 5
 	icon_file = 'icons/obj/tools.dmi'
 	icon = "pneumo_crowbar"
 
@@ -255,8 +255,8 @@
 	desc = "Airlock Brace"
 	id = "airlock_brace"
 
-	x = 0.4
-	y = 0.5
+	x = 8.5
+	y = 5
 	icon_file = 'icons/obj/tools.dmi'
 	icon = "maintenance_jack"
 
@@ -270,8 +270,8 @@
 	desc = "Integrated Circuit Printer"
 	id = "icprinter"
 
-	x = 0.7
-	y = 0.3
+	x = 12
+	y = 8
 	icon_file = 'icons/obj/assemblies/electronic_tools.dmi'
 	icon = "circuit_printer"
 
@@ -285,8 +285,8 @@
 	desc = "Integrated Circuit Printer Upgrade Disk"
 	id = "icupgradv"
 
-	x = 0.7
-	y = 0.2
+	x = 12
+	y = 10
 	icon_file = 'icons/obj/assemblies/electronic_tools.dmi'
 	icon = "upgrade_disk"
 
@@ -300,8 +300,8 @@
 	desc = "Integrated Circuit Printer Clone Disk"
 	id = "icupclo"
 
-	x = 0.8
-	y = 0.3
+	x = 14
+	y = 8
 	icon_file = 'icons/obj/assemblies/electronic_tools.dmi'
 	icon = "upgrade_disk_clone"
 
@@ -315,8 +315,8 @@
 	desc = "Power Node"
 	id = "node"
 
-	x = 0.9
-	y = 0.5
+	x = 16
+	y = 5
 	icon_file = 'icons/obj/tools.dmi'
 	no_lines = TRUE
 	icon = "powernode"

@@ -44,23 +44,7 @@
   -ms-interpolation-mode: nearest-neighbor;
 }
 
-.wrapper {
-  display: -ms-grid;
-  -ms-grid-columns: repeat(3, 1fr);
-  -ms-grid-rows: minmax(100px, auto);
-}
-.one {
-  grid-column: 1;
-  grid-row: 1;
-  -ms-grid-column: 1;
-  -ms-grid-row: 1;
-}
-
 .sciGridSize {
-  width: 48px;
-  height: 48px;
-}
-
-.sciAlign {
-  align-self: center;
+  width: 18px;
+  height: 18px;
 }

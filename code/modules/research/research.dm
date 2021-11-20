@@ -257,8 +257,9 @@ The tech datums are the actual "tech trees" that you improve through researching
 	var/id = null							// should be unique
 	var/tech_type							// Which tech tree does this techology belongs to
 
-	var/x = 0.5								// Position on the tech tree map, 0 - left, 1 - right
-	var/y = 0.5								// 0 - down, 1 - top
+	// Should be multiple of 0.5
+	var/x = 5								// Position on the tech tree map, Higher - right
+	var/y = 5								// Higher - lower
 	var/no_lines = FALSE					// Prevents rendering any lines that leads to this tech
 	var/icon/I
 	var/icon_file = 'icons/obj/gun.dmi'
@@ -268,6 +269,11 @@ The tech datums are the actual "tech trees" that you improve through researching
 	var/cost = 100							// How much research points required to unlock this techology
 
 	var/list/unlocks_designs = list()		// Ids of designs that this technology unlocks
+
+/datum/technology/New()
+	.=..()
+	x *= 2
+	y *= 2
 
 /datum/technology/proc/generate_icon()
 	I = icon(icon_file, icon)

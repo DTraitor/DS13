@@ -4,8 +4,8 @@
 	id = "sdivet"
 	tech_type = TECH_ILLEGAL
 
-	x = 0.5
-	y = 0.5
+	x = 5
+	y = 5
 	icon_file = 'icons/obj/gun.dmi'
 	icon = "divet_spec"
 
@@ -20,8 +20,8 @@
 	id = "icds"
 	tech_type = TECH_ILLEGAL
 
-	x = 0.5
-	y = 0.6
+	x = 5
+	y = 6
 	icon_file = 'icons/obj/ammo.dmi'
 	icon = "icds"
 
@@ -36,8 +36,8 @@
 	id = "hpds"
 	tech_type = TECH_ILLEGAL
 
-	x = 0.6
-	y = 0.5
+	x = 6
+	y = 5
 	icon_file = 'icons/obj/ammo.dmi'
 	icon = "hpds"
 
@@ -52,8 +52,8 @@
 	id = "apds"
 	tech_type = TECH_ILLEGAL
 
-	x = 0.4
-	y = 0.5
+	x = 4
+	y = 5
 	icon_file = 'icons/obj/ammo.dmi'
 	icon = "apds"
 
@@ -68,8 +68,8 @@
 	id = "freedom_implant"
 	tech_type = TECH_ILLEGAL
 
-	x = 0.5
-	y = 0.4
+	x = 5
+	y = 4
 	icon_file = 'icons/obj/items.dmi'
 	icon = "implantcase-r"
 
@@ -84,8 +84,8 @@
 	id = "imprinting_implant"
 	tech_type = TECH_ILLEGAL
 
-	x = 0.4
-	y = 0.4
+	x = 4
+	y = 4
 	icon_file = 'icons/obj/items.dmi'
 	icon = "implantcase-r"
 
@@ -100,8 +100,8 @@
 	id = "explosive_implant"
 	tech_type = TECH_ILLEGAL
 
-	x = 0.6
-	y = 0.4
+	x = 6
+	y = 4
 	icon_file = 'icons/obj/items.dmi'
 	icon = "implantcase-r"
 
@@ -116,8 +116,8 @@
 	id = "chem_implant"
 	tech_type = TECH_ILLEGAL
 
-	x = 0.5
-	y = 0.3
+	x = 5
+	y = 3
 	icon_file = 'icons/obj/items.dmi'
 	icon = "implantcase-r"
 

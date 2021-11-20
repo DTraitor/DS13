@@ -1,84 +1,9 @@
-/*
-Research and Development (R&D) Console
-This is the main work horse of the R&D system. It contains the menus/controls for the Destructive Analyzer, Protolathe, and Circuit
-imprinter. It also contains the /datum/research holder with all the known/possible technology paths and device designs.
-Basic use: When it first is created, it will attempt to link up to related devices within 3 squares. It'll only link up if they
-aren't already linked to another console. Any consoles it cannot link up with (either because all of a certain type are already
-linked or there aren't any in range), you'll just not have access to that menu. In the settings menu, there are menu options that
-allow a player to attempt to re-sync with nearby consoles. You can also force it to disconnect from a specific console.
-The imprinting and construction menus do NOT require toxins access to access but all the other menus do. However, if you leave it
-on a menu, nothing is to stop the person from using the options on that menu (although they won't be able to change to a different
-one). You can also lock the console on the settings menu if you're feeling paranoid and you don't want anyone messing with it who
-doesn't have toxins access.
-When a R&D console is destroyed or even partially disassembled, you lose all research data on it. However, there is a way around
-this dire fate:
-- Go to the settings menu and select "Sync Database with Network." That causes it to upload (but not download)
-it's data to every other device in the game. Each console has a "disconnect from network" option that'll will cause data base sync
-operations to skip that console. This is useful if you want to make a "public" R&D console or, for example, give the engineers
-a circuit imprinter with certain designs on it and don't want it accidentally updating. The downside of this method is that you have
-to have physical access to the other console to send data back. Note: An R&D console is on CentCom so if a random griffan happens to
-cause a ton of data to be lost, an admin can go send it back.
-*/
-
-/obj/machinery/computer/rdconsole
-	name = "fabrication control console"
-	desc = "Console controlling the various fabrication devices. Uses self-learning matrix to hold and optimize blueprints. Prone to corrupting said matrix, so back up often."
-	icon_keyboard = "rd_key"
-	icon_screen = "rdcomp"
-	light_color = "#a97faa"
-	circuit = /obj/item/weapon/circuitboard/rdconsole
-	var/datum/research/files							//Stores all the collected research data.
-
-	var/obj/machinery/r_n_d/destructive_analyzer/linked_destroy = null	//Linked Destructive Analyzer
-	var/obj/machinery/r_n_d/protolathe/linked_lathe = null				//Linked Protolathe
-	var/obj/machinery/r_n_d/circuit_imprinter/linked_imprinter = null	//Linked Circuit Imprinter
-
-	var/id = 0				//ID of the computer (for server restrictions).
-	var/sync = TRUE			//If sync = 0, it doesn't show up on Server Control Console
-	var/can_research = TRUE	//Is this console capable of researching
-	var/list/cats = list("Misc", "Misc", TECH_ENGINEERING, 4, null)	//Stores protolathe, imprinter design category, tech tree tab, console tab and selected tech id
-
-	req_access = list(access_research)	//Data and setting manipulation requires scientist access.
-
-/obj/machinery/computer/rdconsole/Initialize()
-	.=..()
-	files = new /datum/research(src) //Setup the research data holder
-	SyncRDevices()
-	sync_tech()
-
-/obj/machinery/computer/rdconsole/Destroy()
-	sync_tech()
-	QDEL_NULL(files)
-	if(linked_destroy)
-		linked_destroy.linked_console = null
-		linked_destroy = null
-	if(linked_lathe)
-		linked_lathe.linked_console = null
-		linked_destroy = null
-	if(linked_imprinter)
-		linked_imprinter.linked_console = null
-		linked_destroy = null
-	.=..()
-
-/obj/machinery/computer/rdconsole/attackby(var/obj/item/weapon/D as obj, var/mob/user as mob)
-	if(istype(D, /obj/item/weapon/disk/research_points))
-		var/obj/item/weapon/disk/research_points/disk = D
-		to_chat(user, "<span class='notice'>[name] received [disk.stored_points] research points from [disk.name]</span>")
-		files.research_points += disk.stored_points
-		user.remove_from_mob(disk)
-		qdel(disk)
-
-	else
-		.=..()
-
-	SStgui.update_uis(src, TRUE)
-
 /obj/machinery/computer/rdconsole/attack_hand(mob/user as mob)
 	if(..())
 		return
 	if(linked_destroy?.loaded_item)
 		var/icon/I = getFlatIcon(linked_destroy.loaded_item)
-		var/key = "da-[sanitizeFileName("[linked_destroy.loaded_item.type]")].png"
+		var/key = "da_[sanitizeFileName("[linked_destroy.loaded_item.type]")].png"
 		if(!SSassets.cache[key])
 			SSassets.transport.register_asset(key, I, TRUE)
 		SSassets.transport.send_assets(user, key)
@@ -213,6 +138,9 @@ cause a ton of data to be lost, an admin can go send it back.
 		data["tech_trees"] = tech_tree_list
 		data["tech_cat"] = cats[3]
 
+		var/columns = 0
+		var/rows = 0
+
 		for(var/tech_id in files.all_technologies)
 			var/datum/technology/Tech = SSresearch.all_technologies[tech_id]
 			if(Tech.tech_type != cats[3])
@@ -229,46 +157,95 @@ cause a ton of data to be lost, an admin can go send it back.
 					req_techs_unlock |= capitalize(temp.name)
 				else
 					req_techs_lock |= capitalize(temp.name)
+			if(columns < Tech.x)
+				columns = Tech.x
+			if(rows < Tech.y)
+				rows = Tech.y
 			var/list/tech_data = list(
 				"id" =			Tech.id,
 				"name" =		capitalize(Tech.name),
 				"desc" =		Tech.desc,
 				"tech_type" =	Tech.tech_type,
-				"x" =			round(Tech.x*100),
-				"y" =			round(Tech.y*100),
+				"x" =			round(Tech.x),
+				"y" =			round(Tech.y),
 				"cost" =		Tech.cost,
 				"isresearched" =files.IsResearched(Tech),
-				"canresearch" = files.CanResearch(Tech),
-			)
+				"canresearch" = files.CanResearch(Tech))
 			tech_list += list(tech_data)
 
 			for(var/req_tech_id in Tech.required_technologies)
 				if(req_tech_id in files.all_technologies)
 					var/datum/technology/OTech = SSresearch.all_technologies[req_tech_id]
 					if(OTech.tech_type == Tech.tech_type && !Tech.no_lines)
-						var/line_x = (min(round(OTech.x*100), round(Tech.x*100)))
-						var/line_y = (min(round(OTech.y*100), round(Tech.y*100)))
-						var/width = (abs(round(OTech.x*100) - round(Tech.x*100)))
-						var/height = (abs(round(OTech.y*100) - round(Tech.y*100)))
+						var/first_height
+						var/second_height
+						var/first_width
+						var/second_width
+						var/top = FALSE
+						var/bottom = FALSE
+						var/left = FALSE
+						var/right = FALSE
+						if(OTech.y == Tech.y)
+							bottom = TRUE
+							first_height = OTech.y
+							second_height = 0
+							if(OTech.x < Tech.x)
+								first_width = OTech.x + 1
+								second_width = Tech.x - OTech.x
+							else
+								first_width = Tech.x + 1
+								second_width = OTech.x - Tech.x
 
-						var/istop = FALSE
-						if(OTech.y > Tech.y)
-							istop = TRUE
-						var/isright = FALSE
-						if(OTech.x < Tech.x)
-							isright = TRUE
+						else if(OTech.y < Tech.y)
+							first_height = OTech.y + 1
+							second_height = Tech.y - OTech.y
+							if(OTech.x == Tech.x)
+								right = TRUE
+								first_width = OTech.x
+								second_width = 0
+							else if(OTech.x < Tech.x)
+								right = TRUE
+								top = TRUE
+								first_width = OTech.x
+								second_width = Tech.x - OTech.x + 1
+							else
+								left = TRUE
+								top = TRUE
+								first_width = Tech.x + 1
+								second_width = OTech.x - Tech.x
+
+						else
+							first_height = Tech.y + 1
+							second_height = OTech.y - Tech.y
+							if(OTech.x == Tech.x)
+								right = TRUE
+								first_width = OTech.x
+								second_width = 0
+							else if(OTech.x < Tech.x)
+								bottom = TRUE
+								right = TRUE
+								first_width = OTech.x + 1
+								second_width = Tech.x - OTech.x
+							else
+								top = TRUE
+								right = TRUE
+								first_width = Tech.x + 1
+								second_width = OTech.x - Tech.x
 
 						var/list/line_data = list(
 							"category" =	OTech.tech_type,
-							"line_x" =		line_x,
-							"line_y" =		line_y,
-							"width" =		width,
-							"height" =		height,
-							"istop" =		istop,
-							"isright" =		isright,
-						)
+							"width_1" =		round(first_height),
+							"height_1" =	round(first_width),
+							"width_2" =		round(second_height),
+							"height_2" =	round(second_width),
+							"top" =			top,
+							"bottom" =		bottom,
+							"right" =		right,
+							"left" =		left)
 						line_list += list(line_data)
 
+		data["columns"] = columns
+		data["rows"] = rows
 		data["techs"] = tech_list
 		data["lines"] = line_list
 
@@ -465,47 +442,6 @@ cause a ton of data to be lost, an admin can go send it back.
 
 	SStgui.update_uis(src, TRUE)
 
-/obj/machinery/computer/rdconsole/emp_act(var/remaining_charges, var/mob/user)
-	if(!emagged)
-		playsound(src.loc, 'sound/effects/sparks4.ogg', 75, 1)
-		emagged = 1
-		to_chat(user, "<span class='notice'>You you disable the security protocols.</span>")
-		return 1
-
-/obj/machinery/computer/rdconsole/proc/CallReagentName(var/reagent_type)
-	var/datum/reagent/R = reagent_type
-	return ispath(reagent_type, /datum/reagent) ? initial(R.name) : "Unknown"
-
-/obj/machinery/computer/rdconsole/proc/SyncRDevices() //Makes sure it is properly sync'ed up with the devices attached to it (if any).
-	for(var/obj/machinery/r_n_d/D in range(4, src))
-		if(D.linked_console != null || D.panel_open)
-			continue
-		if(istype(D, /obj/machinery/r_n_d/destructive_analyzer))
-			if(linked_destroy == null)
-				linked_destroy = D
-				D.linked_console = src
-		else if(istype(D, /obj/machinery/r_n_d/protolathe))
-			if(linked_lathe == null)
-				linked_lathe = D
-				D.linked_console = src
-		else if(istype(D, /obj/machinery/r_n_d/circuit_imprinter))
-			if(linked_imprinter == null)
-				linked_imprinter = D
-				D.linked_console = src
-	return
-
-/obj/machinery/computer/rdconsole/proc/sync_tech()
-	for(var/obj/machinery/r_n_d/server/S in SSresearch.servers)
-		var/server_processed = FALSE
-		if((id in S.id_with_upload))
-			S.files.download_from(files)
-			server_processed = TRUE
-		if(((id in S.id_with_download)))
-			files.download_from(S.files)
-			server_processed = TRUE
-		if(server_processed)
-			S.produce_heat(100)
-
 /obj/machinery/computer/rdconsole/proc/get_protolathe_data()
 	var/list/protolathe_list = list(
 		"machine_id" =				PROTOLATHE,
@@ -599,8 +535,3 @@ cause a ton of data to be lost, an admin can go send it back.
 			designs_list += list(design_data)
 
 	return designs_list
-
-/obj/machinery/computer/rdconsole/core
-	name = "R&D Console"
-	id = 1
-	can_research = TRUE

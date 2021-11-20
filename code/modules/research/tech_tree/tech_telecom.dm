@@ -8,8 +8,8 @@
 	id = "telecomm_parts"
 	tech_type = TECH_BLUESPACE
 
-	x = 0.5
-	y = 0.275
+	x = 5
+	y = 2
 	icon_file = 'icons/obj/stock_parts.dmi'
 	icon = "subspace_ansible"
 
@@ -23,8 +23,8 @@
 	desc = "Monitoring Consoles"
 	id = "tcom_monitoring"
 
-	x = 0.5
-	y = 0.4
+	x = 5
+	y = 4
 	//special way to generate an icon
 
 	required_technologies = list("telecomm_parts")
@@ -42,8 +42,8 @@
 	desc = "RCON"
 	id = "rcon"
 
-	x = 0.5
-	y = 0.525
+	x = 5
+	y = 5
 	//special way to generate an icon
 
 	required_technologies = list("tcom_monitoring", "adv_power_storage")
@@ -61,8 +61,8 @@
 	desc = "Mainframes"
 	id = "mainframes"
 
-	x = 0.4
-	y = 0.4
+	x = 4
+	y = 4
 	icon = "relay"
 
 	required_technologies = list("telecomm_parts")
@@ -75,8 +75,8 @@
 	desc = "SolNet Quantum Relay"
 	id = "solnet_relay"
 
-	x = 0.3
-	y = 0.4
+	x = 3
+	y = 4
 	icon = "bus"
 
 	required_technologies = list("telecomm_parts")
@@ -89,8 +89,8 @@
 	desc = "Subspace Broadcaster/Reciever"
 	id = "subspace"
 
-	x = 0.6
-	y = 0.4
+	x = 6
+	y = 4
 	icon = "broadcaster"
 
 	required_technologies = list("telecomm_parts")
@@ -103,8 +103,8 @@
 	desc = "Processor Unit"
 	id = "processor"
 
-	x = 0.7
-	y = 0.4
+	x = 7
+	y = 4
 	icon = "processor"
 
 	required_technologies = list("telecomm_parts")

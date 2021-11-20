@@ -7,8 +7,8 @@
 	desc = "First step into the bio technologies!"
 	id = "basic_biotech"
 
-	x = 0.1
-	y = 0.5
+	x = 2
+	y = 5
 	icon = "health"
 
 	required_technologies = list()
@@ -21,8 +21,8 @@
 	desc = "Patient and RIG monitoring consoles"
 	id = "basic_medical_machines"
 
-	x = 0.2
-	y = 0.5
+	x = 4
+	y = 5
 	//special way to generate an icon
 
 	required_technologies = list("basic_biotech")
@@ -40,8 +40,8 @@
 	desc = "Basic hydroponic machinery"
 	id = "hydroponics"
 
-	x = 0.1
-	y = 0.375
+	x = 2
+	y = 7
 	icon_file = 'icons/obj/hydroponics_machines.dmi'
 	icon = "hydrotray3"
 
@@ -55,8 +55,8 @@
 	desc = "Botany DNA manipulation machinery or how to grow bicaridine"
 	id = "adv_hydroponics"
 
-	x = 0.1
-	y = 0.25
+	x = 2
+	y = 9
 	icon_file = 'icons/obj/hydroponics_machines.dmi'
 	icon = "traitcopier"
 
@@ -70,8 +70,8 @@
 	desc = "Quick guide how to cook some delicious humans"
 	id = "food_process"
 
-	x = 0.2
-	y = 0.375
+	x = 4
+	y = 7
 	icon_file = 'icons/obj/kitchen.dmi'
 	icon = "mw"
 
@@ -85,8 +85,8 @@
 	desc = "Implanting someone without permission from department head or person you are implanting is forbidden!"
 	id = "implants"
 
-	x = 0.2
-	y = 0.625
+	x = 4
+	y = 3
 	icon_file = 'icons/obj/items.dmi'
 	icon = "implantcase-r"
 
@@ -100,8 +100,8 @@
 	desc = "Advanced health care machinery"
 	id = "adv_med_machines"
 
-	x = 0.3
-	y = 0.5
+	x = 6
+	y = 5
 	//special way to generate an icon
 
 	required_technologies = list("basic_medical_machines")
@@ -117,8 +117,8 @@
 	desc = "Some useful tools you can print in case you don't have enough in the storage"
 	id = "add_med_tools"
 
-	x = 0.4
-	y = 0.5
+	x = 8
+	y = 5
 	icon_file = 'icons/obj/clothing/glasses.dmi'
 	icon = "healthhud"
 
@@ -132,8 +132,8 @@
 	desc = "For those who prefer the best tools"
 	id = "adv_add_med_tools"
 
-	x = 0.5
-	y = 0.5
+	x = 10
+	y = 5
 	icon = "adv_spectrometer"
 
 	required_technologies = list("add_med_tools")
@@ -146,8 +146,8 @@
 	desc = "What's the point of using tracking implant if you can implant prisoner with beacon?"
 	id = "track_dev"
 
-	x = 0.4
-	y = 0.375
+	x = 8
+	y = 7
 	icon = "locator"
 
 	required_technologies = list("add_med_tools")
@@ -160,8 +160,8 @@
 	desc = "Don't let the clown to get this!"
 	id = "chemicals"
 
-	x = 0.6
-	y = 0.5
+	x = 12
+	y = 5
 	icon_file = 'icons/obj/chemical.dmi'
 	icon = "dispenser"
 
@@ -175,8 +175,8 @@
 	desc = "The fastest way to deliver chemicals into someone"
 	id = "hypospray"
 
-	x = 0.6
-	y = 0.375
+	x = 12
+	y = 7
 	icon_file = 'icons/obj/syringe.dmi'
 	icon = "hypo"
 
@@ -190,8 +190,8 @@
 	desc = "The fastest way to deliver cyanide in someone you don't like"
 	id = "chemical_guns"
 
-	x = 0.7
-	y = 0.375
+	x = 14
+	y = 7
 	icon_file = 'icons/obj/gun.dmi'
 	icon = "rapidsyringegun"
 
@@ -205,8 +205,8 @@
 	desc = "5/6 surgeons recommend using IMS"
 	id = "scalpelmanager"
 
-	x = 0.7
-	y = 0.625
+	x = 12
+	y = 3
 	icon_file = 'icons/obj/surgery.dmi'
 	icon = "scalpel_manager_on"
 
@@ -220,8 +220,8 @@
 	desc = "7/5 doctos recommend using advanced health scanner"
 	id = "adv_health_scanner"
 
-	x = 0.8
-	y = 0.5
+	x = 16
+	y = 5
 	icon = "health_adv"
 
 	required_technologies = list("chemicals")
@@ -234,8 +234,8 @@
 	desc = "How does it even work?"
 	id = "beakers"
 
-	x = 0.6
-	y = 0.625
+	x = 14
+	y = 3
 	icon_file = 'icons/obj/chemical.dmi'
 	icon = "beakerbluespace"
 

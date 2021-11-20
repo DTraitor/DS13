@@ -7,8 +7,8 @@
 	desc = "Security Equipment"
 	id = "sec_eq"
 
-	x = 0.1
-	y = 0.5
+	x = 1
+	y = 5
 	icon_file = 'icons/obj/weapons.dmi'
 	icon = "stunbaton_active"
 
@@ -22,8 +22,8 @@
 	desc = "Prisoner Managment"
 	id = "pris_man"
 
-	x = 0.1
-	y = 0.625
+	x = 1
+	y = 6
 	//special way to generate an icon
 
 	required_technologies = list("sec_eq")
@@ -41,8 +41,8 @@
 	desc = "Additional Security Equipment"
 	id = "add_eq"
 
-	x = 0.2
-	y = 0.5
+	x = 2
+	y = 5
 	icon_file = 'icons/obj/clothing/glasses.dmi'
 	icon = "securityhud"
 
@@ -56,8 +56,8 @@
 	desc = "Additional Security Equipment"
 	id = "nleth_eq"
 
-	x = 0.3
-	y = 0.5
+	x = 3
+	y = 5
 	icon_file = 'icons/obj/rig_modules.dmi'
 	icon = "taser"
 
@@ -71,8 +71,8 @@
 	desc = "Recharger"
 	id = "recharger"
 
-	x = 0.4
-	y = 0.5
+	x = 4
+	y = 5
 	icon_file = 'icons/obj/stationobjs.dmi'
 	icon = "recharger0"
 
@@ -86,8 +86,8 @@
 	desc = "Advanced Combat"
 	id = "shield"
 
-	x = 0.4
-	y = 0.375
+	x = 4
+	y = 3
 	icon_file = 'icons/obj/weapons.dmi'
 	icon = "advanced"
 
@@ -101,8 +101,8 @@
 	desc = "Winchester NK Divet Pistol"
 	id = "divet"
 
-	x = 0.5
-	y = 0.5
+	x = 5
+	y = 5
 	icon_file = 'icons/obj/gun.dmi'
 	icon = "divet"
 
@@ -116,8 +116,8 @@
 	desc = "Speed Loader (.44 Magnum)"
 	id = "speedloader"
 
-	x = 0.5
-	y = 0.625
+	x = 5
+	y = 6
 	icon = "38"
 
 	required_technologies = list("divet")
@@ -130,8 +130,8 @@
 	desc = "SWS Motorized Pulse Rifle"
 	id = "pulse"
 
-	x = 0.6
-	y = 0.5
+	x = 6
+	y = 5
 	icon = "pulse_rounds"
 
 	required_technologies = list("divet")
@@ -144,8 +144,8 @@
 	desc = "High Velocity Pulse Rounds"
 	id = "pulsehv"
 
-	x = 0.6
-	y = 0.625
+	x = 6
+	y = 6
 	icon = "pulse_rounds_hv"
 
 	required_technologies = list("pulse")
@@ -158,8 +158,8 @@
 	desc = "RC-DS Remote Control Disc Ripper"
 	id = "ripper"
 
-	x = 0.6
-	y = 0.375
+	x = 6
+	y = 3
 	icon_file = 'icons/obj/gun.dmi'
 	icon = "ripper"
 
@@ -173,8 +173,8 @@
 	desc = "Diamond Blades"
 	id = "dblades"
 
-	x = 0.7
-	y = 0.375
+	x = 7
+	y = 3
 	icon = "diamondblade"
 
 	required_technologies = list("ripper")
@@ -187,8 +187,8 @@
 	desc = "T15 Javelin Gun"
 	id = "javeline"
 
-	x = 0.7
-	y = 0.625
+	x = 7
+	y = 6
 	icon = "javelin-6"
 
 	required_technologies = list("pulse")
@@ -201,8 +201,8 @@
 	desc = "Seeker Rifle"
 	id = "seeker"
 
-	x = 0.8
-	y = 0.5
+	x = 8
+	y = 5
 	icon = "seekerclip"
 
 	required_technologies = list("pulse")

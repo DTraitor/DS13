@@ -81,11 +81,6 @@ export const RDConsole = (props, context) => {
               Circuit Imprinter
             </Tabs.Tab>
           ):null}
-          <Tabs.Tab
-            selected={console_tab === 5}
-            onClick={() => act("change_tab", { "machine": 4, "tab": 5 })}>
-            Testing
-          </Tabs.Tab>
         </Tabs>
         {console_tab === 4 && (
           <MainTab />
@@ -108,9 +103,6 @@ export const RDConsole = (props, context) => {
             queue_data={imprinter_queue_data}
             all_cats={imprinter_all_cats}
             current_cat={imprinter_cat} />
-        )}
-        {console_tab === 5 && (
-          <TestingTab />
         )}
       </Window.Content>
     </Window>
@@ -226,7 +218,7 @@ const DestructiveAnalyzer = (props, context) => {
                       <Stack.Item pr={3}>
                         <Stack>
                           <Stack.Item>
-                            <img src={"da-"+destroy_data.icon_path+".png"} class="sciDeconIcon" />
+                            <img src={"da_"+destroy_data.icon_path+".png"} class="sciDeconIcon" />
                           </Stack.Item>
                           <Stack.Item width="80%">
                             <Stack vertical>
@@ -331,6 +323,17 @@ const TechLevelsInfo = (props, context) => {
 const Research = (props, context) => {
   const { act, data } = useBackend(context);
 
+  let columnEmpty = [];
+  let rowEmpty = [];
+
+  for (let i = 1; i <= data.columns+1; i++) {
+    columnEmpty.push(<Box className="sciGridSize" style={{ "-ms-grid-column": i, "-ms-grid-row": 1 }} />);
+  }
+
+  for (let i = 2; i <= data.rows+1; i++) {
+    rowEmpty.push(<Box className="sciGridSize" style={{ "-ms-grid-column": 1, "-ms-grid-row": i }} />);
+  }
+
   const {
     tech_trees,
     techs,
@@ -357,29 +360,27 @@ const Research = (props, context) => {
               </Tabs.Tab>
             ))}
           </Tabs>
-          {lines && lines.map((line, i) => (
-            <Box key={i}>
-              {line.category === tech_cat ? (
-                <Box position="absolute"
-                  width={line.width+"%"}
-                  height={line.height+"%"}
-                  left={line.line_x+"%"}
-                  bottom={line.line_y+"%"}
-                  className={(line.istop?"sciBorderTop":"sciBorderBottom")+" "+(line.isright?"sciBorderRight":"sciBorderLeft")} />
-              ):null}
-            </Box>
-          ))}
-          {techs && techs.map((tech, i) => (
-            <Box key={tech.id}>
-              {tech.tech_type === tech_cat ? (
+          <Box style={{ display: "-ms-grid" }}>
+            {columnEmpty}
+            {rowEmpty}
+            {lines && lines.map((line, i) => (
+              <Box
+                key={i}
+                style={{ "-ms-grid-column": line.height_1, "-ms-grid-row": line.width_1, "-ms-grid-column-span": line.height_2, "-ms-grid-row-span": line.width_2 }}
+                className={
+                  (line.bottom && "sciBorderBottom ") + (line.left && " sciBorderLeft ") + (line.right && " sciBorderRight ") + (line.top && " sciBorderTop")
+                } />
+            ))}
+            {techs && techs.map((tech, i) => (
+              <Box key={tech.id}
+                className="sciGridTechPosition"
+                style={{ "-ms-grid-column": tech.x, "-ms-grid-row": tech.y, "-ms-grid-column-span": 1, "-ms-grid-row-span": 1 }}>
                 <Button
                   position="absolute"
                   p={0}
-                  color={(selected_tech && tech.id===selected_tech.id?"caution":(tech.isresearched?"selected":(tech.canresearch?"default":"danger")))}
-                  left={tech.x-1.7+"%"}
-                  bottom={tech.y-3.4+"%"}
                   width="36px"
                   height="36px"
+                  color={(selected_tech && tech.id===selected_tech.id?"caution":(tech.isresearched?"selected":(tech.canresearch?"default":"danger")))}
                   tooltip={
                     <Box>
                       {tech.name}
@@ -392,9 +393,9 @@ const Research = (props, context) => {
                   onClick={() => act('set_selected_tech', { tech_id: tech.id })}>
                   <Box mt="2px" ml="2px" className={"rdtech96x96 "+tech.id+" sciScale32"} />
                 </Button>
-              ):null}
-            </Box>
-          ))}
+              </Box>
+            ))}
+          </Box>
         </Section>
       </Stack.Item>
       <Stack.Item grow>
@@ -730,37 +731,6 @@ const MachineReagentsTab = (props, context) => {
             </LabeledList.Item>
           ))}
       </LabeledList>
-    </Section>
-  );
-};
-
-const TestingTab = (props, context) => {
-  let gridHeight = 14;
-  let gridWidth = 20;
-  let columnEmpty = [];
-  let rowEmpty = [];
-
-  for (let i = 1; i <= gridWidth; i++) {
-    columnEmpty.push(<Box className="sciGridSize" style={{ "-ms-grid-column": i, "-ms-grid-row": 1 }} />);
-  }
-
-  for (let i = 2; i <= gridHeight; i++) {
-    rowEmpty.push(<Box className="sciGridSize" style={{ "-ms-grid-column": 1, "-ms-grid-row": i }} />);
-  }
-
-  return (
-    <Section fill title="Test" height="95%">
-      <Box className="wrapper">
-        {columnEmpty}
-        {rowEmpty}
-        {// Buttons below
-        }
-        <Button width="36px" height="36px" style={{ "-ms-grid-column": 3, "-ms-grid-row": 7 }}>Test</Button>
-        <Button width="36px" height="36px" style={{ "-ms-grid-column": 3, "-ms-grid-row": 9 }}>Test</Button>
-        <Button width="36px" height="36px" style={{ "-ms-grid-column": 5, "-ms-grid-row": 9 }}>Test</Button>
-        <Button width="36px" height="36px" style={{ "-ms-grid-column": 7, "-ms-grid-row": 9 }}>Test</Button>
-        <Button width="36px" height="36px" style={{ "-ms-grid-column": 9, "-ms-grid-row": 9 }}>Test</Button>
-      </Box>
     </Section>
   );
 };
