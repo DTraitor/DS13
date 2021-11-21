@@ -7,7 +7,7 @@
 	id = "basic_engineering"
 
 
-	x = 2
+	x = 1.5
 	y = 5
 	icon_file = 'icons/obj/tools.dmi'
 	icon = "wrench"
@@ -22,7 +22,7 @@
 	desc = "Monitoring"
 	id = "monitoring"
 
-	x = 4.5
+	x = 4
 	y = 5
 	//special way to generate an icon
 
@@ -41,7 +41,7 @@
 	desc = "Gas Heating and Cooling"
 	id = "gas_heat"
 
-	x = 4.5
+	x = 4
 	y = 3.5
 	icon_file = 'icons/obj/atmos.dmi'
 	icon = "sheater-heat"
@@ -56,7 +56,7 @@
 	desc = "PFM-100 Industrial Torch"
 	id = "flamethrower"
 
-	x = 4.5
+	x = 4
 	y = 2
 	icon_file = 'icons/obj/ammo.dmi'
 	icon = "hydecanister_e"
@@ -65,36 +65,6 @@
 	cost = 1500
 
 	unlocks_designs = list("flamethrower")
-
-/datum/technology/engineering/adv_parts
-	name = "Advanced Parts"
-	desc = "Advanced Parts"
-	id = "adv_parts"
-
-	x = 11
-	y = 5
-	icon_file = 'icons/obj/stock_parts.dmi'
-	icon = "advanced_matter_bin"
-
-	required_technologies = list("adv_eng")
-	cost = 1000
-
-	unlocks_designs = list("nano_mani", "adv_matter_bin", "high_micro_laser", "adv_sensor")
-
-/datum/technology/engineering/super_parts
-	name = "Super Parts"
-	desc = "Super Parts"
-	id = "super_parts"
-
-	x = 10
-	y = 5
-	icon_file = 'icons/obj/stock_parts.dmi'
-	icon = "super_matter_bin"
-
-	required_technologies = list("adv_parts")
-	cost = 2000
-
-	unlocks_designs = list("pico_mani", "super_matter_bin", "ultra_micro_laser", "phasic_sensor")
 
 /datum/technology/engineering/res_tech
 	name = "Research Technologies"
@@ -121,7 +91,7 @@
 	id = "xenoarch"
 
 	x = 6.5
-	y = 3
+	y = 3.5
 	icon_file = 'icons/obj/pda.dmi'
 	icon = "crap"
 
@@ -135,8 +105,8 @@
 	desc = "Excavation Drill"
 	id = "excavation_drill"
 
-	x = 10
-	y = 3
+	x = 13
+	y = 3.5
 	icon_file = 'icons/obj/xenoarchaeology.dmi'
 	icon = "excavationdrill7"
 
@@ -150,8 +120,8 @@
 	desc = "Diamond Excavation Drill"
 	id = "excavation_drill_diamond"
 
-	x = 10
-	y = 1
+	x = 13
+	y = 2
 	icon_file = 'icons/obj/xenoarchaeology.dmi'
 	icon = "Dexcavationdrill7"
 
@@ -166,7 +136,7 @@
 	id = "basic_mining"
 
 	x = 6.5
-	y = 7
+	y = 6.5
 	icon_file = 'icons/obj/weapons.dmi'
 	icon = "ds_rocksaw1"
 
@@ -195,8 +165,8 @@
 	desc = "Advanced Mining"
 	id = "adv_mining"
 
-	x = 10
-	y = 7
+	x = 13
+	y = 6.5
 	icon_file = 'icons/obj/tools.dmi'
 	icon = "plasmacutter"
 
@@ -210,8 +180,8 @@
 	desc = "Mining Ammuntion"
 	id = "mining_ammo"
 
-	x = 10
-	y = 9
+	x = 13
+	y = 8
 	icon_file = 'icons/obj/ammo.dmi'
 	icon = "contact_energy"
 
@@ -225,7 +195,7 @@
 	desc = "Advanced Engineering"
 	id = "adv_eng"
 
-	x = 12
+	x = 15
 	y = 5
 	icon_file = 'icons/obj/storage.dmi'
 	icon = "RPED"
@@ -235,12 +205,42 @@
 
 	unlocks_designs = list("rped", "mesons", "mesons_material", "nanopaste", "rivet_bolts")
 
+/datum/technology/engineering/adv_parts
+	name = "Advanced Parts"
+	desc = "Advanced Parts"
+	id = "adv_parts"
+
+	x = 13
+	y = 5
+	icon_file = 'icons/obj/stock_parts.dmi'
+	icon = "advanced_matter_bin"
+
+	required_technologies = list("adv_eng")
+	cost = 1000
+
+	unlocks_designs = list("nano_mani", "adv_matter_bin", "high_micro_laser", "adv_sensor")
+
+/datum/technology/engineering/super_parts
+	name = "Super Parts"
+	desc = "Super Parts"
+	id = "super_parts"
+
+	x = 11
+	y = 5
+	icon_file = 'icons/obj/stock_parts.dmi'
+	icon = "super_matter_bin"
+
+	required_technologies = list("adv_parts")
+	cost = 2000
+
+	unlocks_designs = list("pico_mani", "super_matter_bin", "ultra_micro_laser", "phasic_sensor")
+
 /datum/technology/engineering/adv_tools
 	name = "Advanced Tools"
 	desc = "Advanced Tools"
 	id = "adv_tools"
 
-	x = 14
+	x = 17
 	y = 5
 	icon_file = 'icons/obj/tools.dmi'
 	icon = "pneumo_crowbar"
@@ -270,7 +270,7 @@
 	desc = "Integrated Circuit Printer"
 	id = "icprinter"
 
-	x = 12
+	x = 15
 	y = 8
 	icon_file = 'icons/obj/assemblies/electronic_tools.dmi'
 	icon = "circuit_printer"
@@ -285,8 +285,8 @@
 	desc = "Integrated Circuit Printer Upgrade Disk"
 	id = "icupgradv"
 
-	x = 12
-	y = 10
+	x = 15
+	y = 9.5
 	icon_file = 'icons/obj/assemblies/electronic_tools.dmi'
 	icon = "upgrade_disk"
 
@@ -300,7 +300,7 @@
 	desc = "Integrated Circuit Printer Clone Disk"
 	id = "icupclo"
 
-	x = 14
+	x = 16.5
 	y = 8
 	icon_file = 'icons/obj/assemblies/electronic_tools.dmi'
 	icon = "upgrade_disk_clone"
@@ -315,7 +315,7 @@
 	desc = "Power Node"
 	id = "node"
 
-	x = 16
+	x = 20
 	y = 5
 	icon_file = 'icons/obj/tools.dmi'
 	no_lines = TRUE
