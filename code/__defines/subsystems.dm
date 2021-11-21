@@ -89,6 +89,7 @@
 #define SS_INIT_OPEN_SPACE    -150
 #define SS_INIT_BAY_LEGACY    -200
 #define SS_INIT_UNIT_TESTS    -250
+#define SS_INIT_PATH			-300
 #define SS_INIT_STATPANEL		-499
 #define SS_INIT_CHAT			-500
 #define SS_INIT_SLOW		  -999	//Make this subsystem last, even after other things that think they should be last.

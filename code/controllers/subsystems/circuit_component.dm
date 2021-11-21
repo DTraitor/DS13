@@ -1,74 +1,88 @@
-// This SS manages circuit components; there is another SS that handles power use and init.
-
-SUBSYSTEM_DEF(circuit_components)
+SUBSYSTEM_DEF(circuit_component)
 	name = "Circuit Components"
-	priority = SS_PRIORITY_CIRCUIT_COMP
-	flags = SS_NO_INIT
-	wait = 1
+	wait = 0.1 SECONDS
+	priority = SS_PRIORITY_DEFAULT
 
-	var/list/queued_components = list()              // Queue of components for activation
-	var/position = 1                                 // Helper index to order newly activated components properly
+	var/list/callbacks_to_invoke = list()
+	var/list/currentrun = list()
 
-/datum/controller/subsystem/circuit_components/stat_entry(msg)
-	return "C:[queued_components.len]"
+	var/list/instant_run_stack = list()
 
-/datum/controller/subsystem/circuit_components/fire(resumed = FALSE)
-	if(paused_ticks >= 10) // The likeliest fail mode, due to the fast tick rate, is that it can never clear the full queue, running resumed every tick and accumulating a backlog.
-		disable()          // As this SS deals with optional and potentially abusable content, it will autodisable if overtaxing the server.
-		return
+	var/instant_run_tick = 0
+	var/instant_run_start_cpu_usage = 0
+	var/instant_run_max_cpu_usage = 10
+	var/list/instant_run_callbacks_to_run = list()
 
-	var/list/queued_components = src.queued_components
-	while(length(queued_components))
-		var/list/entry = queued_components[queued_components.len]
-		position = queued_components.len
-		queued_components.len--
-		if(!length(entry))
-			if(MC_TICK_CHECK)
-				break
+/datum/controller/subsystem/circuit_component/fire(resumed)
+	if(!resumed)
+		currentrun = callbacks_to_invoke.Copy()
+		callbacks_to_invoke.Cut()
+
+	while(length(currentrun))
+		var/datum/callback/to_call = currentrun[1]
+		currentrun.Cut(1,2)
+
+		if(QDELETED(to_call))
 			continue
 
-		var/obj/item/integrated_circuit/circuit = entry[1]
-		entry.Cut(1,2)
-		if(QDELETED(circuit))
-			if(MC_TICK_CHECK)
-				break
-			continue
+		to_call.user = null
+		to_call.InvokeAsync()
+		qdel(to_call)
 
-		circuit.check_then_do_work(arglist(entry))
+
 		if(MC_TICK_CHECK)
-			break
-	position = null
+			return
 
-/datum/controller/subsystem/circuit_components/disable()
-	..()
-	queued_components.Cut()
-	log_and_message_admins("Circuit component processing has been disabled.")
-
-/datum/controller/subsystem/circuit_components/enable()
-	..()
-	log_and_message_admins("Circuit component processing has been enabled.")
-
-// Store the entries like this so that components can be queued multiple times at once.
-// With immediate set, will generally imitate the order of the call stack if execution happened directly.
-// With immediate off, you go to the bottom of the pile.
-/datum/controller/subsystem/circuit_components/proc/queue_component(obj/item/integrated_circuit/circuit, immediate = TRUE)
-	if(!can_fire)
+/**
+ * Adds a callback to be invoked when the next fire() is done. Used by the integrated circuit system.
+ *
+ * Prevents race conditions as it acts like a queue system.
+ * Those that registered first will be executed first and those registered last will be executed last.
+ */
+/datum/controller/subsystem/circuit_component/proc/add_callback(datum/port/input, datum/callback/to_call)
+	if(instant_run_tick == world.time && (TICK_USAGE - instant_run_start_cpu_usage) < instant_run_max_cpu_usage)
+		instant_run_callbacks_to_run += to_call
 		return
-	var/list/entry = list(circuit) + args.Copy(3)
-	if(!immediate || !position)
-		queued_components.Insert(1, list(entry))
-		if(position)
-			position++
-	else
-		queued_components.Insert(position, list(entry))
 
-/datum/controller/subsystem/circuit_components/proc/dequeue_component(obj/item/integrated_circuit/circuit)
-	var/i = 1
-	while(i <= length(queued_components)) // Either i increases or length decreases on every iteration.
-		var/list/entry = queued_components[i]
-		if(length(entry) && entry[1] == circuit)
-			queued_components.Cut(i, i+1)
-			if(position > i)
-				position--
-		else
-			i++
+	callbacks_to_invoke += to_call
+
+/// Queues any callbacks to be executed instantly instead of using the subsystem.
+/datum/controller/subsystem/circuit_component/proc/queue_instant_run(start_cpu_time)
+	if(instant_run_tick)
+		instant_run_stack += list(instant_run_callbacks_to_run)
+		// If we're already instantly executing, don't change the start_cpu_time.
+		start_cpu_time = instant_run_start_cpu_usage
+
+	if(!start_cpu_time)
+		start_cpu_time = TICK_USAGE
+
+	instant_run_tick = world.time
+	instant_run_start_cpu_usage = start_cpu_time
+	instant_run_callbacks_to_run = list()
+
+/**
+ * Instantly executes the stored callbacks and does this in a loop until there are no stored callbacks or it hits tick limit.
+ *
+ * Returns a list containing any values added by any input port.
+ */
+/datum/controller/subsystem/circuit_component/proc/execute_instant_run()
+	var/list/received_inputs = list()
+	while(length(instant_run_callbacks_to_run))
+		var/list/instant_run_currentrun = instant_run_callbacks_to_run
+		instant_run_callbacks_to_run = list()
+		while(length(instant_run_currentrun))
+			var/datum/callback/to_call = instant_run_currentrun[1]
+			instant_run_currentrun.Cut(1,2)
+			to_call.user = null
+			to_call.InvokeAsync(received_inputs)
+			qdel(to_call)
+
+	if(length(instant_run_stack))
+		instant_run_callbacks_to_run = pop(instant_run_stack)
+	else
+		instant_run_tick = 0
+
+	if((TICK_USAGE - instant_run_start_cpu_usage) < instant_run_max_cpu_usage)
+		return received_inputs
+	else
+		return null

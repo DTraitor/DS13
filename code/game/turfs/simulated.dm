@@ -137,7 +137,6 @@
 			if(M.slip("the [floor_type] floor", slip_stun))
 				for(var/i = 1 to slip_dist)
 					step(M, M.dir)
-					sleep(1)
 			else
 				M.inertia_dir = 0
 		else

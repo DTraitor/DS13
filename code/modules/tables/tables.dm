@@ -439,6 +439,11 @@
 
 	connections = dirs_to_corner_states(connection_dirs)
 
+/obj/structure/table/CanAStarPass(obj/item/weapon/card/id/ID, to_dir, atom/movable/caller)
+	. = !density
+	if(istype(caller))
+		. = . || (caller.pass_flags & PASS_FLAG_TABLE)
+
 #define CORNER_NONE 0
 #define CORNER_COUNTERCLOCKWISE 1
 #define CORNER_DIAGONAL 2

@@ -621,3 +621,8 @@
 
 /obj/machinery/button/windowtint/update_icon()
 	icon_state = "light[active]"
+
+/obj/structure/window/CanAStarPass(obj/item/weapon/card/id/ID, to_dir, atom/movable/caller)
+	if(!density)
+		return TRUE
+	return FALSE

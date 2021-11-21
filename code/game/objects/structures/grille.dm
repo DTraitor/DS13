@@ -275,3 +275,8 @@
 		if(istype(O, /obj/structure/wall_frame))
 			on_frame = TRUE
 			break
+
+/obj/structure/grille/CanAStarPass(obj/item/weapon/card/id/ID, to_dir, atom/movable/caller)
+	. = !density
+	if(istype(caller))
+		. = . || (caller.pass_flags & PASS_FLAG_GRILLE)

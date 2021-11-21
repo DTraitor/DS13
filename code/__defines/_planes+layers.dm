@@ -187,6 +187,8 @@ What is the naming convention for planes or layers?
 	#define BEAM_PROJECTILE_LAYER		2
 	#define SUPERMATTER_WALL_LAYER		3
 
+#define BALLOON_CHAT_PLANE				251 /// Plane for balloon text (text that fades up)
+
 #define OBSCURITY_PLANE					300 // For visualnets, such as the AI's static.
 
 #define ABOVE_OBSCURITY_PLANE			400	//For objects that are seen even on obscured tiles. Mainly AI/signal eye sprites

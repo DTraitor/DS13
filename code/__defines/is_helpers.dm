@@ -109,3 +109,9 @@
 #define istable(A)	istype(A, /obj/structure/table)
 
 #define islight(A)	istype(A, /obj/machinery/light)
+
+#define ismachinery(A) (istype(A, /obj/machinery))
+
+/// Within given range, but not counting z-levels
+#define IN_GIVEN_RANGE(source, other, given_range) (get_dist(source, other) <= given_range && (get_step(source, 0)?:z) == (get_step(other, 0)?:z))
+

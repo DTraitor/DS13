@@ -64,8 +64,17 @@
 		: FALSE)
 #define HAS_TRAIT_NOT_FROM(target, trait, source) (target.status_traits ? (target.status_traits[trait] ? (length(target.status_traits[trait] - source) > 0) : FALSE) : FALSE)
 
-// common trait
-#define ROUNDSTART_TRAIT "roundstart" //cannot be removed without admin intervention
+// Cannot be removed without admin intervention
+#define ROUNDSTART_TRAIT "roundstart"
 
-//mob traits
-#define TRAIT_BUCKLED "buckled" //you can't unbuckl with button ressist
+// Trait applied when the MMI component is added to an [/obj/item/integrated_circuit]
+#define TRAIT_COMPONENT_MMI "component_mmi"
+
+// Trait applied when the MMI component is added to an [/obj/item/integrated_circuit]
+#define TRAIT_COMPONENT_PRINTER "component_printer"
+
+// Trait applied when an integrated circuit/module becomes undupable
+#define TRAIT_CIRCUIT_UNDUPABLE "circuit_undupable"
+
+// Hearing trait that is from the hearing component
+#define CIRCUIT_HEAR_TRAIT "circuit_hear"

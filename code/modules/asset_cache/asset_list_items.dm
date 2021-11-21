@@ -114,6 +114,11 @@ proc/get_craft_item(path)
 	SSresearch.design_ids["[design.id]"] = design
 
 
+/datum/asset/simple/circuit_assets
+	assets = list(
+		"grid_background.png" = 'icons/ui_icons/grid_background.png'
+	)
+
 /datum/asset/simple/jquery
 	legacy = TRUE
 	assets = list(

@@ -1011,31 +1011,6 @@ Botany:
 	materials = list(MATERIAL_STEEL = 2000, MATERIAL_GLASS = 1500)
 	build_path = /obj/item/modular_computer/telescreen
 
-/datum/design/item/integrated_printer
-	name = "Integrated Circuit Printer"
-	desc = "This machine provides all the necessary things for circuitry."
-	id = "icprinter"
-	materials = list(MATERIAL_STEEL = 10000, MATERIAL_GLASS = 5000)
-	category = "Integrated Circuits"
-	build_type = PROTOLATHE
-	build_path = /obj/item/device/integrated_circuit_printer
-
-/datum/design/item/integrated_printer/integrated_printer_upgrade_advanced
-	name = "Integrated Circuit Printer Upgrade Disk"
-	desc = "This disk allows for integrated circuit printers to print advanced circuitry designs."
-	id = "icupgradv"
-	materials = list(MATERIAL_STEEL = 10000, MATERIAL_GLASS = 10000)
-	build_type = PROTOLATHE
-	build_path = /obj/item/disk/integrated_circuit/upgrade/advanced
-
-/datum/design/item/integrated_printer/integrated_printer_upgrade_clone
-	name = "Integrated Circuit Printer Clone Disk"
-	desc = "This disk allows for integrated circuit printers to copy and clone designs instantaneously."
-	id = "icupclo"
-	materials = list(MATERIAL_STEEL = 10000, MATERIAL_GLASS = 10000)
-	build_type = PROTOLATHE
-	build_path = /obj/item/disk/integrated_circuit/upgrade/clone
-
 /datum/design/item/botany
 	category = "Botany"
 

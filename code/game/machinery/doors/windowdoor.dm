@@ -264,6 +264,9 @@
 
 	return
 
+//used in the AStar algorithm to determinate if the turf the door is on is passable
+/obj/machinery/door/window/CanAStarPass(obj/item/weapon/card/id/ID, to_dir)
+	return !density || (dir != to_dir) || (check_access(ID) && !inoperable())
 
 
 /obj/machinery/door/window/brigdoor

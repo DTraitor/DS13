@@ -68,7 +68,7 @@
 		if(WIRE_DOOR_BOLTS)
 			if(!mend)
 				//Cutting this wire also drops the door bolts, and mending it does not raise them. (This is what happens now, except there are a lot more wires going to door bolts at present)
-				A.lock(1)
+				A.lock(TRUE)
 				A.update_icon()
 
 		if(WIRE_AI_CONTROL)

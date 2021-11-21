@@ -168,3 +168,6 @@
 	//Seciruty
 	var/list/logging = list()
 	var/static/next_mob_id = 0
+
+	///Calls relaymove() to whatever this is set to when the mob tries to move
+	var/atom/movable/remote_control

@@ -4,3 +4,6 @@ GLOBAL_DATUM_INIT(is_http_protocol, /regex, regex("^https?://"))
 //All characters forbidden by filenames: ", \, \n, \t, /, ?, %, *, :, |, <, >
 GLOBAL_DATUM_INIT(filename_forbidden_chars, /regex, regex(@{""|[\\\n\t/?%*:|<>]"}, "g"))
 // had to use the OR operator for quotes instead of putting them in the character class because it breaks the syntax highlighting otherwise.
+
+//All < and > characters
+GLOBAL_DATUM_INIT(angular_brackets, /regex, regex(@"[<>]", "g"))
