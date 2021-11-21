@@ -605,8 +605,6 @@
 			return global.round_progressing;
 		if("rune_list")
 			return global.rune_list;
-		if("same_wires")
-			return global.same_wires;
 		if("secondary_mode")
 			return global.secondary_mode;
 		if("secret_force_mode")
@@ -747,8 +745,6 @@
 			return global.whitelist;
 		if("whitelisted_species")
 			return global.whitelisted_species;
-		if("wireColours")
-			return global.wireColours;
 		if("world_topic_spam_protect_ip")
 			return global.world_topic_spam_protect_ip;
 		if("world_topic_spam_protect_time")
@@ -1370,8 +1366,6 @@
 			global.round_progressing=newval;;
 		if("rune_list")
 			global.rune_list=newval;
-		if("same_wires")
-			global.same_wires=newval;
 		if("secondary_mode")
 			global.secondary_mode=newval;
 		if("secret_force_mode")
@@ -1512,8 +1506,6 @@
 			global.whitelist=newval;
 		if("whitelisted_species")
 			global.whitelisted_species=newval;
-		if("wireColours")
-			global.wireColours=newval;
 		if("world_topic_spam_protect_ip")
 			global.world_topic_spam_protect_ip=newval;
 		if("world_topic_spam_protect_time")
@@ -1839,7 +1831,6 @@
 	"robot_modules",
 	"round_progressing",
 	"rune_list",
-	"same_wires",
 	"secondary_mode",
 	"secret_force_mode",
 	"send_emergency_team",
@@ -1911,7 +1902,6 @@
 	"weighted_randomevent_locations",
 	"whitelist",
 	"whitelisted_species",
-	"wireColours",
 	"world_topic_spam_protect_ip",
 	"world_topic_spam_protect_time",
 	"world_uplinks",
