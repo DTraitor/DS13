@@ -7,7 +7,7 @@
 	id = "basic_engineering"
 
 
-	x = 1.5
+	x = 2
 	y = 5
 	icon_file = 'icons/obj/tools.dmi'
 	icon = "wrench"
@@ -22,7 +22,7 @@
 	desc = "Monitoring"
 	id = "monitoring"
 
-	x = 4
+	x = 4.5
 	y = 5
 	//special way to generate an icon
 
@@ -41,7 +41,7 @@
 	desc = "Gas Heating and Cooling"
 	id = "gas_heat"
 
-	x = 4
+	x = 4.5
 	y = 3.5
 	icon_file = 'icons/obj/atmos.dmi'
 	icon = "sheater-heat"
@@ -56,7 +56,7 @@
 	desc = "PFM-100 Industrial Torch"
 	id = "flamethrower"
 
-	x = 4
+	x = 4.5
 	y = 2
 	icon_file = 'icons/obj/ammo.dmi'
 	icon = "hydecanister_e"
@@ -71,7 +71,7 @@
 	desc = "Research Technologies"
 	id = "res_tech"
 
-	x = 6.5
+	x = 7
 	y = 5
 	//special way to generate an icon
 
@@ -90,7 +90,7 @@
 	desc = "Xenoarcheology"
 	id = "xenoarch"
 
-	x = 6.5
+	x = 7
 	y = 3.5
 	icon_file = 'icons/obj/pda.dmi'
 	icon = "crap"
@@ -105,7 +105,7 @@
 	desc = "Excavation Drill"
 	id = "excavation_drill"
 
-	x = 13
+	x = 13.5
 	y = 3.5
 	icon_file = 'icons/obj/xenoarchaeology.dmi'
 	icon = "excavationdrill7"
@@ -120,7 +120,7 @@
 	desc = "Diamond Excavation Drill"
 	id = "excavation_drill_diamond"
 
-	x = 13
+	x = 13.5
 	y = 2
 	icon_file = 'icons/obj/xenoarchaeology.dmi'
 	icon = "Dexcavationdrill7"
@@ -135,7 +135,7 @@
 	desc = "Basic Mining"
 	id = "basic_mining"
 
-	x = 6.5
+	x = 7
 	y = 6.5
 	icon_file = 'icons/obj/weapons.dmi'
 	icon = "ds_rocksaw1"
@@ -165,7 +165,7 @@
 	desc = "Advanced Mining"
 	id = "adv_mining"
 
-	x = 13
+	x = 13.5
 	y = 6.5
 	icon_file = 'icons/obj/tools.dmi'
 	icon = "plasmacutter"
@@ -180,7 +180,7 @@
 	desc = "Mining Ammuntion"
 	id = "mining_ammo"
 
-	x = 13
+	x = 13.5
 	y = 8
 	icon_file = 'icons/obj/ammo.dmi'
 	icon = "contact_energy"
@@ -195,7 +195,7 @@
 	desc = "Advanced Engineering"
 	id = "adv_eng"
 
-	x = 15
+	x = 15.5
 	y = 5
 	icon_file = 'icons/obj/storage.dmi'
 	icon = "RPED"
@@ -210,7 +210,7 @@
 	desc = "Advanced Parts"
 	id = "adv_parts"
 
-	x = 13
+	x = 13.5
 	y = 5
 	icon_file = 'icons/obj/stock_parts.dmi'
 	icon = "advanced_matter_bin"
@@ -225,7 +225,7 @@
 	desc = "Super Parts"
 	id = "super_parts"
 
-	x = 11
+	x = 11.5
 	y = 5
 	icon_file = 'icons/obj/stock_parts.dmi'
 	icon = "super_matter_bin"
@@ -240,7 +240,7 @@
 	desc = "Advanced Tools"
 	id = "adv_tools"
 
-	x = 17
+	x = 17.5
 	y = 5
 	icon_file = 'icons/obj/tools.dmi'
 	icon = "pneumo_crowbar"
@@ -255,7 +255,7 @@
 	desc = "Airlock Brace"
 	id = "airlock_brace"
 
-	x = 8.5
+	x = 9
 	y = 5
 	icon_file = 'icons/obj/tools.dmi'
 	icon = "maintenance_jack"
@@ -270,7 +270,7 @@
 	desc = "Integrated Circuit Printer"
 	id = "icprinter"
 
-	x = 15
+	x = 15.5
 	y = 8
 	icon_file = 'icons/obj/assemblies/electronic_tools.dmi'
 	icon = "circuit_printer"
@@ -285,7 +285,7 @@
 	desc = "Integrated Circuit Printer Upgrade Disk"
 	id = "icupgradv"
 
-	x = 15
+	x = 15.5
 	y = 9.5
 	icon_file = 'icons/obj/assemblies/electronic_tools.dmi'
 	icon = "upgrade_disk"
@@ -300,7 +300,7 @@
 	desc = "Integrated Circuit Printer Clone Disk"
 	id = "icupclo"
 
-	x = 16.5
+	x = 17
 	y = 8
 	icon_file = 'icons/obj/assemblies/electronic_tools.dmi'
 	icon = "upgrade_disk_clone"
@@ -315,7 +315,7 @@
 	desc = "Power Node"
 	id = "node"
 
-	x = 20
+	x = 20.5
 	y = 5
 	icon_file = 'icons/obj/tools.dmi'
 	no_lines = TRUE

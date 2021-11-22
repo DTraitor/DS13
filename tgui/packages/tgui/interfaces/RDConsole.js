@@ -1,5 +1,6 @@
+import { Component } from 'inferno';
 import { useBackend, useSharedState } from '../backend';
-import { Box, AnimatedNumber, Button, LabeledList, ProgressBar, Section, Stack, Tabs, Icon, Divider, Flex, Tooltip, Table } from '../components';
+import { Box, AnimatedNumber, Button, LabeledList, ProgressBar, Section, Stack, Tabs, Icon, Divider, Flex, Tooltip } from '../components';
 import { Window } from '../layouts';
 import { round } from 'common/math';
 import { Fragment } from 'inferno';
@@ -323,80 +324,14 @@ const TechLevelsInfo = (props, context) => {
 const Research = (props, context) => {
   const { act, data } = useBackend(context);
 
-  let columnEmpty = [];
-  let rowEmpty = [];
-
-  for (let i = 1; i <= data.columns+1; i++) {
-    columnEmpty.push(<Box className="sciGridSize" style={{ "-ms-grid-column": i, "-ms-grid-row": 1 }} />);
-  }
-
-  for (let i = 2; i <= data.rows+1; i++) {
-    rowEmpty.push(<Box className="sciGridSize" style={{ "-ms-grid-column": 1, "-ms-grid-row": i }} />);
-  }
-
   const {
-    tech_trees,
-    techs,
-    lines,
-    research_points,
     selected_tech,
-    tech_cat,
   } = data;
 
   return (
     <Stack vertical fill height="95%">
-      <Stack.Item height={45}>
-        <Section
-          fill
-          title="Research Menu"
-          buttons={<Box bold fontSize="14px">Research Points: <Box inline color="orange">{research_points}</Box></Box>}>
-          <Tabs>
-            {tech_trees && tech_trees.map((tech_tree, i) => (
-              <Tabs.Tab
-                key={tech_tree.id}
-                selected={tech_tree.id === tech_cat}
-                onClick={() => act("change_tab", { "machine": 3, "tab": tech_tree.id })}>
-                {tech_tree.shortname}
-              </Tabs.Tab>
-            ))}
-          </Tabs>
-          <Box style={{ display: "-ms-grid" }}>
-            {columnEmpty}
-            {rowEmpty}
-            {lines && lines.map((line, i) => (
-              <Box
-                key={i}
-                style={{ "-ms-grid-column": line.height_1, "-ms-grid-row": line.width_1, "-ms-grid-column-span": line.height_2, "-ms-grid-row-span": line.width_2 }}
-                className={
-                  (line.bottom && "sciBorderBottom ") + (line.left && " sciBorderLeft ") + (line.right && " sciBorderRight ") + (line.top && " sciBorderTop")
-                } />
-            ))}
-            {techs && techs.map((tech, i) => (
-              <Box key={tech.id}
-                className="sciGridTechPosition"
-                style={{ "-ms-grid-column": tech.x, "-ms-grid-row": tech.y, "-ms-grid-column-span": 1, "-ms-grid-row-span": 1 }}>
-                <Button
-                  position="absolute"
-                  p={0}
-                  width="36px"
-                  height="36px"
-                  color={(selected_tech && tech.id===selected_tech.id?"caution":(tech.isresearched?"selected":(tech.canresearch?"default":"danger")))}
-                  tooltip={
-                    <Box>
-                      {tech.name}
-                      <br />
-                      {tech.desc}
-                    </Box>
-                  }
-                  tooltipPosition="bottom-start"
-                  onDblClick={() => act('research_tech', { tech_id: tech.id })}
-                  onClick={() => act('set_selected_tech', { tech_id: tech.id })}>
-                  <Box mt="2px" ml="2px" className={"rdtech96x96 "+tech.id+" sciScale32"} />
-                </Button>
-              </Box>
-            ))}
-          </Box>
-        </Section>
+      <Stack.Item height="70%">
+        <TechTree />
       </Stack.Item>
       <Stack.Item grow>
         {selected_tech?(
@@ -734,3 +669,169 @@ const MachineReagentsTab = (props, context) => {
     </Section>
   );
 };
+
+/*
+ *  RnD Tech Tree
+ */
+
+const pauseEvent = e => {
+  if (e.stopPropagation) { e.stopPropagation(); }
+  if (e.preventDefault) { e.preventDefault(); }
+  e.cancelBubble = true;
+  e.returnValue = false;
+  return false;
+};
+
+export class TechTree extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      offsetX: 0,
+      offsetY: 0,
+      transform: 'none',
+      dragging: false,
+      originX: null,
+      originY: null,
+    };
+
+    // Dragging
+    this.handleDragStart = e => {
+      this.ref = e.target;
+      this.setState({
+        dragging: false,
+        originX: e.screenX,
+        originY: e.screenY,
+      });
+      document.addEventListener('mousemove', this.handleDragMove);
+      document.addEventListener('mouseup', this.handleDragEnd);
+      pauseEvent(e);
+    };
+
+    this.handleDragMove = e => {
+      this.setState(prevState => {
+        const state = { ...prevState };
+        const newOffsetX = e.screenX - state.originX;
+        const newOffsetY = e.screenY - state.originY;
+        if (prevState.dragging) {
+          state.offsetX += newOffsetX;
+          state.offsetY += newOffsetY;
+          state.originX = e.screenX;
+          state.originY = e.screenY;
+        } else {
+          state.dragging = true;
+        }
+        return state;
+      });
+      pauseEvent(e);
+    };
+
+    this.handleDragEnd = e => {
+      this.setState({
+        dragging: false,
+        originX: null,
+        originY: null,
+      });
+      document.removeEventListener('mousemove', this.handleDragMove);
+      document.removeEventListener('mouseup', this.handleDragEnd);
+      pauseEvent(e);
+    };
+
+  }
+
+  render() {
+    const { dragging, offsetX, offsetY } = this.state;
+    const { data, act } = useBackend(this.context);
+    const {
+      columns,
+      rows,
+      tech_trees,
+      techs,
+      lines,
+      research_points,
+      selected_tech,
+      tech_cat,
+    } = data;
+
+    const newStyle = {
+      "margin-top": offsetY + "px",
+      "margin-left": offsetX + "px",
+      "position": "relative",
+      "display": "-ms-grid",
+    };
+
+
+    let columnEmpty = [];
+    let rowEmpty = [];
+
+    for (let i = 1; i <= columns+1; i++) {
+      columnEmpty.push(<Box className="sciGridSize" style={{ "-ms-grid-column": i, "-ms-grid-row": 1 }} />);
+    }
+
+    for (let i = 2; i <= rows+1; i++) {
+      rowEmpty.push(<Box className="sciGridSize" style={{ "-ms-grid-column": 1, "-ms-grid-row": i }} />);
+    }
+
+    return (
+      <Section
+        fill
+        style={{ "overflow": "hidden", "cursor": dragging ? "move" : "auto" }}
+        // Makes tech trees draggable. Don't need it right now
+        // Enable it if you want to make REALLY big tech tree
+        // onMouseDown={this.handleDragStart}
+        title="Research Menu"
+        buttons={<Box bold fontSize="14px">Research Points: <Box inline color="orange">{research_points}</Box></Box>}>
+        <Tabs>
+          {tech_trees && tech_trees.map((tech_tree, i) => (
+            <Tabs.Tab
+              key={tech_tree.id}
+              selected={tech_tree.id === tech_cat}
+              onClick={() => { act("change_tab", { "machine": 3, "tab": tech_tree.id });
+                this.setState({ "offsetY": 0, "offsetX": 0 }); }}>
+              {tech_tree.shortname}
+            </Tabs.Tab>
+          ))}
+        </Tabs>
+        <Box style={{ "overflow": "hidden" }}>
+          <Box style={newStyle}>
+            {columnEmpty}
+            {rowEmpty}
+            {lines && lines.map((line, i) => (
+              <Box
+                key={i}
+                style={{ "-ms-grid-column": line.height_1, "-ms-grid-row": line.width_1, "-ms-grid-column-span": line.height_2, "-ms-grid-row-span": line.width_2 }}
+                className={
+                  (line.bottom && "sciBorderBottom ") + (line.left && " sciBorderLeft ") + (line.right && " sciBorderRight ") + (line.top && " sciBorderTop")
+                } />
+            ))}
+            {techs && techs.map((tech, i) => (
+              <Box key={tech.id}
+                className="sciGridTechPosition"
+                style={{ "-ms-grid-column": tech.x, "-ms-grid-row": tech.y, "-ms-grid-column-span": 1, "-ms-grid-row-span": 1 }}>
+                <Button
+                  position="absolute"
+                  p={0}
+                  width="36px"
+                  height="36px"
+                  color={(selected_tech && tech.id===selected_tech.id?"caution":(tech.isresearched?"selected":(tech.canresearch?"default":"danger")))}
+                  tooltip={
+                    <Box>
+                      {tech.name}
+                      <br />
+                      {tech.desc}
+                    </Box>
+                  }
+                  tooltipPosition="bottom-start"
+                  onDblClick={() => act('research_tech', { tech_id: tech.id })}
+                  onClick={() => act('set_selected_tech', { tech_id: tech.id })}>
+                  <Box mt="2px" ml="2px" className={"rdtech96x96 "+tech.id+" sciScale32"} />
+                </Button>
+              </Box>
+            ))}
+          </Box>
+        </Box>
+      </Section>
+    );
+  }
+}
+

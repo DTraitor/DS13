@@ -6,8 +6,8 @@
 	desc = "Basic Power"
 	id = "basic_power"
 
-	x = 6
-	y = 8
+	x = 12
+	y = 1.5
 	icon = "cell"
 
 	required_technologies = list()
@@ -24,8 +24,8 @@
 	desc = "Advanced Power"
 	id = "adv_power"
 
-	x = 6
-	y = 6
+	x = 12
+	y = 4.5
 	icon = "hcell"
 
 	required_technologies = list("basic_power")
@@ -42,8 +42,8 @@
 	desc = "Super Power"
 	id = "sup_power"
 
-	x = 6
-	y = 3
+	x = 12
+	y = 7.5
 	icon = "scell"
 
 	required_technologies = list("adv_power")
@@ -60,8 +60,8 @@
 	desc = "Hyper Power"
 	id = "hyp_power"
 
-	x = 8
-	y = 3
+	x = 15
+	y = 7.5
 	icon = "hpcell"
 
 	required_technologies = list("sup_power")
@@ -78,8 +78,8 @@
 	desc = "Solar Power"
 	id = "sol_power"
 
-	x = 8
-	y = 6
+	x = 15
+	y = 4.5
 	// special way to generate an icon
 
 	required_technologies = list("adv_power")
@@ -95,8 +95,8 @@
 	desc = "Advanced Power Generation"
 	id = "adv_power_gen"
 
-	x = 4
-	y = 6
+	x = 9
+	y = 4.5
 	icon = "portgen1"
 
 	required_technologies = list("adv_power")
@@ -109,8 +109,8 @@
 	desc = "Power Storage"
 	id = "power_storage"
 
-	x = 2
-	y = 6
+	x = 6
+	y = 4.5
 	icon_file = 'icons/obj/cellrack.dmi'
 	icon = "rack"
 
@@ -124,8 +124,8 @@
 	desc = "Advanced Power Storage"
 	id = "adv_power_storage"
 
-	x = 2
-	y = 4
+	x = 6
+	y = 6
 	icon = "smes"
 
 	required_technologies = list("power_storage")
@@ -143,8 +143,8 @@
 	desc = "Super Power Generation"
 	id = "sup_power_gen"
 
-	x = 4
-	y = 3
+	x = 9
+	y = 7.5
 	icon = "portgen2"
 
 	required_technologies = list("adv_power_gen", "sup_power")
@@ -157,8 +157,8 @@
 	desc = "R-UST Generator"
 	id = "fusion"
 
-	x = 2
-	y = 3
+	x = 6
+	y = 7.5
 	icon_file = 'icons/obj/machines/power/fusion.dmi'
 	icon = "core"
 
