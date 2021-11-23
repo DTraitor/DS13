@@ -1,5 +1,6 @@
 /mob/Destroy()//This makes sure that mobs with clients/keys are not just deleted from the game.
 	STOP_PROCESSING(SSmobs, src)
+	GLOB.mob_list -= src
 	GLOB.dead_mob_list -= src
 	GLOB.living_mob_list -= src
 	unset_machine()
@@ -22,6 +23,7 @@
 	return QDEL_HINT_HARDDEL
 
 /mob/Initialize()
+	GLOB.mob_list += src
 	. = ..()
 	skillset = new skillset(src)
 	if(!move_intent)
@@ -1018,7 +1020,7 @@
 	if(!check_has_body_select())
 		return
 	var/atom/movable/screen/zone_sel/selector = mob.hud_used.zone_sel
-	selector.set_selected_zone(next_in_list(mob.hud_used.zone_sel.selecting,zones))
+	selector.set_zone_sel(next_in_list(mob.hud_used.zone_sel.selecting,zones))
 
 /mob/proc/has_chem_effect(chem, threshold)
 	return FALSE

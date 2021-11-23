@@ -4081,7 +4081,7 @@
 	d2 = 4;
 	icon_state = "0-4"
 	},
-/obj/item/stack/net/thirty,
+/obj/item/stack/net/large,
 /turf/simulated/floor/dank,
 /area/ishimura/lower/misc/marker)
 "aiS" = (
@@ -26800,13 +26800,13 @@
 /turf/simulated/floor/dank/golf_brown,
 /area/ishimura/lower/mining/processing_room)
 "bdy" = (
-/obj/machinery/input,
 /obj/effect/floor_decal/industrial/loading{
 	dir = 4
 	},
 /obj/machinery/light{
 	dir = 1
 	},
+/obj/machinery/input/ore,
 /turf/simulated/floor/dank/rectangles,
 /area/ishimura/lower/mining/processing_room)
 "bdz" = (
