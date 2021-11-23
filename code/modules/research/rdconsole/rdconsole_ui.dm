@@ -31,6 +31,7 @@
 /obj/machinery/computer/rdconsole/ui_data(mob/user)
 	var/list/data = list()
 	data["sync"] = sync
+	data["locked"] = locked
 	data["can_research"] = can_research
 	data["has_imprinter"] = linked_imprinter ? TRUE : FALSE
 	data["has_protolathe"] = linked_lathe ? TRUE : FALSE
@@ -43,6 +44,8 @@
 
 	data["research_points"] = files.research_points
 
+	data["access"] = job_master
+
 	data["console_tab"] = cats[4]
 
 	if(linked_lathe && cats[4] == PROTOLATHE)
@@ -51,7 +54,7 @@
 		data["lathe_queue_data"] = list()
 		data["lathe_can_restart_queue"] = (linked_lathe.queue.len && !linked_lathe.busy)
 		for(var/RNDD in linked_lathe.queue)
-			data["lathe_queue_data"] += linked_lathe.queue[RNDD]["name"]
+			data["lathe_queue_data"] += list(list("item" = RNDD, "name" = linked_lathe.queue[RNDD]["name"]))
 
 		data["lathe_possible_designs"] = get_possible_designs_data(PROTOLATHE)
 		data["lathe_all_cats"] = files.design_categories_protolathe
@@ -63,7 +66,7 @@
 		data["imprinter_queue_data"] = list()
 		data["imprinter_can_restart_queue"] = (linked_imprinter.queue.len && !linked_imprinter.busy)
 		for(var/RNDD in linked_imprinter.queue)
-			data["imprinter_queue_data"] += linked_imprinter.queue[RNDD]["name"]
+			data["imprinter_queue_data"] += list("item" = RNDD, "name" = linked_imprinter.queue[RNDD]["name"])
 
 		data["imprinter_possible_designs"] = get_possible_designs_data(IMPRINTER)
 		data["imprinter_all_cats"] = files.design_categories_imprinter
@@ -227,8 +230,8 @@
 								first_width = OTech.x + 1
 								second_width = Tech.x - OTech.x
 							else
-								top = TRUE
-								right = TRUE
+								bottom = TRUE
+								left = TRUE
 								first_width = Tech.x + 1
 								second_width = OTech.x - Tech.x
 
@@ -284,163 +287,203 @@
 /obj/machinery/computer/rdconsole/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
 	if(..())
 		return
-	switch(action)
-		if("change_tab")
-			if(params["machine"] && params["tab"])
-				if(cats[text2num(params["machine"])] != params["tab"])
-					cats[text2num(params["machine"])] = params["tab"]
-					playsound(src, get_sfx("keyboard"), VOLUME_HIGH)
+	if(!locked)
+		switch(action)
+			if("change_tab")
+				if(params["machine"] && params["tab"])
+					if(cats[text2num(params["machine"])] != params["tab"])
+						cats[text2num(params["machine"])] = params["tab"]
+						playsound(src, get_sfx("keyboard"), VOLUME_HIGH)
 
-		if("set_selected_tech")
-			if(cats[5] != params["tech_id"])
-				cats[5] = params["tech_id"]
+			if("set_selected_tech")
+				if(cats[5] != params["tech_id"])
+					cats[5] = params["tech_id"]
+					playsound(src, get_sfx("keyboard"), VOLUME_HIGH)
+				else
+					return
+
+			if("change_design_cat_arrow")
+				if(params["dir"] == "right")
+					if(text2num(params["machine"]) == PROTOLATHE)
+						var/cat = files.design_categories_protolathe.Find(cats[PROTOLATHE])
+						if(cat < files.design_categories_protolathe.len)
+							cats[PROTOLATHE] = files.design_categories_protolathe[cat+1]
+						else
+							cats[PROTOLATHE] = files.design_categories_protolathe[1]
+						playsound(src, get_sfx("keyboard"), VOLUME_HIGH)
+
+					else if(text2num(params["machine"]) == IMPRINTER)
+						var/cat = files.design_categories_imprinter.Find(cats[IMPRINTER])
+						if(cat < files.design_categories_imprinter.len)
+							cats[IMPRINTER] = files.design_categories_imprinter[cat+1]
+						else
+							cats[IMPRINTER] = files.design_categories_imprinter[1]
+						playsound(src, get_sfx("keyboard"), VOLUME_HIGH)
+
+					else if(text2num(params["machine"]) == 3)
+						var/cat = files.tech_trees_shown.Find(cats[3])
+						if(cat < files.tech_trees_shown.len)
+							cats[3] = files.tech_trees_shown[cat+1]
+						else
+							cats[3] = files.tech_trees_shown[1]
+						playsound(src, get_sfx("keyboard"), VOLUME_HIGH)
+
+				else
+					if(text2num(params["machine"]) == PROTOLATHE)
+						var/cat = files.design_categories_protolathe.Find(cats[PROTOLATHE])
+						if(cat > 1)
+							cats[PROTOLATHE] = files.design_categories_protolathe[cat-1]
+						else
+							cats[PROTOLATHE] = files.design_categories_protolathe[files.design_categories_protolathe.len]
+						playsound(src, get_sfx("keyboard"), VOLUME_HIGH)
+
+					else if(text2num(params["machine"]) == IMPRINTER)
+						var/cat = files.design_categories_imprinter.Find(cats[IMPRINTER])
+						if(cat > 1)
+							cats[IMPRINTER] = files.design_categories_imprinter[cat-1]
+						else
+							cats[IMPRINTER] = files.design_categories_imprinter[files.design_categories_imprinter.len]
+						playsound(src, get_sfx("keyboard"), VOLUME_HIGH)
+
+					else if(text2num(params["machine"]) == 3)
+						var/cat = files.tech_trees_shown.Find(cats[3])
+						if(cat > 1)
+							cats[3] = files.tech_trees_shown[cat-1]
+						else
+							cats[3] = files.tech_trees_shown[files.tech_trees_shown.len]
+						playsound(src, get_sfx("keyboard"), VOLUME_HIGH)
+
+			if("eject")
+				var/amount = text2num(params["amount"])
+				if(!amount)
+					to_chat(usr, "<span class=\"alert\">[src] only accepts a numerical amount!</span>")
+					return
+
+				if(text2num(params["machine"]) == PROTOLATHE)
+					linked_lathe?.eject_sheet(params["id"], round(amount))
+
+				else if(text2num(params["machine"]) == IMPRINTER)
+					linked_imprinter?.eject_sheet(params["id"], round(amount))
+
+				playsound(src, get_sfx("keystroke"), VOLUME_HIGH)
+
+			if("build")
+				var/amount=text2num(params["amount"])
+				if(params["id"] in files.known_designs)
+					var/datum/design/being_built = SSresearch.designs_by_id[params["id"]]
+					if(amount)
+						switch(text2num(params["machine"]))
+							if(PROTOLATHE)
+								linked_lathe?.queue_design(being_built, amount)
+							if(IMPRINTER)
+								linked_imprinter?.queue_design(being_built, amount)
+				else
+					log_and_message_admins("Possible hacker detected. User tried to print research design that wasn't yet researched. Design id: [params["id"]]", usr, usr.loc)
+
+				playsound(src, get_sfx("keystroke"), VOLUME_HIGH)
+
+			if("research_tech")
+				if((params["tech_id"] in files.all_technologies) && can_research)
+					var/datum/technology/T = SSresearch.all_technologies[params["tech_id"]]
+					if(files.UnlockTechology(T))
+						playsound(src, get_sfx("keystroke"), VOLUME_HIGH)
+
+			if("clear_queue")
+				switch(text2num(params["machine"]))
+					if(PROTOLATHE)
+						linked_lathe?.clear_queue()
+					if(IMPRINTER)
+						linked_imprinter?.clear_queue()
+
+			if("restart_queue")
+				switch(text2num(params["machine"]))
+					if(PROTOLATHE)
+						linked_lathe?.restart_queue()
+					if(IMPRINTER)
+						linked_imprinter?.restart_queue()
+
+			if("remove_from_queue")
+				switch(text2num(params["machine"]))
+					if(PROTOLATHE)
+						linked_lathe?.queue -= params["queue_item"]
+					if(IMPRINTER)
+						linked_imprinter?.queue -= params["queue_item"]
+
+			if("resync_machines")
+				SyncRDevices()
 				playsound(src, get_sfx("keyboard"), VOLUME_HIGH)
+
+			if("togglesync")
+				sync = !sync
+				playsound(src, get_sfx("keyboard"), VOLUME_HIGH)
+				return TRUE // We dont need to send static data again
+
+			if("sync")
+				sync_tech()
+				playsound(src, get_sfx("keyboard"), VOLUME_HIGH)
+
+			if("lock")
+				playsound(src, get_sfx("keyboard"), VOLUME_HIGH)
+				if(allowed(usr) || emagged)
+					locked = !locked
+					return TRUE // We dont need to send static data again
+				else
+					to_chat(usr, SPAN_WARNING("Unauthorized Access."))
+					return
+
+			if("disconnect")
+				switch(text2num(params["machine"]))
+					if(IMPRINTER)
+						linked_imprinter.linked_console = null
+						linked_imprinter = null
+						if(cats[4] == IMPRINTER)
+							cats[3] = 1
+
+					if(PROTOLATHE)
+						linked_lathe.linked_console = null
+						linked_lathe = null
+						if(cats[4] == PROTOLATHE)
+							cats[4] = 1
+
+					// Destructive analyzer
+					if(3)
+						linked_destroy.linked_console = null
+						linked_destroy = null
+
+				playsound(src, get_sfx("keyboard"), VOLUME_HIGH)
+
+			if("purge")
+				var/amount = text2num(params["volume"])
+				if(!amount)
+					to_chat(usr, "<span class=\"alert\">[src] only accepts a numerical volume!</span>")
+					return
+
+				switch(params["machine"])
+					if(PROTOLATHE)
+						linked_lathe?.reagents.remove_reagents_of_type(text2path(params["type"]), round(amount))
+					if(IMPRINTER)
+						linked_imprinter?.reagents.remove_reagents_of_type(text2path(params["type"]), round(amount))
+
+				playsound(src, get_sfx("keystroke"), VOLUME_HIGH)
+
+			if("deconstruct")
+				linked_destroy?.deconstruct_item()
+				playsound(src, get_sfx("keystroke"), VOLUME_HIGH)
+
+			if("eject_decon")
+				linked_destroy?.eject_item(usr)
+				playsound(src, get_sfx("keyboard"), VOLUME_HIGH)
+
+		SStgui.update_uis(src, TRUE)
+
+	else
+		if(action == "lock")
+			playsound(src, get_sfx("keyboard"), VOLUME_HIGH)
+			if(allowed(usr) || emagged)
+				locked = !locked
+				return TRUE // We dont need to send static data again
 			else
-				return
-
-		if("change_design_cat_arrow")
-			if(params["dir"] == "right")
-				if(text2num(params["machine"]) == PROTOLATHE)
-					var/cat = files.design_categories_protolathe.Find(cats[PROTOLATHE])
-					if(cat < files.design_categories_protolathe.len)
-						cats[PROTOLATHE] = files.design_categories_protolathe[cat+1]
-					else
-						cats[PROTOLATHE] = files.design_categories_protolathe[1]
-					playsound(src, get_sfx("keyboard"), VOLUME_HIGH)
-
-				else if(text2num(params["machine"]) == IMPRINTER)
-					var/cat = files.design_categories_imprinter.Find(cats[IMPRINTER])
-					if(cat < files.design_categories_imprinter.len)
-						cats[IMPRINTER] = files.design_categories_imprinter[cat+1]
-					else
-						cats[IMPRINTER] = files.design_categories_imprinter[1]
-					playsound(src, get_sfx("keyboard"), VOLUME_HIGH)
-
-				else if(text2num(params["machine"]) == 3)
-					var/cat = files.tech_trees_shown.Find(cats[3])
-					if(cat < files.tech_trees_shown.len)
-						cats[3] = files.tech_trees_shown[cat+1]
-					else
-						cats[3] = files.tech_trees_shown[1]
-					playsound(src, get_sfx("keyboard"), VOLUME_HIGH)
-
-			else
-				if(text2num(params["machine"]) == PROTOLATHE)
-					var/cat = files.design_categories_protolathe.Find(cats[PROTOLATHE])
-					if(cat > 1)
-						cats[PROTOLATHE] = files.design_categories_protolathe[cat-1]
-					else
-						cats[PROTOLATHE] = files.design_categories_protolathe[files.design_categories_protolathe.len]
-					playsound(src, get_sfx("keyboard"), VOLUME_HIGH)
-
-				else if(text2num(params["machine"]) == IMPRINTER)
-					var/cat = files.design_categories_imprinter.Find(cats[IMPRINTER])
-					if(cat > 1)
-						cats[IMPRINTER] = files.design_categories_imprinter[cat-1]
-					else
-						cats[IMPRINTER] = files.design_categories_imprinter[files.design_categories_imprinter.len]
-					playsound(src, get_sfx("keyboard"), VOLUME_HIGH)
-
-				else if(text2num(params["machine"]) == 3)
-					var/cat = files.tech_trees_shown.Find(cats[3])
-					if(cat > 1)
-						cats[3] = files.tech_trees_shown[cat-1]
-					else
-						cats[3] = files.tech_trees_shown[files.tech_trees_shown.len]
-					playsound(src, get_sfx("keyboard"), VOLUME_HIGH)
-
-		if("eject")
-			var/amount = text2num(params["amount"])
-			if(!amount)
-				to_chat(usr, "<span class=\"alert\">[src] only accepts a numerical amount!</span>")
-				return
-
-			if(text2num(params["machine"]) == PROTOLATHE)
-				linked_lathe?.eject_sheet(params["id"], round(amount))
-
-			else if(text2num(params["machine"]) == IMPRINTER)
-				linked_imprinter?.eject_sheet(params["id"], round(amount))
-
-			playsound(src, get_sfx("keystroke"), VOLUME_HIGH)
-
-		if("build")
-			var/amount=text2num(params["amount"])
-			if(params["id"] in files.known_designs)
-				var/datum/design/being_built = SSresearch.designs_by_id[params["id"]]
-				if(amount)
-					switch(text2num(params["machine"]))
-						if(PROTOLATHE)
-							linked_lathe?.queue_design(being_built, amount)
-						if(IMPRINTER)
-							linked_imprinter?.queue_design(being_built, amount)
-			else
-				log_and_message_admins("Possible hacker detected. User tried to print research design that wasn't yet researched. Design id: [params["id"]]", usr, usr.loc)
-
-			playsound(src, get_sfx("keystroke"), VOLUME_HIGH)
-
-		if("research_tech")
-			if((params["tech_id"] in files.all_technologies) && can_research)
-				var/datum/technology/T = SSresearch.all_technologies[params["tech_id"]]
-				if(files.UnlockTechology(T))
-					playsound(src, get_sfx("keystroke"), VOLUME_HIGH)
-
-		if("resync_machines")
-			SyncRDevices()
-			playsound(src, get_sfx("keyboard"), VOLUME_HIGH)
-
-		if("togglesync")
-			sync = !sync
-			playsound(src, get_sfx("keyboard"), VOLUME_HIGH)
-			return TRUE // We dont need to send static data again
-
-		if("sync")
-			sync_tech()
-			playsound(src, get_sfx("keyboard"), VOLUME_HIGH)
-
-		if("disconnect")
-			switch(text2num(params["machine"]))
-				if(IMPRINTER)
-					linked_imprinter.linked_console = null
-					linked_imprinter = null
-					if(cats[4] == IMPRINTER)
-						cats[3] = 1
-
-				if(PROTOLATHE)
-					linked_lathe.linked_console = null
-					linked_lathe = null
-					if(cats[4] == PROTOLATHE)
-						cats[4] = 1
-
-				// Destructive analyzer
-				if(3)
-					linked_destroy.linked_console = null
-					linked_destroy = null
-
-			playsound(src, get_sfx("keyboard"), VOLUME_HIGH)
-
-		if("purge")
-			var/amount = text2num(params["volume"])
-			if(!amount)
-				to_chat(usr, "<span class=\"alert\">[src] only accepts a numerical volume!</span>")
-				return
-
-			switch(params["machine"])
-				if(PROTOLATHE)
-					linked_lathe?.reagents.remove_reagents_of_type(text2path(params["type"]), round(amount))
-				if(IMPRINTER)
-					linked_imprinter?.reagents.remove_reagents_of_type(text2path(params["type"]), round(amount))
-
-			playsound(src, get_sfx("keystroke"), VOLUME_HIGH)
-
-		if("deconstruct")
-			linked_destroy?.deconstruct_item()
-			playsound(src, get_sfx("keystroke"), VOLUME_HIGH)
-
-		if("eject_decon")
-			linked_destroy?.eject_item(usr)
-			playsound(src, get_sfx("keyboard"), VOLUME_HIGH)
-
-	SStgui.update_uis(src, TRUE)
+				to_chat(usr, SPAN_WARNING("Unauthorized Access."))
 
 /obj/machinery/computer/rdconsole/proc/get_protolathe_data()
 	var/list/protolathe_list = list(
@@ -516,7 +559,7 @@
 				if(build_type == IMPRINTER)
 					t = linked_imprinter.check_mat(D, M)
 
-				design_data["mats"] += list(list("name" = capitalize(M), "amount" = D.materials[M]*coeff, "id" = M, "can_make" = t >= 1 ? TRUE:FALSE))
+				design_data["mats"] += list(list("name" = capitalize(M), "amount" = D.materials[M]*coeff, "can_make" = t >= 1 ? TRUE:FALSE))
 
 				c = min(t,c)
 
@@ -527,7 +570,7 @@
 					if(build_type == IMPRINTER)
 						t = linked_imprinter.check_mat(D, R)
 
-					design_data["chems"] += list(list("name" = CallReagentName(R), "amount" = D.chemicals[R]*coeff, "id" = R, "can_make" = t >= 1 ? TRUE:FALSE))
+					design_data["chems"] += list(list("name" = CallReagentName(R), "amount" = D.chemicals[R]*coeff, "can_make" = t >= 1 ? TRUE:FALSE))
 
 					c = min(t,c)
 

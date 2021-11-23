@@ -166,7 +166,7 @@
 		power += round(D.materials[M] * amount / 5)
 	power = max(2000, power)
 	if (busy)
-		to_chat(usr, "<span class='warning'>The [name] is busy right now</span>")
+		to_chat(usr, SPAN_WARNING("The [name] is busy right now"))
 		return
 	if (!(D.build_type & PROTOLATHE))
 		log_and_message_admins("Protolathe exploit attempted! Tried to print non-protolathe design!", usr, usr.loc)
@@ -178,7 +178,7 @@
 
 	for(var/M in D.materials)
 		if(check_mat(D, M) < amount)
-			visible_message("<span class='warning'>The [name] beeps, \"Not enough materials to complete prototype.\"</span>")
+			to_chat(usr, SPAN_WARNING("Not enough materials to complete design."))
 			busy = FALSE
 			update_icon()
 			return
@@ -187,12 +187,10 @@
 		materials[M]["amount"] = max(0, (materials[M]["amount"] - (D.materials[M]*amount / efficiency_coeff)))
 	for(var/C in D.chemicals)
 		reagents.remove_reagent(C, D.chemicals[C]/efficiency_coeff)
-	addtimer(CALLBACK(src, .proc/create_design, P), (D.time / efficiency_coeff) * amount)
+	addtimer(CALLBACK(src, .proc/create_design, RNDD["design"], amount), (D.time / efficiency_coeff) * amount)
 
-/obj/machinery/r_n_d/protolathe/proc/create_design(P)
-	var/RNDD = queue[P]
-	var/datum/design/D = SSresearch.designs_by_id[RNDD["design"]]
-	var/amount = RNDD["amount"]
+/obj/machinery/r_n_d/protolathe/proc/create_design(P, amount)
+	var/datum/design/D = SSresearch.designs_by_id[P]
 	for(var/i = 1 to amount)
 		new D.build_path(loc)
 	busy = FALSE

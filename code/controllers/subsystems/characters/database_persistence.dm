@@ -181,7 +181,7 @@ SUBSYSTEM_DEF(database)
 	//This gets a list of every store design that exists and filters it to contain only valid designs
 	for(var/A in SSresearch.designs_by_id)
 		var/datum/design/D = SSresearch.designs_by_id[A]
-		if(D.build_type & STORE && (!D.patron_only || !D.whitelist))
+		if(D.build_type & STORE && !(D.id in GLOB.limited_store_designs))
 			designs |= A
 
 	if (!length(designs))
@@ -209,15 +209,10 @@ SUBSYSTEM_DEF(database)
 		//Now designs only contains things which aren't in the DB
 
 		//Cache this
-		unknown_design_ids	= designs
+		unknown_design_ids = designs
 
 	else
 		SSdatabase.known_design_ids = designs
-
-	//And now reload the database for individual stores
-	GLOB.public_store_designs = SSdatabase.known_design_ids.Copy()
-
-	GLOB.public_store_designs |= GLOB.unlimited_store_designs
 
 	//Now all thats done, if there were any schematics waiting on this moment, lets allow them to do their thing now
 	for (var/obj/item/store_schematic/SS in pending_schematics)

@@ -14,6 +14,7 @@
 	var/id = 0				//ID of the computer (for server restrictions).
 	var/sync = TRUE			//If sync = 0, it doesn't show up on Server Control Console
 	var/can_research = TRUE	//Is this console capable of researching
+	var/locked = FALSE
 	var/list/cats = list("Misc", "Misc", TECH_ENGINEERING, 4, null)	//Stores protolathe, imprinter design category, tech tree tab, console tab and selected tech id
 
 	req_access = list(access_research)	//Data and setting manipulation requires scientist access.

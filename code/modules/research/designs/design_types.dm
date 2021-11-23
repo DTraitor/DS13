@@ -189,6 +189,13 @@ Botany:
 	build_path = /obj/item/weapon/stock_parts/scanning_module
 	price = 100
 
+/datum/design/item/stock_part/console_screen
+	name = "Console Screen"
+	id = "console_screen"
+	materials = list(MATERIAL_GLASS = 50)
+	build_path = /obj/item/weapon/stock_parts/console_screen
+	price = 75
+
 /datum/design/item/stock_part/adv_capacitor
 	name = "advanced capacitor"
 	id = "adv_capacitor"

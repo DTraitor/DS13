@@ -162,7 +162,7 @@ using metal and glass, it uses glass and reagents (usually sulfuric acid).
 		power += round(D.materials[M] * amount / 5)
 	power = max(2000, power)
 	if (busy)
-		to_chat(usr, "<span class='warning'>The [name] is busy right now</span>")
+		to_chat(usr, SPAN_WARNING("The [name] is busy right now"))
 		return
 	if (!(D.build_type & IMPRINTER))
 		log_and_message_admins("Circuit imprinter exploit attempted! Tried to print non-imprinter design!", usr, usr.loc)
@@ -174,7 +174,7 @@ using metal and glass, it uses glass and reagents (usually sulfuric acid).
 
 	for(var/M in D.materials)
 		if(check_mat(D, M) < amount)
-			visible_message("<span class='warning'>The [name] beeps, \"Not enough materials to complete prototype.\"</span>")
+			to_chat(usr, SPAN_WARNING("Not enough materials to complete design."))
 			busy = FALSE
 			update_icon()
 			return

@@ -10,6 +10,7 @@ export const RDConsole = (props, context) => {
   const { data, act } = useBackend(context);
 
   const {
+    locked,
     lathe_data,
     lathe_all_cats,
     lathe_possible_designs,
@@ -30,83 +31,107 @@ export const RDConsole = (props, context) => {
     <Window
       width={1000}
       height={800}
-      scrollable={false}
       theme="rdconsole">
-      <Window.Content
-        onKeyDown={e => {
-          if (e.keyCode === KEY_1) {
-            act("change_tab", { "machine": 4, "tab": 4 });
-          }
-          if (e.keyCode === KEY_2) {
-            act("change_tab", { "machine": 4, "tab": 3 });
-          }
-          if (e.keyCode === KEY_3) {
-            act("change_tab", { "machine": 4, "tab": 2 });
-          }
-          if (e.keyCode === KEY_4) {
-            act("change_tab", { "machine": 4, "tab": 1 });
-          }
-          if (e.keyCode === KEY_RIGHT) {
-            act("change_design_cat_arrow", { "dir": "right", "machine": console_tab });
-          }
-          if (e.keyCode === KEY_LEFT) {
-            act("change_design_cat_arrow", { "dir": "left", "machine": console_tab });
-          }
-        }}>
-        <Tabs>
-          <Tabs.Tab
-            selected={console_tab === 4}
-            onClick={() => act("change_tab", { "machine": 4, "tab": 4 })}>
-            Main
-          </Tabs.Tab>
-          {can_research ? (
+      {!locked ? (
+        <Window.Content
+          onKeyPress={e => {
+            if (e.keyCode === KEY_1) {
+              act("change_tab", { "machine": 4, "tab": 4 });
+            }
+            if (e.keyCode === KEY_2) {
+              act("change_tab", { "machine": 4, "tab": 3 });
+            }
+            if (e.keyCode === KEY_3) {
+              act("change_tab", { "machine": 4, "tab": 2 });
+            }
+            if (e.keyCode === KEY_4) {
+              act("change_tab", { "machine": 4, "tab": 1 });
+            }
+          }}
+          onKeyDown={e => {
+            if (e.keyCode === KEY_RIGHT) {
+              act("change_design_cat_arrow", { "dir": "right", "machine": console_tab });
+            }
+            if (e.keyCode === KEY_LEFT) {
+              act("change_design_cat_arrow", { "dir": "left", "machine": console_tab });
+            }
+          }}>
+          <Tabs textAlign="center">
             <Tabs.Tab
-              selected={console_tab === 3}
-              onClick={() => act("change_tab", { "machine": 4, "tab": 3 })}>
-              Research
+              selected={console_tab === 4}
+              onClick={() => act("change_tab", { "machine": 4, "tab": 4 })}>
+              Main
             </Tabs.Tab>
-          ):null}
-          {has_protolathe ? (
-            <Tabs.Tab
-              selected={console_tab === 2}
-              disabled={!has_protolathe}
-              onClick={() => act("change_tab", { "machine": 4, "tab": 2 })}>
-              Protolathe
-            </Tabs.Tab>
-          ):null}
-          {has_imprinter ? (
-            <Tabs.Tab
-              selected={console_tab === 1}
-              disabled={!has_imprinter}
-              onClick={() => act("change_tab", { "machine": 4, "tab": 1 })}>
-              Circuit Imprinter
-            </Tabs.Tab>
-          ):null}
-        </Tabs>
-        {console_tab === 4 && (
-          <MainTab />
-        )}
-        {console_tab === 3 && (
-          <Research />
-        )}
-        {console_tab === 2 && (
-          <MachineTab title="Protolathe"
-            machine_data={lathe_data}
-            possible_designs={lathe_possible_designs}
-            queue_data={lathe_queue_data}
-            all_cats={lathe_all_cats}
-            current_cat={lathe_cat} />
-        )}
-        {console_tab === 1 && (
-          <MachineTab title="Circuit Imprinter"
-            machine_data={imprinter_data}
-            possible_designs={imprinter_possible_designs}
-            queue_data={imprinter_queue_data}
-            all_cats={imprinter_all_cats}
-            current_cat={imprinter_cat} />
-        )}
-      </Window.Content>
+            {can_research ? (
+              <Tabs.Tab
+                selected={console_tab === 3}
+                onClick={() => act("change_tab", { "machine": 4, "tab": 3 })}>
+                Research
+              </Tabs.Tab>
+            ):null}
+            {has_protolathe ? (
+              <Tabs.Tab
+                selected={console_tab === 2}
+                disabled={!has_protolathe}
+                onClick={() => act("change_tab", { "machine": 4, "tab": 2 })}>
+                Protolathe
+              </Tabs.Tab>
+            ):null}
+            {has_imprinter ? (
+              <Tabs.Tab
+                selected={console_tab === 1}
+                disabled={!has_imprinter}
+                onClick={() => act("change_tab", { "machine": 4, "tab": 1 })}>
+                Circuit Imprinter
+              </Tabs.Tab>
+            ):null}
+          </Tabs>
+          {console_tab === 4 && (
+            <MainTab />
+          )}
+          {console_tab === 3 && (
+            <Research />
+          )}
+          {console_tab === 2 && (
+            <MachineTab title="Protolathe"
+              machine_data={lathe_data}
+              possible_designs={lathe_possible_designs}
+              queue_data={lathe_queue_data}
+              all_cats={lathe_all_cats}
+              current_cat={lathe_cat} />
+          )}
+          {console_tab === 1 && (
+            <MachineTab title="Circuit Imprinter"
+              machine_data={imprinter_data}
+              possible_designs={imprinter_possible_designs}
+              queue_data={imprinter_queue_data}
+              all_cats={imprinter_all_cats}
+              current_cat={imprinter_cat} />
+          )}
+        </Window.Content>
+      ):(
+        <Window.Content>
+          <LockedScreen />
+        </Window.Content>
+      )}
     </Window>
+  );
+};
+
+const LockedScreen = (props, context) => {
+  const { act, data } = useBackend(context);
+
+  return (
+    <Section fill textAlign="center">
+      <Box className="sciLocked" mt="28%" fontSize={4}>SYSTEM LOCKED</Box>
+      <br />
+      <Button
+        fontSize={4}
+        icon="unlock-alt"
+        onClick={() => act("lock")}>
+        Unlock
+      </Button>
+    </Section>
   );
 };
 
@@ -149,7 +174,8 @@ const MainTab = (props, context) => {
                   <Button
                     icon="lock"
                     tooltip="Locks console to prevent unauthorized use."
-                    tooltipPosition="bottom-start">
+                    tooltipPosition="bottom-start"
+                    onClick={() => act("lock")}>
                     Lock Console
                   </Button>
                 </Stack.Item>
@@ -330,13 +356,13 @@ const Research = (props, context) => {
 
   return (
     <Stack vertical fill height="95%">
-      <Stack.Item height="70%">
+      <Stack.Item height="75%">
         <TechTree />
       </Stack.Item>
       <Stack.Item grow>
         {selected_tech?(
           <Section fill title={selected_tech.name} buttons={
-            <Box bold fontSize="14px"> Cost: <span style={{ color: "orange" }}>{selected_tech.cost}</span></Box>
+            <Box bold fontSize="14px"> Cost: <Box inline color="orange">{selected_tech.cost}</Box></Box>
           }>
             <Stack fill>
               <Stack.Item width="45%" mr={2}>
@@ -349,14 +375,14 @@ const Research = (props, context) => {
                   </Stack.Item>
                 </Stack>
               </Stack.Item>
-              <Stack.Item width="15%">
+              <Stack.Item width="23.5%">
                 <Box bold>
                   Unlocks Designs:
                 </Box>
                 {selected_tech.unlocks_design
                 && selected_tech.unlocks_design.map((design, i) => (
                   <Box key={design}>
-                    <span style={{ color: "#27f2eb" }}>{design}</span>
+                    <Box color="#27f2eb">{design}</Box>
                   </Box>
                 ))}
               </Stack.Item>
@@ -367,23 +393,24 @@ const Research = (props, context) => {
                 {selected_tech.req_techs_unlock
                 && selected_tech.req_techs_unlock.map((req_tech, i) => (
                   <Box key={req_tech}>
-                    <span style={{ color: "lime" }}>{req_tech}</span>
+                    <Box color="lime">{req_tech}</Box>
                   </Box>
                 ))}
                 {selected_tech.req_techs_lock
                 && selected_tech.req_techs_lock.map((req_tech, i) => (
                   <Box key={req_tech}>
-                    <span style={{ color: "red" }}>{req_tech}</span>
+                    <Box color="red">{req_tech}</Box>
                   </Box>
                 ))}
               </Stack.Item>
-              <Stack.Item grow>
+              <Stack.Item width="25%">
                 <Button
                   fluid
+                  disabled={selected_tech.isresearched || selected_tech.canresearch}
                   fontSize={2.4}
                   textAlign="center"
                   onClick={() => act('research_tech', { tech_id: selected_tech.id })}>
-                  Research
+                  {selected_tech.isresearched ? "Researched" : "Research"}
                 </Button>
               </Stack.Item>
             </Stack>
@@ -397,7 +424,7 @@ const Research = (props, context) => {
 };
 
 const MachineTab = (props, context) => {
-  const { data, act } = useBackend(context);
+  const { act } = useBackend(context);
   const {
     title,
     machine_data,
@@ -406,9 +433,6 @@ const MachineTab = (props, context) => {
     all_cats,
     current_cat,
   } = props;
-  const {
-    console_tab,
-  } = data;
   const [materialReagent, setMaterialReagent] = useSharedState(context, props.machine_data.machine_id+"_materialReagent", 0);
 
   return (
@@ -417,7 +441,7 @@ const MachineTab = (props, context) => {
         <Stack vertical fill>
           <Stack.Item>
             <Tabs>
-              <Stack wrap="wrap">
+              <Stack wrap="wrap" textAlign="center">
                 {all_cats && all_cats.map((category, i) => (
                   <Stack.Item key={category}>
                     <Tabs.Tab
@@ -502,10 +526,15 @@ const MachineTab = (props, context) => {
                                 </Flex.Item>
                               </Flex>
                             </Stack.Item>
-                            <Stack.Item mr={1} width="17.5%">
+                            <Stack.Item mr={1} textAlign="right" width="19.5%">
                               {design.mats && design.mats.map((mat, i) => (
-                                <Box key={mat.id} textColor={mat.can_make ? "white":"red"}>
+                                <Box key={mat.name} textColor={mat.can_make ? "white":"red"}>
                                   {mat.amount} {mat.name}
+                                </Box>
+                              ))}
+                              {design.chems && design.chems.map((chem, i) => (
+                                <Box key={chem.name} textColor={chem.can_make ? "white":"red"}>
+                                  {chem.amount} {chem.name}
                                 </Box>
                               ))}
                             </Stack.Item>
@@ -529,13 +558,13 @@ const MachineTab = (props, context) => {
               <MachineReagentsTab machine_data={machine_data} title={title+" Reagent Storage"} />
             )}
           </Stack.Item>
-          <Stack.Item grow>
-            <Section title="Queue" fill scrollable buttons={
+          <Stack.Item height="62%">
+            <Section title="Queue" scrollable fill style={{ "overflow": "hidden" }} buttons={
               <Fragment>
-                <Button>
+                <Button onClick={() => act("clear_queue", { "machine": machine_data.machine_id })}>
                   Clear Queue
                 </Button>
-                <Button>
+                <Button onClick={() => act("restart_queue", { "machine": machine_data.machine_id })}>
                   Restart Queue
                 </Button>
               </Fragment>
@@ -543,8 +572,8 @@ const MachineTab = (props, context) => {
               <LabeledList>
                 {queue_data
                   && queue_data.map((queue, i) => (
-                    <LabeledList.Item label={queue} key={queue}>
-                      <Button>
+                    <LabeledList.Item label={queue.name} key={queue.item}>
+                      <Button onClick={() => act("remove_from_queue", { "machine": machine_data.machine_id, "queue_item": queue.item })}>
                         Remove
                       </Button>
                     </LabeledList.Item>
@@ -775,13 +804,13 @@ export class TechTree extends Component {
     return (
       <Section
         fill
-        style={{ "overflow": "hidden", "cursor": dragging ? "move" : "auto" }}
+        style={{ "overflow": "hidden", "-ms-scroll-limit": "0 0 0 0", "cursor": dragging ? "move" : "auto" }}
         // Makes tech trees draggable. Don't need it right now
         // Enable it if you want to make REALLY big tech tree
         // onMouseDown={this.handleDragStart}
         title="Research Menu"
         buttons={<Box bold fontSize="14px">Research Points: <Box inline color="orange">{research_points}</Box></Box>}>
-        <Tabs>
+        <Tabs textAlign="center">
           {tech_trees && tech_trees.map((tech_tree, i) => (
             <Tabs.Tab
               key={tech_tree.id}
@@ -792,7 +821,7 @@ export class TechTree extends Component {
             </Tabs.Tab>
           ))}
         </Tabs>
-        <Box style={{ "overflow": "hidden" }}>
+        <Box style={{ "overflow": "hidden", "-ms-scroll-limit": "0 0 0 0" }}>
           <Box style={newStyle}>
             {columnEmpty}
             {rowEmpty}

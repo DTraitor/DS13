@@ -15,7 +15,23 @@
 	required_technologies = list()
 	cost = 0
 
-	unlocks_designs = list("micro_mani", "basic_matter_bin", "basic_micro_laser", "light_replacer", "weldingmask", "autolathe", "arcademachine", "oriontrail", "boombox")
+	unlocks_designs = list("light_replacer", "weldingmask", "autolathe", "arcademachine", "oriontrail", "boombox")
+
+/datum/technology/engineering/basic_parts
+	name = "Basic Parts"
+	desc = "Basic"
+	id = "basic_parts"
+
+
+	x = 2
+	y = 3.5
+	icon_file = 'icons/obj/stock_parts.dmi'
+	icon = "matter_bin"
+
+	required_technologies = list("basic_engineering")
+	cost = 150
+
+	unlocks_designs = list("micro_mani", "basic_matter_bin", "basic_micro_laser", "console_screen")
 
 /datum/technology/engineering/monitoring
 	name = "Monitoring"

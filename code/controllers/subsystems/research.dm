@@ -23,8 +23,6 @@ SUBSYSTEM_DEF(research)
 			D.AssembleDesignInfo()
 			designs_by_id[D.id] = D
 
-	SSdatabase.update_store_designs()
-
 	for(var/A in subtypesof(/datum/technology))
 		var/datum/technology/T = new A
 		if(T.id)
@@ -48,6 +46,8 @@ SUBSYSTEM_DEF(research)
 		register_research_design(A)
 
 	late_designs_init = null
+
+	SSdatabase.update_store_designs()
 
 	for(var/A in design_files_to_init)
 		initialize_design_file(A)
@@ -108,6 +108,6 @@ SUBSYSTEM_DEF(research)
 		else
 			D.AssembleDesignInfo()
 			designs_by_id[D.id] = D
-
+			SSdatabase.update_store_designs()
 	else
 		late_designs_init += D

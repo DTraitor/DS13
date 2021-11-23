@@ -44,19 +44,20 @@ The tech datums are the actual "tech trees" that you improve through researching
 	var/list/all_technologies = list()
 	var/list/researched_tech = list()
 
-	var/atom/linked_atom
+	var/obj/machinery/computer/rdconsole/linked_obj
 	var/obj/machinery/r_n_d/server/server
 	var/datum/experiment_data/experiments
 
 	var/research_points = 0
 
 /datum/research/New(atom/A)
-	linked_atom = A
+	linked_obj = A
 	experiments = new /datum/experiment_data()
 	SSresearch.initialize_research_file(src)
 
 /datum/research/Destroy()
 	SSresearch.research_files -= src
+	linked_obj.files = null
 	.=..()
 
 /datum/research/proc/IsResearched(datum/technology/T)
