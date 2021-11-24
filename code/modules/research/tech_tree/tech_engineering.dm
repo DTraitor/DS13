@@ -19,7 +19,7 @@
 
 /datum/technology/engineering/basic_parts
 	name = "Basic Parts"
-	desc = "Basic"
+	desc = "First step into making your own machinery"
 	id = "basic_parts"
 
 
@@ -69,7 +69,7 @@
 
 /datum/technology/engineering/flamethrower
 	name = "PFM-100 Industrial Torch"
-	desc = "PFM-100 Industrial Torch"
+	desc = "Hans... Get ze flammenwerfer!"
 	id = "flamethrower"
 
 	x = 4.5
@@ -84,7 +84,7 @@
 
 /datum/technology/engineering/res_tech
 	name = "Research Technologies"
-	desc = "Research Technologies"
+	desc = ""
 	id = "res_tech"
 
 	x = 7

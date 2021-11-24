@@ -90,7 +90,7 @@ overflow-y: auto
 					{{for sublist :value}}
 						<tr>
 						<td style="text-align: left;">
-						{{:helper.link(value.item_name, null, { "select_item" : value.id }, (data.selected_id != value.id) ? null : 'disabled')}}
+						{{:helper.link(value.name, null, { "select_item" : value.id }, (data.selected_id != value.id) ? null : 'disabled')}}
 						</td>
 						<td style="text-align: right;">
 						{{:value.price}}
@@ -109,14 +109,14 @@ overflow-y: auto
 		<!-- Image-->
 		<td  style="width: 15%; border: 1px solid black; overflow: hidden; text-align: center;">
 			{{if data.current}}
-				<img src= {{:data.current.icon}} height={{:data.current.icon_height * 2.5}} width={{:data.current.icon_width * 2.5}}>
+				<div class={"rnd_designs"+{:data.current.icon_width}+"x"+{:data.current.icon_height}+" "+{:data.current.id}} height={{:data.current.icon_height * 1.2}} width={{:data.current.icon_width * 1.2}}>
 			{{/if}}
 
 
 		<!-- Name and Desc-->
 		<td  style="width: 50%; border: 1px solid black; overflow: hidden; vertical-align: top; padding: 5px; padding-left: 10px;">	
 			{{if data.current}}	
-				<h1>{{:data.current.item_name}}</h1>
+				<h1>{{:data.current.name}}</h1>
 				{{:data.current.desc}}
 			{{/if}}
 		</td>

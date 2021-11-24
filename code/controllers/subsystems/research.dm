@@ -4,7 +4,7 @@ SUBSYSTEM_DEF(research)
 	priority = SS_PRIORITY_DEFAULT
 	init_order = SS_INIT_RESEARCH
 
-	var/list/designs_by_id = list()		// id = datum
+	var/list/datum/design/designs_by_id = list()		// id = datum
 	var/list/tech_trees = list()		// id = datum
 	var/list/all_technologies = list()	// id = datum
 	var/list/servers = list()			// obj list

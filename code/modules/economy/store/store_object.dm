@@ -93,7 +93,8 @@ GLOBAL_VAR_INIT(number_of_store_kiosks, 0)
 /obj/machinery/store/Uncrossed(atom/movable/O)
 	if (occupant == O)
 		remove_occupant()
-
+	if(istype(O, /mob))
+		SStgui.close_user_uis(O, src)
 	.=..()
 
 
@@ -103,7 +104,6 @@ GLOBAL_VAR_INIT(number_of_store_kiosks, 0)
 			return
 		remove_occupant()
 	occupant = O
-	update_occupant_data()
 
 
 /obj/machinery/store/proc/remove_occupant()

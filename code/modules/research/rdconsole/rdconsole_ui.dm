@@ -32,7 +32,6 @@
 	var/list/data = list()
 	data["sync"] = sync
 	data["locked"] = locked
-	data["can_research"] = can_research
 	data["has_imprinter"] = linked_imprinter ? TRUE : FALSE
 	data["has_protolathe"] = linked_lathe ? TRUE : FALSE
 	data["has_destroy"] = linked_destroy ? TRUE : FALSE
@@ -41,6 +40,8 @@
 
 /obj/machinery/computer/rdconsole/ui_static_data(mob/user)
 	var/list/data = list()
+
+	data["can_research"] = can_research
 
 	data["research_points"] = files.research_points
 

@@ -174,7 +174,7 @@ SUBSYSTEM_DEF(database)
 
 //This returns a list of all design IDs which are not known to the store. These can thusly be used for assigning to new schematics
 /datum/controller/subsystem/database/proc/update_store_designs()
-
+	GLOB.store_categories.Cut()
 	known_design_ids.Cut()
 	unknown_design_ids.Cut()
 
@@ -185,12 +185,13 @@ SUBSYSTEM_DEF(database)
 		var/datum/design/D = SSresearch.designs_by_id[A]
 		if(D.build_type & STORE && !(D.id in GLOB.limited_store_designs))
 			designs |= A
+			GLOB.store_categories |= D.category
 
 	if (!length(designs))
 		return	//Fatal error
 
 	if(dbcon && dbcon.IsConnected())
-
+		GLOB.store_categories.Cut()
 
 		//Now lets get the list of all persisting schematics in the database
 		var/DBQuery/query = dbcon.NewQuery("SELECT * FROM store_schematics;")
@@ -207,6 +208,8 @@ SUBSYSTEM_DEF(database)
 
 			designs -= schematic_id
 			SSdatabase.known_design_ids += schematic_id
+			var/datum/design/D = SSresearch.designs_by_id[schematic_id]
+			GLOB.store_categories |= D.category
 
 		//Now designs only contains things which aren't in the DB
 

@@ -59,13 +59,21 @@ export const RDConsole = (props, context) => {
           <Tabs textAlign="center">
             <Tabs.Tab
               selected={console_tab === 4}
-              onClick={() => act("change_tab", { "machine": 4, "tab": 4 })}>
+              onClick={() => {
+                if (!(console_tab === 4)) {
+                  act("change_tab", { "machine": 4, "tab": 4 });
+                }
+              }}>
               Main
             </Tabs.Tab>
             {can_research ? (
               <Tabs.Tab
                 selected={console_tab === 3}
-                onClick={() => act("change_tab", { "machine": 4, "tab": 3 })}>
+                onClick={() => {
+                  if (!(console_tab === 3)) {
+                    act("change_tab", { "machine": 4, "tab": 3 });
+                  }
+                }}>
                 Research
               </Tabs.Tab>
             ):null}
@@ -73,7 +81,11 @@ export const RDConsole = (props, context) => {
               <Tabs.Tab
                 selected={console_tab === 2}
                 disabled={!has_protolathe}
-                onClick={() => act("change_tab", { "machine": 4, "tab": 2 })}>
+                onClick={() => {
+                  if (!(console_tab === 2)) {
+                    act("change_tab", { "machine": 4, "tab": 2 });
+                  }
+                }}>
                 Protolathe
               </Tabs.Tab>
             ):null}
@@ -81,7 +93,11 @@ export const RDConsole = (props, context) => {
               <Tabs.Tab
                 selected={console_tab === 1}
                 disabled={!has_imprinter}
-                onClick={() => act("change_tab", { "machine": 4, "tab": 1 })}>
+                onClick={() => {
+                  if (!(console_tab === 1)) {
+                    act("change_tab", { "machine": 4, "tab": 1 });
+                  }
+                }}>
                 Circuit Imprinter
               </Tabs.Tab>
             ):null}
@@ -447,7 +463,10 @@ const MachineTab = (props, context) => {
                     <Tabs.Tab
                       my={0.5}
                       selected={current_cat === category}
-                      onClick={() => act("change_tab", { "machine": machine_data.machine_id, "tab": category })}>
+                      onClick={() => {
+                        if (!(current_cat === category)) {
+                          act("change_tab", { "machine": machine_data.machine_id, "tab": category });
+                        } }}>
                       {category}
                     </Tabs.Tab>
                   </Stack.Item>
@@ -815,8 +834,11 @@ export class TechTree extends Component {
             <Tabs.Tab
               key={tech_tree.id}
               selected={tech_tree.id === tech_cat}
-              onClick={() => { act("change_tab", { "machine": 3, "tab": tech_tree.id });
-                this.setState({ "offsetY": 0, "offsetX": 0 }); }}>
+              onClick={() => {
+                if (!(tech_tree.id === tech_cat)) {
+                  act("change_tab", { "machine": 3, "tab": tech_tree.id });
+                  this.setState({ "offsetY": 0, "offsetX": 0 });
+                } }}>
               {tech_tree.shortname}
             </Tabs.Tab>
           ))}

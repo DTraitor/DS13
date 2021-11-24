@@ -131,9 +131,14 @@ S	fuel tank (hydrazine)
 /datum/design/item/weapon/flamethrower
 	name = "PFM-100 Industrial Torch"
 	id = "flamethrower"
+	build_type = PROTOLATHE
 	build_path = /obj/item/weapon/gun/spray/hydrazine_torch
 	materials = list(MATERIAL_STEEL = 2500, MATERIAL_GLASS = 100, MATERIAL_GOLD = 4000, MATERIAL_SILVER = 4000)
 	price = 11000
+
+/datum/design/item/weapon/flamethrower/store
+	build_type = STORE
+	build_path = /obj/item/weapon/gun/spray/hydrazine_torch/fuel
 
 /datum/design/item/weapon/seeker
 	name = "Seeker Rifle"

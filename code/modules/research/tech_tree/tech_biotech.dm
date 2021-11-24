@@ -157,7 +157,7 @@
 
 /datum/technology/bio/chemicals
 	name = "Chemicals"
-	desc = "Don't let the clown to get this!"
+	desc = "Don't let the clown get access to this!"
 	id = "chemicals"
 
 	x = 12
@@ -172,7 +172,7 @@
 
 /datum/technology/bio/hypospray
 	name = "Hypospray"
-	desc = "The fastest way to deliver chemicals into someone"
+	desc = "The fastest way to deliver chemicals in patient"
 	id = "hypospray"
 
 	x = 12

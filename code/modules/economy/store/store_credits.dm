@@ -17,8 +17,9 @@
 	if (!occupant)
 		return FALSE
 
-	if (cost == null && current_design)
-		cost = current_design.get_price(occupant)
+	if (!cost && current_design_id)
+		var/datum/design/D = SSresearch.designs_by_id[current_design_id]
+		cost = D.get_price(occupant)
 
 	return (get_available_credits() >= cost)
 
@@ -59,16 +60,17 @@
 
 //Buys and returns the current item, don't call this directly
 /obj/machinery/store/proc/buy_current()
-	if (!occupant)
+	if (!occupant || !current_design_id)
 		return
-	var/cost = current_design.get_price(occupant)
+	var/datum/design/D = SSresearch.designs_by_id[current_design_id]
+	var/cost = D.get_price(occupant)
 
 	if (!occupant_pay_credits(cost))
 		return
 
 
 	playsound(src, sound_vend, VOLUME_MID, TRUE)
-	return current_design.CreatedInStore(src)
+	return D.CreatedInStore(src)
 
 /obj/machinery/store/proc/store_or_drop(var/obj/item/I)
 	if (!istype(I) || !deposit_box.store_item(I))

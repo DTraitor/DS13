@@ -75,14 +75,13 @@ other types of metals and chemistry for reagents).
 
 	AssembleDesignName(temp_atom)
 	AssembleDesignDesc(temp_atom)
+	AssembleDesignId()
+	AssembleDesignTime()
+	AssembleDesignFile()
 	AssembleDesignUIData(temp_atom)
 
 	if (temp_atom)
 		qdel(temp_atom)
-
-	AssembleDesignId()
-	AssembleDesignTime()
-	AssembleDesignFile()
 
 /datum/design/proc/get_price(var/mob/user)
 	.=price
@@ -102,13 +101,11 @@ other types of metals and chemistry for reagents).
 
 // Try to make up a nice description if we don't have one.
 /datum/design/proc/AssembleDesignDesc(atom/temp_atom)
-	if(desc)
-		return
-	else
+	if(!desc)
 		desc = temp_atom.desc
 
+	full_desc = desc
 	if(length_char(desc) > 100)
-		full_desc = desc
 		desc = copytext_char(desc, 1, 98)
 		if(findtext_char(desc, " ", -1))
 			desc = copytext_char(desc, 1, 97)

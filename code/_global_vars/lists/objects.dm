@@ -82,3 +82,6 @@ GLOBAL_LIST_EMPTY(vitals_auto_update_tracking)
 
 //Holds designs that are patron only or require a whitelist. These do not require schematics
 GLOBAL_LIST_EMPTY(limited_store_designs)
+
+//Holds designs that are patron only or require a whitelist. These do not require schematics
+GLOBAL_LIST_EMPTY(store_categories)
