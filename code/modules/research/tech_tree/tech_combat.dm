@@ -4,7 +4,7 @@
 
 /datum/technology/combat/security
 	name = "Security Equipment"
-	desc = "Security Equipment"
+	desc = "Basic shitcurity kit"
 	id = "sec_eq"
 
 	x = 2
@@ -19,7 +19,7 @@
 
 /datum/technology/combat/pris_man
 	name = "Prisoner Managment"
-	desc = "Prisoner Managment"
+	desc = "Make sure prisoners won't escape from Alcatraz"
 	id = "pris_man"
 
 	x = 2
@@ -38,7 +38,7 @@
 
 /datum/technology/combat/add_eq
 	name = "Additional Security Equipment"
-	desc = "Additional Security Equipment"
+	desc = "I am the law!"
 	id = "add_eq"
 
 	x = 4
@@ -53,7 +53,7 @@
 
 /datum/technology/combat/nleth_eq
 	name = "Non-lethal Eqiupment"
-	desc = "Additional Security Equipment"
+	desc = "Taser and flash for your RIG"
 	id = "nleth_eq"
 
 	x = 6
@@ -68,7 +68,7 @@
 
 /datum/technology/combat/recharger
 	name = "Recharger"
-	desc = "Recharger"
+	desc = "Finally a way to recharge your... Uh... RIG cell?"
 	id = "recharger"
 
 	x = 8
@@ -79,11 +79,11 @@
 	required_technologies = list("nleth_eq", "sup_power")
 	cost = 1250
 
-	unlocks_designs = list("recharger", "force_energy")
+	unlocks_designs = list("recharger")
 
 /datum/technology/combat/shield
 	name = "Advanced Combat"
-	desc = "Advanced Combat"
+	desc = "SWAT "
 	id = "shield"
 
 	x = 8

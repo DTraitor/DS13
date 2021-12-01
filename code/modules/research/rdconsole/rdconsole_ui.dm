@@ -1,3 +1,7 @@
+#define DESTRUCTIVE 3
+#define MAIN_TAB 4
+#define RESEARCH_TAB 3
+
 /obj/machinery/computer/rdconsole/attack_hand(mob/user as mob)
 	if(..())
 		return
@@ -73,7 +77,7 @@
 		data["imprinter_all_cats"] = files.design_categories_imprinter
 		data["imprinter_cat"] = cats[IMPRINTER]
 
-	if(cats[4] == 4)
+	if(cats[4] == MAIN_TAB)
 		var/list/tech_tree_list = list()
 		for(var/tech_tree_id in files.tech_trees_shown)
 			var/datum/tech/Tech_Tree = SSresearch.tech_trees[tech_tree_id]
@@ -127,7 +131,7 @@
 
 			data["destroy_data"] = destroy_list
 
-	if(cats[4] == 3)
+	if(cats[4] == RESEARCH_TAB)
 		var/list/line_list = list()
 		var/list/tech_list = list()
 		var/list/tech_tree_list = list()
@@ -321,7 +325,7 @@
 							cats[IMPRINTER] = files.design_categories_imprinter[1]
 						playsound(src, get_sfx("keyboard"), VOLUME_HIGH)
 
-					else if(text2num(params["machine"]) == 3)
+					else if(text2num(params["machine"]) == RESEARCH_TAB)
 						var/cat = files.tech_trees_shown.Find(cats[3])
 						if(cat < files.tech_trees_shown.len)
 							cats[3] = files.tech_trees_shown[cat+1]
@@ -346,7 +350,7 @@
 							cats[IMPRINTER] = files.design_categories_imprinter[files.design_categories_imprinter.len]
 						playsound(src, get_sfx("keyboard"), VOLUME_HIGH)
 
-					else if(text2num(params["machine"]) == 3)
+					else if(text2num(params["machine"]) == RESEARCH_TAB)
 						var/cat = files.tech_trees_shown.Find(cats[3])
 						if(cat > 1)
 							cats[3] = files.tech_trees_shown[cat-1]
@@ -446,8 +450,7 @@
 						if(cats[4] == PROTOLATHE)
 							cats[4] = 1
 
-					// Destructive analyzer
-					if(3)
+					if(DESTRUCTIVE)
 						linked_destroy.linked_console = null
 						linked_destroy = null
 
@@ -579,3 +582,7 @@
 			designs_list += list(design_data)
 
 	return designs_list
+
+#undef DESTRUCTIVE
+#undef MAIN_TAB
+#undef RESEARCH_TAB

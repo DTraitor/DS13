@@ -1,6 +1,6 @@
 import { Component } from 'inferno';
 import { useBackend, useSharedState } from '../backend';
-import { Box, AnimatedNumber, Button, LabeledList, ProgressBar, Section, Stack, Tabs, Icon, Divider, Flex, Tooltip } from '../components';
+import { Box, AnimatedNumber, Button, LabeledList, ProgressBar, Section, Stack, Tabs, Icon, Divider, Flex, Tooltip, NoticeBox, Grid } from '../components';
 import { Window } from '../layouts';
 import { round } from 'common/math';
 import { Fragment } from 'inferno';
@@ -135,11 +135,11 @@ export const RDConsole = (props, context) => {
 };
 
 const LockedScreen = (props, context) => {
-  const { act, data } = useBackend(context);
+  const { act } = useBackend(context);
 
   return (
     <Section fill textAlign="center">
-      <Box className="sciLocked" mt="28%" fontSize={4}>SYSTEM LOCKED</Box>
+      <NoticeBox mt="2.5%" className="sciLocked" fontSize={6}>SYSTEM LOCKED</NoticeBox>
       <br />
       <Button
         fontSize={4}
@@ -788,7 +788,7 @@ export class TechTree extends Component {
   }
 
   render() {
-    const { dragging, offsetX, offsetY } = this.state;
+    const { dragging } = this.state;
     const { data, act } = useBackend(this.context);
     const {
       columns,
@@ -800,25 +800,6 @@ export class TechTree extends Component {
       selected_tech,
       tech_cat,
     } = data;
-
-    const newStyle = {
-      "margin-top": offsetY + "px",
-      "margin-left": offsetX + "px",
-      "position": "relative",
-      "display": "-ms-grid",
-    };
-
-
-    let columnEmpty = [];
-    let rowEmpty = [];
-
-    for (let i = 1; i <= columns+1; i++) {
-      columnEmpty.push(<Box className="sciGridSize" style={{ "-ms-grid-column": i, "-ms-grid-row": 1 }} />);
-    }
-
-    for (let i = 2; i <= rows+1; i++) {
-      rowEmpty.push(<Box className="sciGridSize" style={{ "-ms-grid-column": 1, "-ms-grid-row": i }} />);
-    }
 
     return (
       <Section
@@ -844,21 +825,25 @@ export class TechTree extends Component {
           ))}
         </Tabs>
         <Box style={{ "overflow": "hidden", "-ms-scroll-limit": "0 0 0 0" }}>
-          <Box style={newStyle}>
-            {columnEmpty}
-            {rowEmpty}
+          <Grid columns={columns} rows={rows} gridSize="18px">
             {lines && lines.map((line, i) => (
-              <Box
+              <Grid.Item
                 key={i}
-                style={{ "-ms-grid-column": line.height_1, "-ms-grid-row": line.width_1, "-ms-grid-column-span": line.height_2, "-ms-grid-row-span": line.width_2 }}
+                firstColumn={line.height_1}
+                firstRow={line.width_1}
+                secondColumn={line.height_2}
+                secondRow={line.width_2}
                 className={
                   (line.bottom && "sciBorderBottom ") + (line.left && " sciBorderLeft ") + (line.right && " sciBorderRight ") + (line.top && " sciBorderTop")
                 } />
             ))}
             {techs && techs.map((tech, i) => (
-              <Box key={tech.id}
-                className="sciGridTechPosition"
-                style={{ "-ms-grid-column": tech.x, "-ms-grid-row": tech.y, "-ms-grid-column-span": 1, "-ms-grid-row-span": 1 }}>
+              <Grid.Item
+                key={tech.id}
+                firstColumn={tech.x}
+                firstRow={tech.y}
+                secondColumn={1}
+                secondRow={1}>
                 <Button
                   position="absolute"
                   p={0}
@@ -877,9 +862,9 @@ export class TechTree extends Component {
                   onClick={() => act('set_selected_tech', { tech_id: tech.id })}>
                   <Box mt="2px" ml="2px" className={"rdtech96x96 "+tech.id+" sciScale32"} />
                 </Button>
-              </Box>
+              </Grid.Item>
             ))}
-          </Box>
+          </Grid>
         </Box>
       </Section>
     );
