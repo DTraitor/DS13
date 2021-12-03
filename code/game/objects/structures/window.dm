@@ -309,7 +309,9 @@
 	health = max_health
 
 	ini_dir = dir
+	.=INITIALIZE_HINT_LATELOAD
 
+/obj/structure/window/LateInitialize()
 	update_connections(1)
 	update_icon()
 

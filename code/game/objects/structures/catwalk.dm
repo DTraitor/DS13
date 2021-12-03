@@ -21,6 +21,9 @@
 	DELETE_IF_DUPLICATE_OF(/obj/structure/catwalk)
 	var/turf/T = get_turf(src)
 	LAZYSET(T.zstructures, src, 1) //Ladders have a ztransition priority of 2 to overrule other things
+	.=INITIALIZE_HINT_LATELOAD
+
+/obj/structure/catwalk/LateInitialize()
 	update_connections(1)
 	update_icon()
 

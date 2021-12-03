@@ -93,10 +93,12 @@
 
 	health = max_health
 	resistance = min_force	//Todo: remove min force and roll everything into resistance
+	.=INITIALIZE_HINT_LATELOAD
+
+/obj/machinery/door/LateInitialize()
 	update_connections(1)
 	update_icon()
-
-	update_nearby_tiles(need_rebuild=1)
+	update_nearby_tiles(TRUE)
 
 /obj/machinery/door/Initialize(var/mapload)
 	set_extension(src, /datum/extension/penetration/proc_call, .proc/CheckPenetration)

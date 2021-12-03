@@ -16,19 +16,21 @@
 		playsound(src, "rustle", VOLUME_LOW, TRUE)
 
 /obj/structure/net/Initialize(var/mapload)
-	. = ..()
-	update_connections()
+	.=..()
+	.=INITIALIZE_HINT_LATELOAD
 	var/turf/simulated/floor/T = get_turf(src)
-	if (!mapload)//if it's not mapped object but rather created during round, we should update visuals of adjacent net objects
+	if (istype(T))
+		T?.incorruptible = TRUE
 
+/obj/structure/net/LateInitialize(mapload)
+	update_connections()
+	if (!mapload)//if it's not mapped object but rather created during round, we should update visuals of adjacent net objects
+		var/turf/simulated/floor/T = get_turf(src)
 		for (var/turf/AT in T.CardinalTurfs(FALSE))
 			for (var/obj/structure/net/N in AT)
 				if (type != N.type)//net-walls cause update for net-walls and floors for floors but not for each other
 					continue
 				N.update_connections()
-
-	if (istype(T))
-		T?.incorruptible = TRUE
 
 /obj/structure/net/Destroy()
 

@@ -22,9 +22,12 @@
 	noblend_objects = list(/obj/machinery/door/window)
 
 /obj/structure/wall_frame/Initialize()
+	. = ..()
+	.=INITIALIZE_HINT_LATELOAD
+
+/obj/structure/wall_frame/LateInitialize()
 	update_connections(TRUE)
 	update_icon()
-	. = ..()
 
 /obj/structure/wall_frame/attackby(var/obj/item/weapon/W, var/mob/user)
 	src.add_fingerprint(user)

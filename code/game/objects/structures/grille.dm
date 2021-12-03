@@ -17,9 +17,11 @@
 
 /obj/structure/grille/Initialize()
 	. = ..()
+	.=INITIALIZE_HINT_LATELOAD
+
+/obj/structure/grille/LateInitialize()
 	update_connections(1)
 	update_icon()
-
 
 /obj/structure/grille/update_icon()
 	update_onframe()

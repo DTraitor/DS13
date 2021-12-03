@@ -69,6 +69,16 @@
 	if(istext(reinforced))
 		reinforced = get_material_by_name(reinforced)
 
+	// reset color/alpha, since they're set for nice map previews
+	color = "#ffffff"
+	alpha = 255
+	update_desc()
+	update_material()
+	.=INITIALIZE_HINT_LATELOAD
+
+/obj/structure/table/LateInitialize()
+	update_connections(1)
+	update_icon()
 	// One table per turf.
 	for(var/obj/structure/table/T in loc)
 		if(T != src)
@@ -76,14 +86,6 @@
 			// break_to_parts calls qdel(src)
 			break_to_parts(full_return = 1)
 			return
-
-	// reset color/alpha, since they're set for nice map previews
-	color = "#ffffff"
-	alpha = 255
-	update_connections(1)
-	update_icon()
-	update_desc()
-	update_material()
 
 /obj/structure/table/Destroy()
 	material = null
