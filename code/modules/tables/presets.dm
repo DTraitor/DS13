@@ -54,9 +54,10 @@
 /obj/structure/table/holotable
 	icon_state = "holo_preview"
 	color = COLOR_OFF_WHITE
-/obj/structure/table/holotable/New()
+
+/obj/structure/table/holotable/Initialize()
 	material = "holo[DEFAULT_TABLE_MATERIAL]"
-	..()
+	.=..()
 
 /obj/structure/table/holo_woodentable
 	icon_state = "holo_preview"

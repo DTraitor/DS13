@@ -9,8 +9,8 @@
 	var/datum/artifact_effect/secondary_effect
 	var/being_used = 0
 
-/obj/machinery/artifact/New(var/atom/location, var/direction, var/nocircuit = FALSE)
-	..()
+/obj/machinery/artifact/Initialize(mapload, d)
+	. = ..()
 
 	var/effecttype = pick(typesof(/datum/artifact_effect) - /datum/artifact_effect)
 	my_effect = new effecttype(src)

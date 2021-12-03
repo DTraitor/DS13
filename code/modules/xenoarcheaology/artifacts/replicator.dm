@@ -19,8 +19,8 @@
 
 	var/fail_message
 
-/obj/machinery/replicator/New(var/atom/location, var/direction, var/nocircuit = FALSE)
-	..()
+/obj/machinery/replicator/Initialize(mapload, d)
+	. = ..()
 
 	var/list/viables = list(
 	/obj/item/roller,
@@ -66,7 +66,7 @@
 	/obj/item/weapon/grenade/chem_grenade/metalfoam)
 
 	var/quantity = rand(5, 15)
-	for(var/i=0, i<quantity, i++)
+	for(var/i=0 to quantity)
 		var/button_desc = "a [pick("yellow","purple","green","blue","red","orange","white")], "
 		button_desc += "[pick("round","square",MATERIAL_DIAMOND,"heart","dog","human")] shaped "
 		button_desc += "[pick("toggle","switch","lever","button","pad","hole")]"

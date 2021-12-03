@@ -21,13 +21,9 @@
 	blend_objects = list(/obj/machinery/door, /turf/simulated/wall) // Objects which to blend with
 	noblend_objects = list(/obj/machinery/door/window)
 
-/obj/structure/wall_frame/New(var/new_loc)
-	..(new_loc)
-
-	update_connections(1)
-	update_icon()
-
 /obj/structure/wall_frame/Initialize()
+	update_connections(TRUE)
+	update_icon()
 	. = ..()
 
 /obj/structure/wall_frame/attackby(var/obj/item/weapon/W, var/mob/user)

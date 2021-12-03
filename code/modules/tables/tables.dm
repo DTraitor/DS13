@@ -28,13 +28,6 @@
 
 	connections = list("nw0", "ne0", "sw0", "se0")
 
-/obj/structure/table/New()
-	if(istext(material))
-		material = get_material_by_name(material)
-	if(istext(reinforced))
-		reinforced = get_material_by_name(reinforced)
-	..()
-
 /obj/structure/table/ex_act(severity)
 	switch(severity)
 		if(1.0)
@@ -70,6 +63,11 @@
 
 /obj/structure/table/Initialize()
 	. = ..()
+
+	if(istext(material))
+		material = get_material_by_name(material)
+	if(istext(reinforced))
+		reinforced = get_material_by_name(reinforced)
 
 	// One table per turf.
 	for(var/obj/structure/table/T in loc)

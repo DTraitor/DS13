@@ -32,7 +32,19 @@
 	var/coolant_purity = 0
 	var/datum/reagents/coolant_reagents
 	var/used_coolant = 0
-	var/list/coolant_reagents_purity = list()
+	var/list/coolant_reagents_purity = list(
+		/datum/reagent/water = 0.5,
+		/datum/reagent/drink/coffee/icecoffee = 0.6,
+		/datum/reagent/drink/tea/icetea = 0.6,
+		/datum/reagent/drink/milkshake = 0.6,
+		/datum/reagent/leporazine = 0.7,
+		/datum/reagent/kelotane = 0.7,
+		/datum/reagent/sterilizine = 0.7,
+		/datum/reagent/dermaline = 0.7,
+		/datum/reagent/hyperzine = 0.8,
+		/datum/reagent/cryoxadone = 0.9,
+		/datum/reagent/coolant = 1,
+		/datum/reagent/adminordrazine = 2)
 	//
 	var/maser_wavelength = 0
 	var/optimal_wavelength = 0
@@ -44,21 +56,9 @@
 	var/t_left_radspike = 0
 	var/rad_shield = 0
 
-/obj/machinery/radiocarbon_spectrometer/New(var/atom/location, var/direction, var/nocircuit = FALSE)
-	..()
+/obj/machinery/radiocarbon_spectrometer/Initialize(mapload, d)
+	.=..()
 	create_reagents(500)
-	coolant_reagents_purity[/datum/reagent/water] = 0.5
-	coolant_reagents_purity[/datum/reagent/drink/coffee/icecoffee] = 0.6
-	coolant_reagents_purity[/datum/reagent/drink/tea/icetea] = 0.6
-	coolant_reagents_purity[/datum/reagent/drink/milkshake] = 0.6
-	coolant_reagents_purity[/datum/reagent/leporazine] = 0.7
-	coolant_reagents_purity[/datum/reagent/kelotane] = 0.7
-	coolant_reagents_purity[/datum/reagent/sterilizine] = 0.7
-	coolant_reagents_purity[/datum/reagent/dermaline] = 0.7
-	coolant_reagents_purity[/datum/reagent/hyperzine] = 0.8
-	coolant_reagents_purity[/datum/reagent/cryoxadone] = 0.9
-	coolant_reagents_purity[/datum/reagent/coolant] = 1
-	coolant_reagents_purity[/datum/reagent/adminordrazine] = 2
 
 /obj/machinery/radiocarbon_spectrometer/attack_hand(var/mob/user as mob)
 	ui_interact(user)

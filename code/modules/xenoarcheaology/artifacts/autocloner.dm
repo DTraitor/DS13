@@ -14,13 +14,13 @@
 	active_power_usage = 2000
 	idle_power_usage = 1000
 
-/obj/machinery/auto_cloner/New(var/atom/location, var/direction, var/nocircuit = FALSE)
-	..()
+/obj/machinery/auto_cloner/Initialize(mapload, d)
+	. = ..()
 
 	time_per_spawn = rand(1200,3600)
 
 	//33% chance to spawn nasties
-	if(prob(33))
+	if(prob(3))
 		spawn_type = pick(
 		/mob/living/simple_animal/hostile/giant_spider/nurse,
 		/mob/living/simple_animal/hostile/alien,

@@ -295,11 +295,14 @@
 
 	//player-constructed windows
 	if (constructed)
+		state = 0
 		set_anchored(FALSE)
 
 	if (start_dir)
 		set_dir(start_dir)
 
+/obj/structure/window/Initialize()
+	. = ..()
 	if(is_fulltile())
 		max_health *= 2
 
@@ -310,25 +313,35 @@
 	update_connections(1)
 	update_icon()
 
+	for(var/obj/structure/S in orange(src, 1))
+		S.update_connections()
+		S.update_icon()
+	layer = is_full_window() ? FULL_WINDOW_LAYER : SIDE_WINDOW_LAYER
+
 	update_nearby_tiles(need_rebuild=1)
 	update_nearby_icons()
-
 
 /obj/structure/window/Destroy()
 	set_density(0)
 	update_nearby_tiles()
 	var/turf/location = loc
 	. = ..()
-	for(var/obj/structure/window/W in orange(location, 1))
-		W.update_icon()
-
+	for(var/obj/structure/S in orange(location, 1))
+		S.update_connections()
+		S.update_icon()
 
 /obj/structure/window/Move(NewLoc, Dir = 0, step_x = 0, step_y = 0, var/glide_size_override = 0)
 	var/ini_dir = dir
 	update_nearby_tiles(need_rebuild=1)
-	..()
+	.=..()
 	set_dir(ini_dir)
 	update_nearby_tiles(need_rebuild=1)
+	var/oldloc = loc
+
+	if(loc != oldloc)
+		for(var/obj/structure/S in orange(oldloc, 1) | orange(loc, 1))
+			S.update_connections()
+			S.update_icon()
 
 //checks if this window is full-tile one
 /obj/structure/window/proc/is_fulltile()
@@ -463,18 +476,6 @@
 	material_color = GLASS_COLOR
 	color = GLASS_COLOR
 	resistance = 10
-
-/obj/structure/window/New(Loc, constructed=0)
-	..()
-
-	//player-constructed windows
-	if (constructed)
-		state = 0
-	update_connections(1)
-
-/obj/structure/window/Initialize()
-	. = ..()
-	layer = is_full_window() ? FULL_WINDOW_LAYER : SIDE_WINDOW_LAYER
 
 /obj/structure/window/reinforced/full
 	dir = 5

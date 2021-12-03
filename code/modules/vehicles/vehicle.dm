@@ -39,11 +39,10 @@
 //-------------------------------------------
 // Standard procs
 //-------------------------------------------
-/obj/vehicle/New()
-
+/obj/vehicle/Initialize()
 	//Future TODO: Update this whenever move delay could change
 	set_move_delay(initial(move_delay))
-	..()
+	. = ..()
 	//spawn the cell you want in each vehicle
 
 /obj/vehicle/Move(NewLoc, Dir = 0, step_x = 0, step_y = 0, var/glide_size_override = 0)
