@@ -1,6 +1,7 @@
 /////////////////////////////////////////////
 // Chem smoke
 /////////////////////////////////////////////
+
 /obj/effect/effect/smoke/chem
 	icon = 'icons/effects/chemsmoke.dmi'
 	opacity = 0
@@ -180,6 +181,7 @@
 		I = icon('icons/effects/96x96.dmi', "smoke")
 
 	//Calculate smoke duration
+#define arcLength 2.3559 //distance between each smoke cloud
 	var/smoke_duration = 150
 
 	var/pressure = 0
@@ -187,7 +189,6 @@
 	if(environment) pressure = environment.return_pressure()
 	smoke_duration = between(5, smoke_duration*pressure/(ONE_ATMOSPHERE/3), smoke_duration)
 
-	#define arcLength 2.3559 //distance between each smoke cloud
 
 	for(var/i = 0, i < range, i++) //calculate positions for smoke coverage - then spawn smoke
 		var/radius = i * 1.5

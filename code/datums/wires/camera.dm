@@ -1,5 +1,12 @@
 // Wires for cameras.
 
+#define CAMERA_WIRE_FOCUS  1
+#define CAMERA_WIRE_POWER  2
+#define CAMERA_WIRE_LIGHT  4
+#define CAMERA_WIRE_ALARM  8
+#define CAMERA_WIRE_NOTHING1  16
+#define CAMERA_WIRE_NOTHING2  32
+
 /datum/wires/camera
 	random = 1
 	holder_type = /obj/machinery/camera
@@ -18,13 +25,6 @@
 /datum/wires/camera/CanUse(var/mob/living/L)
 	var/obj/machinery/camera/C = holder
 	return C.panel_open
-
-#define CAMERA_WIRE_FOCUS  1
-#define CAMERA_WIRE_POWER  2
-#define CAMERA_WIRE_LIGHT  4
-#define CAMERA_WIRE_ALARM  8
-#define CAMERA_WIRE_NOTHING1  16
-#define CAMERA_WIRE_NOTHING2  32
 
 /datum/wires/camera/UpdateCut(var/index, var/mended)
 	var/obj/machinery/camera/C = holder

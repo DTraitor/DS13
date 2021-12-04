@@ -2,7 +2,14 @@
 #define FONT_COLOR "#09f"
 #define FONT_STYLE "Arial Black"
 #define SCROLL_SPEED 2
-
+#define CHARS_PER_LINE  5
+#define STATUS_DISPLAY_BLANK  0
+#define STATUS_DISPLAY_TRANSFER_SHUTTLE_TIME  1
+#define STATUS_DISPLAY_MESSAGE  2
+#define STATUS_DISPLAY_ALERT  3
+#define STATUS_DISPLAY_TIME  4
+define STATUS_DISPLAY_IMAGE  5
+#define STATUS_DISPLAY_CUSTOM  99
 // Status display
 // (formerly Countdown timer display)
 
@@ -38,15 +45,6 @@
 
 	maptext_height = 26
 	maptext_width = 32
-
-	#define CHARS_PER_LINE  5
-	#define STATUS_DISPLAY_BLANK  0
-	#define STATUS_DISPLAY_TRANSFER_SHUTTLE_TIME  1
-	#define STATUS_DISPLAY_MESSAGE  2
-	#define STATUS_DISPLAY_ALERT  3
-	#define STATUS_DISPLAY_TIME  4
-	#define STATUS_DISPLAY_IMAGE  5
-	#define STATUS_DISPLAY_CUSTOM  99
 
 	can_block_movement = FALSE //Wallmounted
 

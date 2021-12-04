@@ -178,7 +178,7 @@
 	return
 
 
-
+#define wait_step  5
 /obj/structure/transit_tube/station/pod_stopped(obj/structure/transit_tube_pod/pod, from_dir)
 	pod_moving = 1
 	spawn(5)
@@ -188,7 +188,6 @@
 		pod.mix_air()
 
 		if(automatic_launch_time)
-			#define wait_step  5
 			var/i = 0
 			while(i < automatic_launch_time)
 				sleep(wait_step)
