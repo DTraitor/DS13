@@ -71,7 +71,6 @@
 /*
  * ID CARDS
  */
-#define NO_EMAG_ACT -50
 
 /obj/item/weapon/card/emag_broken
 	desc = "It's a card with a magnetic strip attached to some circuitry. It looks too busted to be used for anything but salvage."

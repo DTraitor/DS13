@@ -8,7 +8,7 @@
 #define STATUS_DISPLAY_MESSAGE  2
 #define STATUS_DISPLAY_ALERT  3
 #define STATUS_DISPLAY_TIME  4
-define STATUS_DISPLAY_IMAGE  5
+#define STATUS_DISPLAY_IMAGE  5
 #define STATUS_DISPLAY_CUSTOM  99
 // Status display
 // (formerly Countdown timer display)

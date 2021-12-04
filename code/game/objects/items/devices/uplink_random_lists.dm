@@ -18,9 +18,8 @@
 	items = list()
 
 /datum/uplink_random_selection/proc/get_random_item(var/telecrystals, obj/item/device/uplink/U, var/list/bought_items)
-	#define  attempts  50
 
-	for(var/i = 0; i < attempts; i++)
+	for(var/i = 0; i < 50; i++)
 		var/datum/uplink_random_item/RI = pick(items)
 		if(!prob(RI.keep_probability))
 			continue

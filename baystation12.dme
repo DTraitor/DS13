@@ -2049,7 +2049,6 @@
 #include "code\modules\mob\dead\observer\ghost\login.dm"
 #include "code\modules\mob\dead\observer\ghost\logout.dm"
 #include "code\modules\mob\dead\observer\ghost\say.dm"
-#include "code\modules\mob\dead\observer\virtual\_constants.dm"
 #include "code\modules\mob\dead\observer\virtual\base.dm"
 #include "code\modules\mob\dead\observer\virtual\helpers.dm"
 #include "code\modules\mob\dead\observer\virtual\mob.dm"

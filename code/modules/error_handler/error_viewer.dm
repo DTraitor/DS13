@@ -45,7 +45,7 @@ GLOBAL_DATUM(error_cache, /datum/error_viewer/error_cache)
 	</style>
 	"})
 	browser.open()
-
+	
 /datum/error_viewer/proc/build_header(datum/error_viewer/back_to, linear)
 	// Common starter HTML for show_to
 
@@ -114,10 +114,11 @@ GLOBAL_DATUM(error_cache, /datum/error_viewer/error_cache)
 
 	// Show the error to admins with debug messages turned on, but only if one
 	//  from the same source hasn't been shown too recently
-#define viewtext "\[view]" // Nesting these in other brackets went poorly
 	if (error_source.next_message_at <= world.time)
-		//log_debug("Runtime in <b>[e.file]</b>, line <b>[e.line]</b>: <b>[html_encode(e.name)]</b> [error_entry.make_link(viewtext)]")
-#undef viewtext
+		#define viewtext "\[view]" // Nesting these in other brackets went poorly
+		//log_debug("Runtime in <b>[e.file]</b>, line <b>[e.line]</b>: <b>[html_encode(e.name)]</b> 
+		[error_entry.make_link(viewtext)]")
+		#undef viewtext
 		var/err_msg_delay
 		if(config?.loaded)
 			err_msg_delay = CONFIG_GET(number/error_msg_delay)

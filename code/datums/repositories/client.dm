@@ -1,4 +1,4 @@
-#define var_name value/NO_CLIENT_CKEY = "*no ckey*"
+#define NO_CLIENT_CKEY "*no ckey*"
 
 var/repository/client/client_repository = new()
 

@@ -157,6 +157,8 @@
 // Applies reagents to walls that affect walls (only thermite and plant-b-gone at the moment).
 // Also calculates target locations to spawn the visual smoke effect on, so the whole area
 // is covered fairly evenly.
+
+#define arcLength 2.3559 //distance between each smoke cloud
 /datum/effect/effect/system/smoke_spread/chem/start()
 	if(!location)
 		return
@@ -179,9 +181,7 @@
 		I += color
 	else
 		I = icon('icons/effects/96x96.dmi', "smoke")
-
 	//Calculate smoke duration
-#define arcLength 2.3559 //distance between each smoke cloud
 	var/smoke_duration = 150
 
 	var/pressure = 0

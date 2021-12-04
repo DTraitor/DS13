@@ -1,9 +1,9 @@
+#define rad_interval 	 5  	//Same interval period as radiation storms.
+#define temp_incr      100
+#define fire_loss     40
 /datum/event/solar_storm
-	startWhen				 45
-	announceWhen			 1
-	#define rad_interval 	 5  	//Same interval period as radiation storms.
-	#define temp_incr      100
-	#define fire_loss     40
+	startWhen =	45
+	announceWhen = 1
 	var/base_solar_gen_rate
 
 

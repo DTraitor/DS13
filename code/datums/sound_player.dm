@@ -108,7 +108,7 @@ GLOBAL_DATUM_INIT(sound_player, /decl/sound_player, new)
 	var/sound_id       // The associated sound id, used for cleanup
 	var/status = 0     // Paused, muted, running? Global for all listeners
 	var/listener_status// Paused, muted, running? Specific for the given listener.
-	#define SOUND_STOPPED = 0x8000
+	#define SOUND_STOPPED 0x8000
 
 	var/datum/proximity_trigger/square/proxy_listener
 	var/list/can_be_heard_from

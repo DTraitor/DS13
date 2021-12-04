@@ -45,3 +45,8 @@
 		if(WIRE_TRANSMIT)
 			R.broadcasting = mended && !IsIndexCut(WIRE_SIGNAL)
 	SSnano.update_uis(holder)
+
+
+#undef WIRE_SIGNAL
+#undef WIRE_RECEIVE
+#undef WIRE_TRANSMIT
