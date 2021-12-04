@@ -62,7 +62,7 @@ var/list/_client_preferences_by_type
 /datum/client_preference
 	var/description
 	var/key
-	var/list/options = list(GLOB.PREF_YES, GLOB.PREF_NO)
+	var/list/options = list(PREF_YES, PREF_NO)
 	var/default_value
 
 /datum/client_preference/New()
@@ -84,7 +84,7 @@ var/list/_client_preferences_by_type
 /datum/client_preference/floating_messages
 	description = "Floating chat messages"
 	key = "FLOATING_CHAT"
-	options = list(GLOB.PREF_SHOW, GLOB.PREF_HIDE)
+	options = list(PREF_SHOW, PREF_HIDE)
 
 /datum/client_preference/play_admin_midis
 	description ="Play admin midis"
@@ -97,7 +97,7 @@ var/list/_client_preferences_by_type
 /datum/client_preference/split_admins_tabs
 	description = "Split admins tabs"
 	key = "SPLIT_ADMINS_TABS"
-	options = list(GLOB.PREF_YES, GLOB.PREF_NO)
+	options = list(PREF_YES, GLOB.PREF_NO)
 
 /datum/client_preference/play_lobby_music/changed(var/mob/preference_mob, var/new_value)
 	if (preference_mob && preference_mob.client)

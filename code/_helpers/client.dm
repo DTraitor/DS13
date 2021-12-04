@@ -96,7 +96,7 @@
 	if (QDELETED(src))
 		return
 
-	if(!(get_preference_value(/datum/client_preference/play_lobby_music) == GLOB.PREF_YES))
+	if(!(get_preference_value(/datum/client_preference/play_lobby_music) == PREF_YES))
 		return
 
 	if (!istype(mob, /mob/dead/new_player))	//Don't play it if we aren't in the lobby
