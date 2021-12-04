@@ -1,8 +1,8 @@
 /datum/event/radiation_storm
-	var/const/enterBelt		= 30
-	var/const/radIntervall 	= 5	// Enough time between enter/leave belt for 10 hits, as per original implementation
-	var/const/leaveBelt		= 80
-	var/const/revokeAccess	= 165 //Hopefully long enough for radiation levels to dissipate.
+	#define enterBelt		 30
+	#define radIntervall 	 5	// Enough time between enter/leave belt for 10 hits, as per original implementation
+	#define leaveBelt		 80
+	#define revokeAccess	 165 //Hopefully long enough for radiation levels to dissipate.
 	startWhen				= 2
 	announceWhen			= 1
 	endWhen					= revokeAccess

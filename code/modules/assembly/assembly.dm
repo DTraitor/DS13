@@ -17,11 +17,11 @@
 	var/cooldown = 0//To prevent spam
 	var/wires = WIRE_RECEIVE | WIRE_PULSE
 
-	var/const/WIRE_RECEIVE = 1			//Allows Pulsed(0) to call Activate()
-	var/const/WIRE_PULSE = 2				//Allows Pulse(0) to act on the holder
-	var/const/WIRE_PULSE_SPECIAL = 4		//Allows Pulse(0) to act on the holders special assembly
-	var/const/WIRE_RADIO_RECEIVE = 8		//Allows Pulsed(1) to call Activate()
-	var/const/WIRE_RADIO_PULSE = 16		//Allows Pulse(1) to send a radio message
+	#define_WIRE_RECEIVE 1			//Allows Pulsed(0) to call Activate()
+	#define_WIRE_PULSE 2				//Allows Pulse(0) to act on the holder
+	#define_/WIRE_PULSE_SPECIAL 4		//Allows Pulse(0) to act on the holders special assembly
+	#define_WIRE_RADIO_RECEIVE 8		//Allows Pulsed(1) to call Activate()
+	#define_WIRE_RADIO_PULSE 16		//Allows Pulse(1) to send a radio message
 
 /obj/item/device/assembly/proc/activate()									//What the device does when turned on
 	return

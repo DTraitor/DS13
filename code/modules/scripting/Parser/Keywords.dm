@@ -3,14 +3,14 @@
 /*
 	File: Keywords
 */
-var/const/KW_FAIL = 0 //Fatal error; stop parsing entire script.
-var/const/KW_PASS = 1 //OK
-var/const/KW_ERR  = 2 //Non-fatal error, keyword couldn't be handled properly. Ignore keyword but continue on.
-var/const/KW_WARN = 3 //Warning
+#define KW_FAIL  0 //Fatal error; stop parsing entire script.
+#define KW_PASS  1 //OK
+#define KW_ERR   2 //Non-fatal error, keyword couldn't be handled properly. Ignore keyword but continue on.
+#define KW_WARN  3 //Warning
 
 /*
-var/const/Class: n_Keyword
-var/const/Represents a special statement in the code triggered by a keyword.
+#define Class: n_Keyword
+#define Represents a special statement in the code triggered by a keyword.
 */
 /n_Keyword
 	New(inline=0)

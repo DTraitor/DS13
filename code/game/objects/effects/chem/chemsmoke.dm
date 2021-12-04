@@ -187,7 +187,7 @@
 	if(environment) pressure = environment.return_pressure()
 	smoke_duration = between(5, smoke_duration*pressure/(ONE_ATMOSPHERE/3), smoke_duration)
 
-	var/const/arcLength = 2.3559 //distance between each smoke cloud
+	#define var_name value/arcLength = 2.3559 //distance between each smoke cloud
 
 	for(var/i = 0, i < range, i++) //calculate positions for smoke coverage - then spawn smoke
 		var/radius = i * 1.5

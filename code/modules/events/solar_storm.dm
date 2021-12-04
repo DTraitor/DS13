@@ -1,9 +1,9 @@
 /datum/event/solar_storm
-	startWhen				= 45
-	announceWhen			= 1
-	var/const/rad_interval 	= 5  	//Same interval period as radiation storms.
-	var/const/temp_incr     = 100
-	var/const/fire_loss     = 40
+	startWhen				 45
+	announceWhen			 1
+	#define rad_interval 	 5  	//Same interval period as radiation storms.
+	#define temp_incr      100
+	#define fire_loss     40
 	var/base_solar_gen_rate
 
 

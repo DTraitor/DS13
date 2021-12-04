@@ -14,7 +14,7 @@
 	var/carbon_stored = 0
 	var/carbon_efficiency = 0.5
 	var/intake_power_efficiency = 1
-	var/const/carbon_moles_per_piece = 50 //One 12g per mole * 50 = 600 g chunk of coal
+	#define carbon_moles_per_piece  50 //One 12g per mole * 50 = 600 g chunk of coal
 	var/phase = "filling"//"filling", "processing", "releasing"
 	var/datum/gas_mixture/inner_tank = new
 	var/tank_volume = 400//Litres

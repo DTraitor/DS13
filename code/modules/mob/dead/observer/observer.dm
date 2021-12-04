@@ -1,7 +1,7 @@
-var/const/GHOST_IMAGE_NONE = 0
-var/const/GHOST_IMAGE_DARKNESS = 1
-var/const/GHOST_IMAGE_SIGHTLESS = 2
-var/const/GHOST_IMAGE_ALL = ~GHOST_IMAGE_NONE
+#define GHOST_IMAGE_NONE  0
+#define GHOST_IMAGE_DARKNESS  1
+#define GHOST_IMAGE_SIGHTLESS  2
+#define GHOST_IMAGE_ALL ~GHOST_IMAGE_NONE
 
 /mob/dead/observer
 	density = 0

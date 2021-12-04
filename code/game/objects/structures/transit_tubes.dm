@@ -31,8 +31,8 @@
 	var/pod_moving = 0
 	var/automatic_launch_time = 100
 
-	var/const/OPEN_DURATION = 6
-	var/const/CLOSE_DURATION = 6
+	#define OPEN_DURATION  6
+	#define CLOSE_DURATION  6
 
 
 
@@ -188,7 +188,7 @@
 		pod.mix_air()
 
 		if(automatic_launch_time)
-			var/const/wait_step = 5
+			#define /wait_step  5
 			var/i = 0
 			while(i < automatic_launch_time)
 				sleep(wait_step)

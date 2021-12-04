@@ -21,7 +21,7 @@ field_generator power level display
 	anchored = 0
 	density = 1
 	use_power = 0
-	var/const/num_power_levels = 6	// Total number of power level icon has
+	#define_num_power_levels 6	// Total number of power level icon has
 	var/Varedit_start = 0
 	var/Varpower = 0
 	var/active = 0

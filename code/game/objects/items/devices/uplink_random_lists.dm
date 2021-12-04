@@ -18,7 +18,7 @@
 	items = list()
 
 /datum/uplink_random_selection/proc/get_random_item(var/telecrystals, obj/item/device/uplink/U, var/list/bought_items)
-	var/const/attempts = 50
+	#define  attempts  50
 
 	for(var/i = 0; i < attempts; i++)
 		var/datum/uplink_random_item/RI = pick(items)
@@ -120,7 +120,7 @@ var/list/uplink_random_selections_
 		items += new_thing
 
 /datum/uplink_random_selection/blacklist/get_random_item(var/telecrystals, obj/item/device/uplink/U, var/list/bought_items)
-	var/const/attempts = 50
+	#define attempts  50
 	for(var/i = 0; i < attempts; i++)
 		var/datum/uplink_random_item/RI = pick(items)
 		if(!prob(RI.keep_probability))

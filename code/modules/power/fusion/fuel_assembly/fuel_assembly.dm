@@ -11,7 +11,7 @@
 	var/fuel_type = "composite"
 	var/fuel_colour
 	var/radioactivity = 0
-	var/const/initial_amount = 300
+	$define_initial_amount 300
 
 /obj/item/weapon/fuel_assembly/New(var/newloc, var/_material, var/_colour)
 	fuel_type = _material

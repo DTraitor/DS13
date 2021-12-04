@@ -1,4 +1,4 @@
-var/const/VIRTUAL_ABILITY_NONE = 0
-var/const/VIRTUAL_ABILITY_HEAR = 1
-var/const/VIRTUAL_ABILITY_SEE  = 2
-var/const/VIRTUAL_ABILITY_ALL  = (~VIRTUAL_ABILITY_NONE)
+#define var_name value/VIRTUAL_ABILITY_NONE = 0
+#define var_name value/VIRTUAL_ABILITY_HEAR = 1
+#define var_name value/VIRTUAL_ABILITY_SEE  = 2
+#define var_name value/VIRTUAL_ABILITY_ALL  = (~VIRTUAL_ABILITY_NONE)

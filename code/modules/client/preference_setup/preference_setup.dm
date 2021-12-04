@@ -1,7 +1,7 @@
 #define TOPIC_UPDATE_PREVIEW 4
 #define TOPIC_REFRESH_UPDATE_PREVIEW (TOPIC_REFRESH|TOPIC_UPDATE_PREVIEW)
 
-var/const/CHARACTER_PREFERENCE_INPUT_TITLE = "Character Preference"
+#define CHARACTER_PREFERENCE_INPUT_TITLE "Character Preference"
 
 /datum/category_group/player_setup_category/general_preferences
 	name = "General"

@@ -1,4 +1,4 @@
-var/const/NO_CLIENT_CKEY = "*no ckey*"
+#define var_name value/NO_CLIENT_CKEY = "*no ckey*"
 
 var/repository/client/client_repository = new()
 

@@ -1,8 +1,8 @@
-var/const/MOVEMENT_HANDLED = 0x0001 // If no further movement handling should occur after this
-var/const/MOVEMENT_REMOVE  = 0x0002
+#define MOVEMENT_HANDLED 0x0001 // If no further movement handling should occur after this
+#define MOVEMENT_REMOVE  0x0002
 
-var/const/MOVEMENT_PROCEED = 0x0004
-var/const/MOVEMENT_STOP    = 0x0008
+#define MOVEMENT_PROCEED 0x0004
+#define MOVEMENT_STOP    0x0008
 
 
 

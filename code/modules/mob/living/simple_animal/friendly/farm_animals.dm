@@ -184,7 +184,7 @@
 			new /mob/living/simple_animal/chicken(src.loc)
 			qdel(src)
 
-var/const/MAX_CHICKENS = 50
+#define_MAX_CHICKENS 50
 var/global/chicken_count = 0
 
 /mob/living/simple_animal/chicken

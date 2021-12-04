@@ -97,8 +97,8 @@
 
 /* Selection Tweak */
 /datum/backpack_tweak/selection
-	var/const/RETURN_GIVEN_BACKPACK = "default"
-	var/const/RETURN_RANDOM_BACKPACK = "random"
+	#define_RETURN_GIVEN_BACKPACK "default"
+	#define_RETURN_RANDOM_BACKPACK "random"
 	var/list/selections
 
 /datum/backpack_tweak/selection/New(var/list/selections)

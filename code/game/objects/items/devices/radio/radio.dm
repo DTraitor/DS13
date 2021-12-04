@@ -26,7 +26,7 @@
 	w_class = ITEM_SIZE_SMALL
 
 	matter = list(MATERIAL_GLASS = 25,MATERIAL_STEEL = 75)
-	var/const/FREQ_LISTENING = 1
+	#define FREQ_LISTENING  1
 	var/list/internal_channels
 
 	var/obj/item/weapon/cell/device/cell = /obj/item/weapon/cell/device

@@ -9,7 +9,7 @@
 	var/obj/item/weapon/card/id/held_card
 	var/datum/money_account/detailed_account_view
 	var/creating_new_account = 0
-	var/const/fund_cap = 1000000
+	#define var_name value t/fund_cap = 1000000
 
 	circuit = /obj/item/weapon/circuitboard/account_database
 

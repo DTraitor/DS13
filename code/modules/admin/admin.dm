@@ -1002,7 +1002,7 @@ var/global/floorIsLava = 0
 	return check_rights(R_HOST, 0, C)
 
 //Prevents SDQL2 commands from changing admin permissions
-/datum/admins/SDQL_update(var/const/var_name, var/new_value)
+/datum/admins/SDQL_update(#define var_name value/var_name, var/new_value)
 	return 0
 
 //
