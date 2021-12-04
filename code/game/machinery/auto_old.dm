@@ -1,7 +1,7 @@
 /var/global/list/autolathe_recipes
 /var/global/list/autolathe_categories
 
-#define_EXTRA_COST_FACTOR 1.25
+#define EXTRA_COST_FACTOR 1.25
 // Items are more expensive to produce than they are to recycle.
 
 /proc/populate_lathe_recipes()

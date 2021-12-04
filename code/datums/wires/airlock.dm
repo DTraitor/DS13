@@ -10,18 +10,18 @@
 	wire_count = 12
 	window_y = 570
 
-#define var_name value/AIRLOCK_WIRE_IDSCAN = 1
-#define var_name value/AIRLOCK_WIRE_MAIN_POWER1 = 2
-#define var_name value/AIRLOCK_WIRE_MAIN_POWER2 = 4
-#define var_name value/AIRLOCK_WIRE_DOOR_BOLTS = 8
-#define var_name value/AIRLOCK_WIRE_BACKUP_POWER1 = 16
-#define var_name value/AIRLOCK_WIRE_BACKUP_POWER2 = 32
-#define var_name value/AIRLOCK_WIRE_OPEN_DOOR = 64
-#define var_name value/AIRLOCK_WIRE_AI_CONTROL = 128
-#define var_name value/AIRLOCK_WIRE_ELECTRIFY = 256
-#define var_name value/AIRLOCK_WIRE_SAFETY = 512
-#define var_name value/AIRLOCK_WIRE_SPEED = 1024
-#define var_name value/AIRLOCK_WIRE_LIGHT = 2048
+#define AIRLOCK_WIRE_IDSCAN   1
+#define AIRLOCK_WIRE_MAIN_POWER1  2
+#define AIRLOCK_WIRE_MAIN_POWER2  4
+#define AIRLOCK_WIRE_DOOR_BOLTS   8
+#define AIRLOCK_WIRE_BACKUP_POWER1  16
+#define AIRLOCK_WIRE_BACKUP_POWER2  32
+#define AIRLOCK_WIRE_OPEN_DOOR      64
+#define AIRLOCK_WIRE_AI_CONTROL     128
+#define AIRLOCK_WIRE_ELECTRIFY      256
+#define AIRLOCK_WIRE_SAFETY         512
+#define AIRLOCK_WIRE_SPEED          1024
+#define AIRLOCK_WIRE_LIGHT          2048
 
 /datum/wires/airlock/CanUse(var/mob/living/L)
 	var/obj/machinery/door/airlock/A = holder

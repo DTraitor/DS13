@@ -13,6 +13,7 @@ field_generator power level display
 */
 
 #define field_generator_max_power 250000
+#define num_power_levels 6	// Total number of power level icon has
 /obj/machinery/field_generator
 	name = "Field Generator"
 	desc = "A large thermal battery that projects a high amount of energy when powered."
@@ -21,7 +22,6 @@ field_generator power level display
 	anchored = 0
 	density = 1
 	use_power = 0
-	#define_num_power_levels 6	// Total number of power level icon has
 	var/Varedit_start = 0
 	var/Varpower = 0
 	var/active = 0

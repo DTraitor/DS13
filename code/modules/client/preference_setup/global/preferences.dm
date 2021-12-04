@@ -1,27 +1,27 @@
-$define(PREF_YES, "Yes")
-$define(PREF_NO, "No")
-$define(PREF_ALL_SPEECH, "All Speech")
-$define(PREF_NEARBY, "Nearby")
-$define(PREF_ALL_EMOTES, "All Emotes")
-$define(PREF_ALL_CHATTER, "All Chatter")
-$define(PREF_SHORT, "Short")
-$define(PREF_LONG, "Long")
-$define(PREF_SHOW, "Show")
-$define(PREF_HIDE, "Hide")
-$define(PREF_FANCY, "Fancy")
-$define(PREF_PLAIN, "Plain")
-$define(PREF_PRIMARY, "Primary")
-$define(PREF_ALL, "All")
-$define(PREF_OFF, "Off")
-$define(PREF_BASIC, "Basic")
-$define(PREF_FULL, "Full")
-$define(PREF_MIDDLE_CLICK, "middle click")
-$define(PREF_ALT_CLICK, "alt click")
-$define(PREF_CTRL_CLICK, "ctrl click")
-$define(PREF_CTRL_SHIFT_CLICK, "ctrl shift click")
-$define(PREF_HEAR, "Hear")
-$define(PREF_SILENT, "Silent")
-$define(PREF_SHORTHAND, "Shorthand")
+# define PREF_YES "Yes"
+# define PREF_NO "No"
+# define PREF_ALL_SPEECH "All Speech"
+# define PREF_NEARBY "Nearby"
+# define PREF_ALL_EMOTES "All Emotes"
+# define PREF_ALL_CHATTER "All Chatter"
+# define PREF_SHORT "Short"
+# define PREF_LONG "Long"
+# define PREF_SHOW "Show"
+# define PREF_HIDE "Hide"
+# define PREF_FANCY "Fancy"
+# define PREF_PLAIN "Plain"
+# define PREF_PRIMARY "Primary"
+# define PREF_ALL "All"
+# define PREF_OFF "Off"
+# define PREF_BASIC "Basic"
+# define PREF_FULL "Full"
+# define PREF_MIDDLE_CLICK "middle click"
+# define PREF_ALT_CLICK "alt click"
+# define PREF_CTRL_CLICK "ctrl click"
+# define PREF_CTRL_SHIFT_CLICK "ctrl shift click"
+# define PREF_HEAR "Hear"
+# define PREF_SILENT "Silent"
+# define PREF_SHORTHAND "Shorthand"
 
 var/list/_client_preferences
 var/list/_client_preferences_by_key

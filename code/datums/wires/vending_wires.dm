@@ -2,7 +2,7 @@
 	holder_type = /obj/machinery/vending
 	wire_count = 4
 
-#define /VENDING_WIRE_THROW  1
+#define VENDING_WIRE_THROW  1
 #define VENDING_WIRE_CONTRABAND  2
 #define VENDING_WIRE_ELECTRIFY  4
 #define VENDING_WIRE_IDSCAN  8

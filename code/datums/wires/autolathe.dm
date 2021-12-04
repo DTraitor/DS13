@@ -3,9 +3,9 @@
 	holder_type = /obj/machinery/autolathe
 	wire_count = 6
 
-#define_AUTOLATHE_HACK_WIRE 1
-#define_AUTOLATHE_SHOCK_WIRE 2
-#define_AUTOLATHE_DISABLE_WIRE 4
+#define AUTOLATHE_HACK_WIRE    1
+#define AUTOLATHE_SHOCK_WIRE   2
+#define AUTOLATHE_DISABLE_WIRE 4
 
 /datum/wires/autolathe/GetInteractWindow()
 	var/obj/machinery/autolathe/A = holder

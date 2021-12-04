@@ -97,33 +97,33 @@ On the map:
 1455 for AI access
 */
 
-#define var_name value/RADIO_LOW_FREQ	= 1200
-#define var_name value/PUBLIC_LOW_FREQ	= 1441
-#define var_name value/PUBLIC_HIGH_FREQ	= 1489
-#define var_name value/RADIO_HIGH_FREQ	= 1600
+#define RADIO_LOW_FREQ	 1200
+#define PUBLIC_LOW_FREQ	 1441
+#define PUBLIC_HIGH_FREQ 1489
+#define RADIO_HIGH_FREQ	 1600
 
-#define var_name value/BOT_FREQ	= 1447
-#define var_name value/COMM_FREQ = 1353
-#define var_name value/ERT_FREQ	= 1345
-#define var_name value/AI_FREQ	= 1343
-#define var_name value/DTH_FREQ	= 1341
-#define var_name value/SYND_FREQ = 1213
-#define var_name value/RAID_FREQ	= 1277
-#define var_name value/ENT_FREQ	= 1461 //entertainment frequency. This is not a diona exclusive frequency.
+#define BOT_FREQ	 1447
+#define COMM_FREQ    1353
+#define ERT_FREQ	 1345
+#define AI_FREQ	     1343
+#define DTH_FREQ	 1341
+#define SYND_FREQ    1213
+#define RAID_FREQ    1277
+#define ENT_FREQ	 1461 //entertainment frequency. This is not a diona exclusive frequency.
 
 // department channels
-#define var_name value/PUB_FREQ = 1459
-#define var_name value/SEC_FREQ = 1359
-#define var_name value/ENG_FREQ = 1357
-#define var_name value/MED_FREQ = 1355
-#define var_name value/SCI_FREQ = 1351
-#define var_name value/SRV_FREQ = 1349
-#define var_name value/SUP_FREQ = 1347
-#define var_name value/MIN_FREQ = 1361
+#define PUB_FREQ  1459
+#define SEC_FREQ  1359
+#define ENG_FREQ  1357
+#define MED_FREQ  1355
+#define SCI_FREQ  1351
+#define SRV_FREQ  1349
+#define SUP_FREQ  1347
+#define MIN_FREQ  1361
 
 // internal department channels
-#define var_name value/MED_I_FREQ = 1485
-#define var_name value/SEC_I_FREQ = 1475
+#define MED_I_FREQ  1485
+#define SEC_I_FREQ  1475
 
 var/list/radiochannels = list(
 	"Common"		= PUB_FREQ,
@@ -213,17 +213,17 @@ var/list/DEPT_FREQS = list(AI_FREQ, COMM_FREQ, ENG_FREQ, MED_FREQ, MIN_FREQ, SEC
 //This is done for performance, so we don't send signals to lots of machines unnecessarily.
 
 //This filter is special because devices belonging to default also recieve signals sent to any other filter.
-#define var_name value/RADIO_DEFAULT = "radio_default"
+#define RADIO_DEFAULT "radio_default"
 
-#define var_name value/RADIO_TO_AIRALARM = "radio_airalarm" //air alarms
-#define var_name value/RADIO_FROM_AIRALARM = "radio_airalarm_rcvr" //devices interested in recieving signals from air alarms
-#define var_name value/RADIO_CHAT = "radio_telecoms"
-#define var_name value/RADIO_ATMOSIA = "radio_atmos"
-#define var_name value/RADIO_NAVBEACONS = "radio_navbeacon"
-#define var_name value/RADIO_AIRLOCK = "radio_airlock"
-#define var_name value/RADIO_SECBOT = "radio_secbot"
-#define var_name value/RADIO_MULEBOT = "radio_mulebot"
-#define var_name value/RADIO_MAGNETS = "radio_magnet"
+#define RADIO_TO_AIRALARM  "radio_airalarm" //air alarms
+#define RADIO_FROM_AIRALARM  "radio_airalarm_rcvr" //devices interested in recieving signals from air alarms
+#define RADIO_CHAT  "radio_telecoms"
+#define RADIO_ATMOSIA  "radio_atmos"
+#define RADIO_NAVBEACONS  "radio_navbeacon"
+#define RADIO_AIRLOCK  "radio_airlock"
+#define RADIO_SECBOT  "radio_secbot"
+#define RADIO_MULEBOT  "radio_mulebot"
+#define RADIO_MAGNETS  "radio_magnet"
 
 var/global/datum/controller/radio/radio_controller
 

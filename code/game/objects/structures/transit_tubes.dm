@@ -188,7 +188,7 @@
 		pod.mix_air()
 
 		if(automatic_launch_time)
-			#define /wait_step  5
+			#define wait_step  5
 			var/i = 0
 			while(i < automatic_launch_time)
 				sleep(wait_step)

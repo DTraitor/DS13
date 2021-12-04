@@ -4,8 +4,8 @@
 	wire_count = 7
 
 #define NUCLEARBOMB_WIRE_LIGHT	   1
-#define NUCLEARBOMB_WIRE_TIMING	  2
-#define NUCLEARBOMB_WIRE_SAFETY	    4
+#define NUCLEARBOMB_WIRE_TIMING	   2
+#define NUCLEARBOMB_WIRE_SAFETY	   4
 
 /datum/wires/nuclearbomb/CanUse(var/mob/living/L)
 	var/obj/machinery/nuclearbomb/N = holder

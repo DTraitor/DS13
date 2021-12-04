@@ -96,9 +96,9 @@
 
 
 /* Selection Tweak */
+#define RETURN_GIVEN_BACKPACK "default"
+#define RETURN_RANDOM_BACKPACK "random"
 /datum/backpack_tweak/selection
-	#define_RETURN_GIVEN_BACKPACK "default"
-	#define_RETURN_RANDOM_BACKPACK "random"
 	var/list/selections
 
 /datum/backpack_tweak/selection/New(var/list/selections)

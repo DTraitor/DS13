@@ -1,4 +1,4 @@
-#define(HIGHEST_CONNECTABLE_ZLEVEL_INDEX, 0)
+#define HIGHEST_CONNECTABLE_ZLEVEL_INDEX 0
 
 /proc/HasAbove(z)
 	return FALSE

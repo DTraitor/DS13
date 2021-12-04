@@ -1,6 +1,6 @@
 /client
 	var/codex_on_cooldown = FALSE
-	#define var_name value/max_codex_entries_shown = 10
+	#define max_codex_entries_shown 10
 
 /client/verb/search_codex(searching as text)
 

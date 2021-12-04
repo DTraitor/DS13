@@ -1,7 +1,7 @@
-#define var_name value/CLICK_HANDLER_NONE                 = 0
-#define var_name value/CLICK_HANDLER_REMOVE_ON_MOB_LOGOUT = 1
-#define var_name value/CLICK_HANDLER_SUPPRESS_POPUP_MENU = 2
-#define var_name value/CLICK_HANDLER_ALL                  = (~0)
+#define CLICK_HANDLER_NONE              0
+#define CLICK_HANDLER_REMOVE_ON_MOB_LOGOUT  1
+#define CLICK_HANDLER_SUPPRESS_POPUP_MENU  2
+#define CLICK_HANDLER_ALL                (~0)
 
 /*
 	Custom click handling
