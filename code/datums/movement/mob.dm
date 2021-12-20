@@ -133,7 +133,7 @@
 	if(!mob)
 		return // Moved here to avoid nullrefs below
 	if(mob.remote_control) //we're controlling something, our movement is relayed to it
-		return mob.remote_control.relaymove(mob, direct)
+		return mob.remote_control.relaymove(mob, direction)
 	return mob.SelfMove(direction)
 
 // Checks whether this mob is allowed to move in space

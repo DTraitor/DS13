@@ -16,6 +16,6 @@
 #define IMPRINTER	1	//For circuits. Uses glass/chemicals.
 #define PROTOLATHE	2	//New stuff. Uses glass/metal/chemicals
 #define MECHFAB		4	//Mechfab
-#define CHASSIS		8	//For protolathe, but differently
-#define AUTOLATHE	16  //For autolathe
-#define STORE		32	//Purchasing in store
+#define AUTOLATHE	8	//For autolathe
+#define STORE		16	//Purchasing in store
+#define WIREMOD		32	//Wiremods

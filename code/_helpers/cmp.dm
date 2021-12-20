@@ -96,8 +96,3 @@
 
 /proc/cmp_profile_count_dsc(list/A, list/B)
 	return B[PROFILE_ITEM_COUNT] - A[PROFILE_ITEM_COUNT]
-
-/// Orders by integrated circuit weight
-/proc/cmp_port_order_asc(datum/port/compare1, datum/port/compare2)
-	return compare1.order - compare2.order
-
