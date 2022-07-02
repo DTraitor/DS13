@@ -67,6 +67,7 @@ GLOBAL_LIST_INIT(bpl_growth_organs, list(
 "Lungs" = list("type" = /obj/item/organ/internal/lungs, "icon" = "lungs_shrunk", "name" = "Lungs", "stemcells"  = 5),
 "Liver" = list("type" = /obj/item/organ/internal/liver, "icon" = "liver", "name" = "Liver", "stemcells"  = 5),
 "Stem Cells" = list("type" = /obj/item/organ/fetus, "icon" = "thing", "name" = "Stem Cells", "stemcells"  = 0),
+"Head" = list("type" = /obj/item/organ/external/head, "icon" = "head", "name" = "Head", "stemcells" = 15),
 "Arm" = list("type" = list("Left Arm" = /obj/item/organ/external/arm/full, "Right Arm" = /obj/item/organ/external/arm/right/full), "icon" = "arm", "name" = "Arm", "stemcells"  = 10),
 "Leg" = list("type" = list("Left Leg" = /obj/item/organ/external/leg/full, "Right Leg" = /obj/item/organ/external/leg/right/full), "icon" = "leg", "name" = "Leg", "stemcells"  = 10)
 ))
@@ -80,8 +81,5 @@ GLOBAL_LIST_EMPTY(gear_datums)
 // Used to update tracking level for all vitals monitors that are set to automatic mode when alert changes
 GLOBAL_LIST_EMPTY(vitals_auto_update_tracking)
 
-//Holds designs that are patron only or require a whitelist. These do not require schematics
-GLOBAL_LIST_EMPTY(limited_store_designs)
-
-//Holds designs that are patron only or require a whitelist. These do not require schematics
-GLOBAL_LIST_EMPTY(store_categories)
+/// List of wire colors for each object type of that round. One for airlocks, one for vendors, etc.
+GLOBAL_LIST_EMPTY(wire_color_directory) // This is an associative list with the `holder_type` as the key, and a list of colors as the value.

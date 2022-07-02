@@ -1,8 +1,7 @@
 import { useBackend, useLocalState } from '../backend';
-import { Button, Flex, Grid, LabeledList, Section, Table, Tabs } from '../components';
+import { Button, Flex, LabeledList, Section, Table, Tabs } from '../components';
 import { Window } from '../layouts';
 import { sortBy } from 'common/collections';
-import { multiline } from '../../common/string';
 import { TableCell } from '../components/Table';
 
 export const airlock_electronics = (props, context) => {

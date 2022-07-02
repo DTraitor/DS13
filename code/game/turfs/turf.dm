@@ -1,7 +1,7 @@
 /turf
 	icon = 'icons/turf/floors.dmi'
 	level = 1
-
+	vis_flags = VIS_INHERIT_ID | VIS_INHERIT_PLANE// Important for interaction with and visualization of openspace.
 	var/turf_flags
 
 	var/holy = 0
@@ -34,15 +34,66 @@
 	var/pathweight = 1          // How much does it cost to pathfind over this turf?
 	var/blessed = 0             // Has the turf been blessed?
 
-	//List of everything that could possibly block movement
-	var/list/movement_blocking_atoms = list()
-
 	var/list/decals
 
 	var/movement_delay
 
 	var/tmp/changing_turf
 
+	///Lumcount added by sources other than lighting datum objects, such as the overlay lighting component.
+	var/dynamic_lumcount = 0
+
+	///Bool, whether this turf will always be illuminated no matter what area it is in
+	var/always_lit = FALSE
+
+	var/tmp/lighting_corners_initialised = FALSE
+
+	///Our lighting object.
+	var/tmp/datum/lighting_object/lighting_object
+	///Lighting Corner datums.
+	var/tmp/datum/lighting_corner/lighting_corner_NE
+	var/tmp/datum/lighting_corner/lighting_corner_SE
+	var/tmp/datum/lighting_corner/lighting_corner_SW
+	var/tmp/datum/lighting_corner/lighting_corner_NW
+
+
+	///Which directions does this turf block the vision of, taking into account both the turf's opacity and the movable opacity_sources.
+	var/directional_opacity = NONE
+	///Lazylist of movable atoms providing opacity sources.
+	var/list/atom/movable/opacity_sources
+
+/turf/Initialize(mapload)
+	SHOULD_CALL_PARENT(FALSE)
+	if(atom_flags & ATOM_FLAG_INITIALIZED)
+		crash_with("Warning: [src]([type]) initialized multiple times!")
+	atom_flags |= ATOM_FLAG_INITIALIZED
+
+	// by default, vis_contents is inherited from the turf that was here before
+	vis_contents.Cut()
+
+	levelupdate()
+
+	for(var/atom/movable/content as anything in src)
+		Entered(content, null)
+
+	var/area/our_area = loc
+	if(our_area.area_has_base_lighting && always_lit) //Only provide your own lighting if the area doesn't for you
+		add_overlay(GLOB.fullbright_overlay)
+
+	if (light_power && light_range)
+		update_light()
+
+	var/turf/T = GetAbove(src)
+	if(T)
+		T.multiz_turf_new(src, DOWN)
+	T = GetBelow(src)
+	if(T)
+		T.multiz_turf_new(src, UP)
+
+	if (opacity)
+		directional_opacity = ALL_CARDINALS
+
+	return INITIALIZE_HINT_NORMAL
 
 /turf/proc/has_wall()
 	if (is_wall)
@@ -54,22 +105,8 @@
 				return TRUE
 
 	return FALSE
-/turf/Initialize(mapload, ...)
-	. = ..()
-	if(dynamic_lighting)
-		luminosity = 0
-	else
-		luminosity = 1
 
-	if (mapload && permit_ao)
-		queue_ao()
-
-	if (z_flags & ZM_MIMIC_BELOW)
-		setup_zmimic(mapload)
-
-	return INITIALIZE_HINT_NORMAL
-
-/turf/Destroy()
+/turf/Destroy(force)
 	if (!changing_turf)
 		crash_with("Improper turf qdel. Do not qdel turfs directly.")
 
@@ -77,18 +114,21 @@
 
 	remove_cleanables()
 
-	if (ao_queued)
-		SSao.queue -= src
-		ao_queued = 0
-
-	if (z_flags & ZM_MIMIC_BELOW)
-		cleanup_zmimic()
-
-	if (bound_overlay)
-		QDEL_NULL(bound_overlay)
+	var/turf/T = GetAbove(src)
+	if(T)
+		T.multiz_turf_del(src, DOWN)
+	T = GetBelow(src)
+	if(T)
+		T.multiz_turf_del(src, UP)
 
 	..()
 	return QDEL_HINT_IWILLGC
+
+/turf/proc/multiz_turf_del(turf/T, dir)
+	SEND_SIGNAL(src, COMSIG_TURF_MULTIZ_DEL, T, dir)
+
+/turf/proc/multiz_turf_new(turf/T, dir)
+	SEND_SIGNAL(src, COMSIG_TURF_MULTIZ_NEW, T, dir)
 
 /turf/ex_act(severity)
 	return FALSE
@@ -102,7 +142,7 @@
 	if(Adjacent(user))
 		attack_hand(user)
 
-turf/attackby(obj/item/weapon/W as obj, mob/user as mob)
+/turf/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if(istype(W, /obj/item/weapon/storage))
 		var/obj/item/weapon/storage/S = W
 		if(S.use_to_pickup && S.collection_mode)
@@ -117,14 +157,14 @@ turf/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	var/turf/origin = mover.loc
 
 	//First, check objects to block exit . border or not
-	for(var/obj/obstacle in origin.movement_blocking_atoms)
+	for(var/obj/obstacle in origin.contents)
 		if((mover != obstacle) && (forget != obstacle))
 			if(!obstacle.CheckExit(mover, src))
 				return obstacle
 
 
 	//Next, check objects to block entry that are on the border
-	for(var/obj/border_obstacle in src.movement_blocking_atoms)
+	for(var/obj/border_obstacle in src.contents)
 		if(border_obstacle.atom_flags & ATOM_FLAG_CHECKS_BORDER)
 			if(!border_obstacle.CanPass(mover, mover.loc, 1, 0) && (forget != border_obstacle))
 				return border_obstacle
@@ -134,7 +174,7 @@ turf/attackby(obj/item/weapon/W as obj, mob/user as mob)
 		return src
 
 	//Finally, check objects/mobs to block entry that are not on the border
-	for(var/atom/movable/obstacle in src.movement_blocking_atoms)
+	for(var/atom/movable/obstacle in src.contents)
 		if(!(obstacle.atom_flags & ATOM_FLAG_CHECKS_BORDER))
 			if(!obstacle.CanPass(mover, mover.loc, 1, 0) && (forget != obstacle))
 				return obstacle
@@ -151,14 +191,14 @@ turf/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	var/turf/origin = mover.loc
 
 	//First, check objects to block exit . border or not
-	for(var/obj/obstacle in origin.movement_blocking_atoms)
+	for(var/obj/obstacle in origin.contents)
 		if((mover != obstacle) && (forget != obstacle))
 			if(!obstacle.CheckExit(mover, src))
 				mover.Bump(obstacle, 1)
 				return FALSE
 
 	//Next, check objects to block entry that are on the border
-	for(var/obj/border_obstacle in src.movement_blocking_atoms)
+	for(var/obj/border_obstacle in src.contents)
 		if(border_obstacle.atom_flags & ATOM_FLAG_CHECKS_BORDER)
 			if(!border_obstacle.CanPass(mover, mover.loc, 1, 0) && (forget != border_obstacle))
 				mover.Bump(border_obstacle, 1)
@@ -170,10 +210,7 @@ turf/attackby(obj/item/weapon/W as obj, mob/user as mob)
 		return FALSE
 
 	//Finally, check objects/mobs to block entry that are not on the border
-	for(var/atom/movable/obstacle in src.movement_blocking_atoms)
-		if (QDELETED(obstacle))
-			movement_blocking_atoms -= obstacle
-			continue
+	for(var/atom/movable/obstacle in src.contents)
 		if(!(obstacle.atom_flags & ATOM_FLAG_CHECKS_BORDER))
 			if(!obstacle.CanPass(mover, mover.loc, 1, 0) && (forget != obstacle))
 				mover.Bump(obstacle, 1)
@@ -185,9 +222,6 @@ var/const/enterloopsanity = 100
 /turf/Entered(atom/atom as mob|obj)
 
 	..()
-
-	if (atom.can_block_movement)
-		LAZYDISTINCTADD(movement_blocking_atoms,atom)
 
 	if(!istype(atom, /atom/movable))
 		return
@@ -215,14 +249,25 @@ var/const/enterloopsanity = 100
 					A.HasProximity(thing, 1)
 					if ((thing && A) && (thing.movable_flags & MOVABLE_FLAG_PROXMOVE))
 						thing.HasProximity(A, 1)
-	return
+
+	if(A.density)
+		if(clear)	//If clear was previously true, null it
+			clear = null
+
+		//If this turf was not already dense, maybe it is now. notify everyone of that possibility
+		if(!density && A.density)
+			content_density_set(A.density)
 
 /turf/Exited(atom/atom as mob|obj)
-	if (atom.can_block_movement)
-
-		LAZYREMOVE(movement_blocking_atoms,atom)
-
 	.=..()
+
+	if(atom.density)
+		if(!clear)	//If clear was previously true, null it
+			clear = null
+
+		//If this turf was not naturally dense, maybe this object was the only thing blocking it, lets fire off an event
+		if(!density && atom.density)
+			content_density_set(atom.density)
 
 
 /turf/proc/adjacent_fire_act(turf/simulated/floor/source, temperature, volume)

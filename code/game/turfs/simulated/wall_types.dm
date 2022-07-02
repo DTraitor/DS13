@@ -67,6 +67,12 @@
 /turf/simulated/wall/iron/New(var/newloc)
 	..(newloc,"iron")
 
+/turf/simulated/wall/tram
+	icon_state = "tram"
+
+/turf/simulated/wall/tram/New(var/newloc)
+	..(newloc,MATERIAL_TRAM)
+
 /turf/simulated/wall/uranium/New(var/newloc)
 	..(newloc,"uranium")
 
@@ -113,6 +119,16 @@
 	icon_state = "jaggy"
 	floor_type = /turf/simulated/floor/fixed/alium
 	list/blend_objects = newlist()
+
+/turf/simulated/floor/fixed/alium/ruin
+	name = "ancient alien plating"
+	desc = "This obviously wasn't made for your feet. Looks pretty old."
+	initial_gas = null
+
+/turf/simulated/floor/fixed/alium/ruin/Initialize()
+	. = ..()
+	if(prob(10))
+		ChangeTurf(get_base_turf_by_area(src))
 
 /turf/simulated/wall/alium/New(var/newloc)
 	..(newloc,"aliumium")

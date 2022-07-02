@@ -8,9 +8,8 @@
 	name = "processing unit console"
 	icon = 'icons/obj/machines/mining_machines.dmi'
 	icon_state = "console"
-	density = 1
+	density = FALSE
 	anchored = 1
-	can_block_movement = FALSE
 	var/obj/machinery/mineral/processing_unit/machine = null
 
 /obj/machinery/mineral/processing_unit_console/Initialize()
@@ -19,7 +18,12 @@
 
 /obj/machinery/mineral/processing_unit_console/LateInitialize()
 	if(!machine)
-		qdel(src)
+		for(var/obj/machinery/mineral/processing_unit/unit in orange(2, src))
+			machine = unit
+			machine.console = src
+			break
+		if(!machine)
+			qdel(src)
 
 /obj/machinery/mineral/processing_unit_console/attack_hand(mob/user)
 	add_fingerprint(user)
@@ -81,7 +85,7 @@
 	icon_state = "furnace"
 	density = 1
 	anchored = 1
-	light_outer_range = 3
+	light_range = 3
 	circuit = /obj/item/weapon/circuitboard/ore_processing
 	var/obj/machinery/input/input
 	var/obj/machinery/mineral/output
@@ -208,14 +212,14 @@
 
 	//Grab some more ore to process this tick.
 	for(var/i = 1 to ores_per_tick)
-		var/obj/item/weapon/ore/O = locate() in input.loc
+		var/obj/item/stack/ore/O = locate() in input.loc
 
 		if(!O)
 			break
 
 		if(O.ore)
 			currently_working = TRUE
-			ores_stored[O.ore.type]++
+			ores_stored[O.ore.type] += O.amount
 			qdel(O)
 			SStgui.update_uis(console)
 		else
@@ -320,13 +324,19 @@
 				OS--
 				sheets++
 				currently_working = TRUE	//We have enough ore to make something
-				new /obj/item/weapon/ore/slag(output.loc)
+				new /obj/item/stack/ore/slag(output.loc)
 			ores_stored[metal] = OS
 		else
 			continue
 
-	if (length(ores_processed))
-		SStrade.ores_processed(ores_processed)
+	if(length(ores_processed))
+		var/payout
+		for(var/oretype in ores_processed)
+			var/ore/ore_datum = GLOB.ores_by_type[oretype]
+			var/value = ore_datum.Value()
+			payout = value * ores_processed[oretype]
+		if(payout)
+			spawn_miner_money(payout, loc)
 
 	console.updateUsrDialog()
 

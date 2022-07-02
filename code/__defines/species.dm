@@ -38,16 +38,6 @@
 #define SKIN_NORMAL 0
 #define SKIN_THREAT 1
 
-// Darkvision Levels these are inverted from normal so pure white is the darkest
-// possible and pure black is none
-#define DARKTINT_NONE      "#ffffff"
-#define DARKTINT_POOR  		"#cccccc"
-#define DARKTINT_MODERATE      "#aaaaaa"
-#define DARKTINT_GOOD			"#8C8C8C"
-#define DARKTINT_EXCEPTIONAL	"#666666"
-
-
-
 
 #define SPECIES_HUMAN       "Human"
 #define SPECIES_TAJARA      "Tajara"
@@ -78,6 +68,7 @@
 #define SPECIES_NECROMORPH_HUNTER	"Hunter"
 #define SPECIES_NECROMORPH_INFECTOR	"Infector"
 #define SPECIES_NECROMORPH_TWITCHER	"Twitcher"
+#define SPECIES_NECROMORPH_TWITCHER_ORACLE	"Oracle Twitcher"
 #define SPECIES_NECROMORPH_LEAPER 	"Leaper"
 #define SPECIES_NECROMORPH_LEAPER_ENHANCED 	"Enhanced Leaper"
 #define SPECIES_NECROMORPH_LEAPER_HOPPER	"Hopper"

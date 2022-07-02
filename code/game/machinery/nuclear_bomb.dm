@@ -42,7 +42,7 @@ var/bomb_set
 		timeleft = max(timeleft - (wait / 10), 0)
 		playsound(loc, 'sound/items/timer.ogg', 50)
 		if(timeleft <= 0)
-			addtimer(CALLBACK(src, .proc/explode), 0)
+			INVOKE_ASYNC(src, .proc/explode)
 		SSnano.update_uis(src)
 
 /obj/machinery/nuclearbomb/attackby(obj/item/weapon/O as obj, mob/user as mob, params)
@@ -258,7 +258,7 @@ var/bomb_set
 				if(safety)
 					to_chat(usr, "<span class='warning'>The safety is still on.</span>")
 					return 1
-				if(wires.IsIndexCut(NUCLEARBOMB_WIRE_TIMING))
+				if(wires.is_cut(WIRE_BOMB_TIMING))
 					to_chat(usr, "<span class='warning'>Nothing happens, something might be wrong with the wiring.</span>")
 					return 1
 				if(!timing && !safety)
@@ -266,7 +266,7 @@ var/bomb_set
 				else
 					check_cutoff()
 			if(href_list["safety"])
-				if (wires.IsIndexCut(NUCLEARBOMB_WIRE_SAFETY))
+				if (wires.is_cut(WIRE_BOMB_SAFETY))
 					to_chat(usr, "<span class='warning'>Nothing happens, something might be wrong with the wiring.</span>")
 					return 1
 				safety = !safety
@@ -354,18 +354,18 @@ var/bomb_set
 	. = ..()
 	nuke_disks |= src
 	// Can never be quite sure that a game mode has been properly initiated or not at this point, so always register
-	GLOB.moved_event.register(src, src, /obj/item/weapon/disk/nuclear/proc/check_z_level)
+	RegisterSignal(src, COMSIG_MOVABLE_MOVED, .proc/check_z_level)
 
 /obj/item/weapon/disk/nuclear/proc/check_z_level()
+	SIGNAL_HANDLER
 	if(!(SSticker && istype(SSticker.mode, /datum/game_mode/nuclear)))
-		GLOB.moved_event.unregister(src, src, /obj/item/weapon/disk/nuclear/proc/check_z_level) // However, when we are certain unregister if necessary
+		UnregisterSignal(src, COMSIG_MOVABLE_MOVED) // However, when we are certain unregister if necessary
 		return
 	var/turf/T = get_turf(src)
 	if(!T || isNotStationLevel(T.z))
 		qdel(src)
 
 /obj/item/weapon/disk/nuclear/Destroy()
-	GLOB.moved_event.unregister(src, src, /obj/item/weapon/disk/nuclear/proc/check_z_level)
 	nuke_disks -= src
 	if(!nuke_disks.len)
 		var/turf/T = pick_area_turf(/area/maintenance, list(/proc/is_station_turf, /proc/not_turf_contains_dense_objects))

@@ -8,7 +8,7 @@
 	anchored = 1
 	density = 1
 	layer = SINGULARITY_LAYER
-	light_outer_range = 6
+	light_range = 6
 	unacidable = 1 //Don't comment this out.
 
 	var/current_size = 1
@@ -343,10 +343,10 @@
 	var/dir2 = 0
 	var/dir3 = 0
 	switch(direction)
-		if(NORTH||SOUTH)
+		if(NORTH, SOUTH)
 			dir2 = 4
 			dir3 = 8
-		if(EAST||WEST)
+		if(EAST, WEST)
 			dir2 = 1
 			dir3 = 2
 	var/turf/T2 = T

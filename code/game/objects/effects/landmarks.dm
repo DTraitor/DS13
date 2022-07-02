@@ -2,10 +2,11 @@
 	name = "landmark"
 	icon = 'icons/hud/screen1.dmi'
 	icon_state = "x2"
-	anchored = 1.0
+	anchored = TRUE
+	layer = TURF_LAYER
 	unacidable = 1
 	simulated = 0
-	invisibility = 101
+	invisibility = INVISIBILITY_ABSTRACT
 	var/delete_me = 0
 
 /obj/effect/landmark/New()
@@ -64,6 +65,10 @@
 			return
 		if("bluespacerift")
 			endgame_exits += loc
+			delete_me = 1
+			return
+		if("ShuttleRepairPart")
+			GLOB.shuttlerepairspawnlocs += loc
 			delete_me = 1
 			return
 

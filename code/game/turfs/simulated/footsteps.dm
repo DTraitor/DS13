@@ -65,9 +65,11 @@
 /decl/flooring/linoleum/footstep_type = FOOTSTEP_TILES
 /decl/flooring/wood/footstep_type = FOOTSTEP_WOOD
 /decl/flooring/reinforced/footstep_type = FOOTSTEP_PLATING
+/decl/flooring/reinforced/footstep_type = FOOTSTEP_PLATING
 
 //ds13 sounds
 /decl/flooring/tiling_ds/footstep_type = FOOTSTEP_TILES
+/decl/flooring/complex/tiling_ds/footstep_type = FOOTSTEP_TILES
 
 /turf/simulated/floor/proc/get_footstep_sound()
 	if(is_plating())
@@ -80,13 +82,10 @@
 /turf/simulated/floor/asteroid/get_footstep_sound()
 	return safepick(footstep_sounds[FOOTSTEP_ASTEROID])
 
-/turf/simulated/floor/exoplanet/get_footstep_sound()
-	return safepick(footstep_sounds[FOOTSTEP_CARPET])
+/turf/simulated/floor/water_shallow
+	initial_flooring = /decl/flooring/water
 
-/turf/simulated/floor/exoplanet/grass/get_footstep_sound()
-	return safepick(footstep_sounds[FOOTSTEP_GRASS])
-
-/turf/simulated/floor/exoplanet/water/shallow/get_footstep_sound()
+/turf/simulated/floor/water_shallow/get_footstep_sound()
 	return safepick(footstep_sounds[FOOTSTEP_WATER])
 
 /turf/simulated/floor/fixed/get_footstep_sound()

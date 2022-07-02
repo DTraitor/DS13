@@ -27,8 +27,8 @@
 
 /mob/dead/new_player/Destroy()
 	GLOB.new_player_list -= src
-
-	return ..()
+	QDEL_NULL(panel)
+	.=..()
 
 /mob/dead/new_player/verb/new_player_panel()
 	set src = usr
@@ -99,6 +99,10 @@
 	if(href_list["observe"])
 		if(!(initialization_stage&INITIALIZATION_COMPLETE))
 			to_chat(src, "<span class='warning'>Please wait for server initialization to complete...</span>")
+			return
+
+		if(SSticker.current_state < GAME_STATE_PLAYING)
+			to_chat(src, SPAN_NOTICE("You can't join the game before round starts."))
 			return
 
 		if(!CONFIG_GET(number/respawn_delay) || client.holder || tgui_alert(src,"Are you sure you wish to observe? You will have to wait [CONFIG_GET(number/respawn_delay)] minute\s before being able to respawn!","Player Setup", list("Yes","No")) == "Yes")
@@ -362,7 +366,6 @@
 	dat += "<table>"
 	dat += "<tr><td colspan = 3><b>[GLOB.using_map.station_name]:</b></td></tr>"
 
-	// TORCH JOBS
 	var/list/job_summaries = list()
 	for(var/datum/job/job in job_master.occupations)
 		var/summary = job.get_join_link(client, "byond://?src=\ref[src];SelectedJob=[job.title]", show_invalid_jobs)
@@ -372,24 +375,6 @@
 		dat += job_summaries
 	else
 		dat += "No available positions."
-	// END TORCH JOBS
-
-	// SUBMAP JOBS
-	for(var/thing in SSmapping.submaps)
-		var/datum/submap/submap = thing
-		if(submap && submap.available())
-			dat += "<tr><td colspan = 3><b>[submap.name] ([submap.archetype.descriptor]):</b></td></tr>"
-			job_summaries = list()
-			for(var/otherthing in submap.jobs)
-				var/datum/job/job = submap.jobs[otherthing]
-				var/summary = job.get_join_link(client, "byond://?src=\ref[submap];joining=\ref[src];join_as=[otherthing]", show_invalid_jobs)
-				if(summary && summary != "")
-					job_summaries += summary
-			if(LAZYLEN(job_summaries))
-				dat += job_summaries
-			else
-				dat += "No available positions."
-	// END SUBMAP JOBS
 
 	dat += "</table></center>"
 	src << browse(jointext(dat, null), "window=latechoices;size=450x640;can_close=1")
@@ -444,7 +429,7 @@
 
 	if(mind)
 		mind.active = 0					//we wish to transfer the key manually
-		mind.original = new_character
+		mind.replace_original_mob(new_character)
 		if(client.prefs.memory)
 			mind.store_memory(client.prefs.memory)
 		if(client.prefs.relations.len)
@@ -463,8 +448,6 @@
 		GLOB.living_crew |= mind
 
 		mind.transfer_to(new_character)					//won't transfer key since the mind is not active
-
-		client.prefs.copy_to_mind(new_character.mind)
 
 	new_character.SetName(real_name)
 	new_character.dna.ready_dna(new_character)
@@ -485,10 +468,6 @@
 	new_character.regenerate_icons()
 
 	new_character.key = key		//Manually transfer the key to log them in
-
-	//Register that they've joined the round
-	character_spawned(new_character.mind)
-
 	return new_character
 
 /mob/dead/new_player/proc/ViewManifest()

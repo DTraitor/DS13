@@ -6,7 +6,11 @@ GLOBAL_DATUM_INIT(shipsystem, /datum/ship_subsystems, new)
 */
 /datum/game_mode/marker/containment
 	name = "Containment"
+	#ifdef MAP_ISHIMURA
 	round_description = "The crew of the USG Ishimura has brought aboard a strange artifact and is tasked with discovering what its purpose is."
+	#else
+	round_description = "The staff of the Colony has brought a strange artifact and is tasked with discovering what its purpose is."
+	#endif
 	extended_round_description = "The crew must holdout until help arrives"
 	config_tag = "containment"
 	votable = TRUE//Debug TRUE
@@ -29,6 +33,11 @@ GLOBAL_DATUM_INIT(shipsystem, /datum/ship_subsystems, new)
 	latejoin_antag_tags = list(MODE_UNITOLOGIST_SHARD)
 
 /datum/game_mode/marker/enemy_within/get_marker_location()
+	var/obj/structure/showcase/marker/fake = locate(/obj/structure/showcase/marker)
+	if(fake)
+		. = get_turf(fake)
+		qdel(fake)
+		return .
 	return pick(SSnecromorph.marker_spawns_aegis)
 
 /datum/game_mode/marker
@@ -104,8 +113,7 @@ GLOBAL_DATUM_INIT(shipsystem, /datum/ship_subsystems, new)
 	return FALSE
 
 /datum/game_mode/marker/proc/activate_marker()
-	last_pointgain_time = world.timeofday
-		//This handles preventing evac until we have enough points
+	//This handles preventing evac until we have enough points
 	charge_evac_points()
 	SSnecromorph.marker.make_active() //Allow controlling
 	pick_marker_player()

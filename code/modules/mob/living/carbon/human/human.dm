@@ -58,11 +58,10 @@
 /mob/living/carbon/human/Destroy()
 	if(species)
 		species.onDestroy(src)
+	QDEL_NULL(vessel)
 	GLOB.human_mob_list -= src
 	worn_underwear = null
 	remove_massive_atom(src)	//Remove necromorphs from the massive atoms list
-	for(var/organ in organs)
-		qdel(organ)
 	return ..()
 
 
@@ -936,7 +935,8 @@
 
 	regenerate_icons(TRUE)
 	spawn(0)
-
+		if(QDELETED(src))
+			return
 		if(vessel.total_volume < species.blood_volume)
 			vessel.maximum_volume = species.blood_volume
 			vessel.add_reagent(/datum/reagent/blood, species.blood_volume - vessel.total_volume)

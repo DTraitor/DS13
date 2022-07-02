@@ -11,6 +11,11 @@
 	icon_state = "marker_shard_dormant"
 	randpixel = 0
 
+	light_range = 8
+	light_power = 1
+	light_color = COLOR_MARKER_RED
+	light_on = FALSE
+
 	var/mass_active = 30 //It gets heavier when active
 
 	resistance = 40
@@ -90,11 +95,10 @@
 /obj/item/marker_shard/update_icon()
 	if (active)
 		icon_state = "marker_shard_active"
-		set_light(1, 1, 8, 2, COLOR_MARKER_RED)
+		set_light_on(TRUE)
 	else
 		icon_state = "marker_shard_dormant"
-		set_light(0)
-
+		set_light_on(FALSE)
 
 //The shard reveals an area around it, seeing through walls
 /obj/item/marker_shard/get_visualnet_tiles(var/datum/visualnet/network)
@@ -106,7 +110,7 @@
 /obj/item/marker_shard/proc/activate()
 	active = TRUE
 	last_known_location = loc
-	GLOB.moved_event.register(src, src, .proc/moved)
+	RegisterSignal(src, COMSIG_MOVABLE_MOVED, .proc/moved)
 	attempt_deploy()
 	mass = mass_active
 	update_icon()
@@ -114,7 +118,7 @@
 /obj/item/marker_shard/proc/deactivate()
 	active = FALSE
 	mass = initial(mass)
-	GLOB.moved_event.unregister(src, src, .proc/moved)
+	UnregisterSignal(src, COMSIG_MOVABLE_MOVED)
 	update_icon()
 
 /obj/item/marker_shard/proc/set_deploy_timer()
@@ -131,7 +135,6 @@
 	try_sink()
 	if (!isturf(loc))
 		apply_debuff()
-	.=..()
 
 /*
 	Any crewman who picks up the shard recieves significant penalties

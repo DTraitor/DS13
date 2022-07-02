@@ -30,7 +30,7 @@
 
 	layer = LARGE_MOB_LAYER
 
-	biomass = 400
+	biomass = 360
 	require_total_biomass	=	BIOMASS_REQ_T3
 	mass = 250
 	biomass_reclamation_time	=	15 MINUTES
@@ -50,6 +50,7 @@
 	stun_mod = 0.5
 	weaken_mod = 0.3
 	paralysis_mod = 0.3
+	burn_mod = 1
 
 
 	inherent_verbs = list(/mob/living/carbon/human/proc/tripod_leap,
@@ -134,6 +135,8 @@
 	'sound/effects/creatures/necromorph/tripod/tripod_shout_long_6.ogg')
 	)
 
+	lowest_money_drop = 10000
+	highest_money_drop = 12500
 
 
 #define TRIPOD_PASSIVE_1	"<h2>PASSIVE: Personal Space:</h2><br>\

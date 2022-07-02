@@ -30,12 +30,15 @@
 	icon_state = "floor7"
 	initial_flooring = /decl/flooring/reinforced/shuttle/black
 
+/turf/simulated/floor/shuttle/pod
+	icon_state = "p_floor"
+	initial_flooring = /decl/flooring/reinforced/shuttle/pod
 
 /decl/flooring/reinforced/shuttle
 	name = "floor"
 	icon = 'icons/turf/shuttle.dmi'
 	build_type = null
-	flags = TURF_ACID_IMMUNE | TURF_CAN_BREAK | TURF_REMOVE_WRENCH
+	flags = TURF_ACID_IMMUNE | TURF_CAN_BREAK | TURF_REMOVE_WRENCH | TURF_HIDES_THINGS
 	can_paint = 1
 
 /decl/flooring/reinforced/shuttle/blue
@@ -58,3 +61,6 @@
 
 /decl/flooring/reinforced/shuttle/black
 	icon_base = "floor7"
+
+/decl/flooring/reinforced/shuttle/pod
+	icon_base = "p_floor"

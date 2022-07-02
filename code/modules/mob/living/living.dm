@@ -50,7 +50,7 @@ default behaviour is:
 	return ..()
 
 /mob/living/Bump(atom/movable/AM, yes)
-	GLOB.bump_event.raise_event(src, AM)
+	SEND_SIGNAL(src, COMSIG_MOVABLE_BUMP, AM)
 	spawn(0)
 		if ((!( yes ) || now_pushing) || !loc)
 			return
@@ -279,6 +279,8 @@ default behaviour is:
 	BITSET(hud_updateflag, LIFE_HUD)
 	ExtinguishMob()
 	fire_stacks = 0
+	// The signal is called after everything else so components can properly check the updated values
+	SEND_SIGNAL(src, COMSIG_LIVING_REVIVE)
 
 /mob/living/proc/rejuvenate()
 	if(reagents)

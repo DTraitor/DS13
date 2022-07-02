@@ -9,7 +9,10 @@
 	pixel_x = -33
 	density = TRUE
 	anchored = TRUE
-	var/light_colour = COLOR_MARKER_RED
+	light_on = FALSE
+	light_range = 12
+	light_power = 1
+	light_color = COLOR_MARKER_RED
 	var/player	//Ckey of the player controlling the marker
 	var/mob/dead/observer/eye/signal/master/playermob	//Signal mob of the player controlling the marker
 	var/corruption_plant
@@ -63,6 +66,7 @@
 	//Start spreading corruption
 	start_corruption()
 	update_icon()
+	set_light_on(TRUE)
 	set_traumatic_sight(TRUE, 5) //Marker is pretty hard to look at.
 
 	//If the marker is activated manually, tell the gamemode to activate itself too.
@@ -101,10 +105,10 @@
 /obj/machinery/marker/update_icon()
 	if (player && active)
 		icon_state = "marker_giant_active_anim"
-		set_light(1, 1, 12, 2, light_colour)
+		set_light_on(TRUE)
 	else
 		icon_state = "marker_giant_dormant"
-		set_light(0)
+		set_light_on(FALSE)
 
 //Each process tick, we'll loop through all biomass sources and absorb their income
 /obj/machinery/marker/Process()

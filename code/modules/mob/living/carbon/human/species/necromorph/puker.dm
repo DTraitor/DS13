@@ -4,6 +4,7 @@
 	bodytype = SPECIES_NECROMORPH_PUKER
 	name_plural = "pukers"
 	total_health = 176
+	burn_mod = 1.1
 	biomass = 130
 	require_total_biomass	=	BIOMASS_REQ_T2
 	mass = 120
@@ -89,7 +90,8 @@
 	outfits = list(/decl/hierarchy/outfit/necromorph/puker_biosuit = list(PATRON = TRUE),
 	/decl/hierarchy/outfit/naked = list())
 
-
+	lowest_money_drop = 1500
+	highest_money_drop = 2000
 
 
 //Ancient version, formerly default, now uncommon

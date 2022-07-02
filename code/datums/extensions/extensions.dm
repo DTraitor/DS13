@@ -29,18 +29,6 @@
 	var/list/datum/extension/extensions
 
 
-
-/datum/Destroy()
-	if(extensions)
-		for(var/expansion_key in extensions)
-			var/list/extension = extensions[expansion_key]
-			if(islist(extension))
-				extension.Cut()
-			else
-				qdel(extension)
-		extensions = null
-	return ..()
-
 //Variadic - Additional positional arguments can be given. Named arguments might not work so well
 /proc/set_extension(var/datum/source, var/datum/extension/extension_type)
 	var/datum/extension/extension_base_type = initial(extension_type.base_type)
@@ -134,3 +122,16 @@
 
 /datum/extension/proc/remove_self()
 	remove_extension(holder, (base_type ? base_type : type))
+
+
+/*
+	If this extension creates any hud elements, do so here
+
+	In addition, its important to note that this can be called multiple times on the same mob, especially in response to logins.
+	So you must also be sure to clean up any previously existing hud elements before recreating them
+
+	The update parameter tells whether or not we should attempt to instantly add things to client screen
+	If false, this is being called from normal hud instantiation and we can assume screen adding will be done in a batch at the end
+*/
+/datum/extension/proc/handle_hud(var/datum/hud/M, var/update = TRUE)
+	return

@@ -103,8 +103,11 @@
 	icon = 'icons/obj/lighting.dmi'
 	icon_state = "partylight-off"
 	item_state = "partylight-off"
+	light_range = 7
+	light_power = 1
+	light_on = FALSE
 	var/activated = 0
-	var/strobe_effect = null
+	var/obj/effect/party_light/strobe_effect = null
 
 /obj/item/weapon/party_light/attack_self()
 	if (activated)
@@ -115,10 +118,10 @@
 /obj/item/weapon/party_light/update_icon()
 	if (activated)
 		icon_state = "partylight-on"
-		set_light(1, 1, 7)
+		set_light_on(TRUE)
 	else
 		icon_state = "partylight_off"
-		set_light(0)
+		set_light_on(FALSE)
 
 /obj/item/weapon/party_light/proc/activate_strobe()
 	activated = 1
@@ -129,7 +132,7 @@
 	strobe_effect = L
 
 	// Make the light effect follow this party light object.
-	GLOB.moved_event.register(src, L, /atom/movable/proc/move_to_turf_or_null)
+	L.RegisterSignal(src, COMSIG_MOVABLE_MOVED, /atom/movable/proc/move_to_turf_or_null)
 
 	update_icon()
 
@@ -137,7 +140,7 @@
 	activated = 0
 
 	// Cause the party light effect to stop following this object, and then delete it.
-	GLOB.moved_event.unregister(src, strobe_effect, /atom/movable/proc/move_to_turf_or_null)
+	strobe_effect.UnregisterSignal(src, COMSIG_MOVABLE_MOVED)
 	QDEL_NULL(strobe_effect)
 
 	update_icon()

@@ -32,7 +32,7 @@
 	name = "floor"
 	icon = 'icons/turf/flooring/misc.dmi'
 	icon_state = "concrete"
-	initial_flooring = null
+	initial_flooring = /decl/flooring/concrete
 
 /turf/simulated/floor/holofloor/tiled
 	name = "floor"
@@ -137,11 +137,11 @@
 
 	if(!istype(W) || W.item_flags & ITEM_FLAG_NO_BLUDGEON) return
 
-	if(istype(W, /obj/item/weapon/tool/screwdriver))
+	if(isScrewdriver(W))
 		to_chat(user, ("<span class='notice'>It's a holowindow, you can't unfasten it!</span>"))
-	else if(istype(W, /obj/item/weapon/tool/crowbar) && reinf && state <= 1)
+	else if(isCrowbar(W) && reinf && state <= 1)
 		to_chat(user, ("<span class='notice'>It's a holowindow, you can't pry it!</span>"))
-	else if(istype(W, /obj/item/weapon/tool/wrench) && !anchored && (!state || !reinf))
+	else if(isWrench(W) && !anchored && (!state || !reinf))
 		to_chat(user, ("<span class='notice'>It's a holowindow, you can't dismantle it!</span>"))
 	else
 		if(W.damtype == BRUTE || W.damtype == BURN)
@@ -206,7 +206,7 @@
 	..()
 
 /obj/structure/bed/chair/holochair/attackby(obj/item/weapon/W as obj, mob/user as mob)
-	if(istype(W, /obj/item/weapon/tool/wrench))
+	if(isWrench(W))
 		to_chat(user, ("<span class='notice'>It's a holochair, you can't dismantle it!</span>"))
 	return
 
@@ -425,10 +425,8 @@
 	icon_gib = null
 	meat_amount = 0
 	meat_type = null
-
-/mob/living/simple_animal/hostile/carp/holodeck/New()
-	..()
-	set_light(0.5, 0.1, 2) //hologram lighting
+	light_range = 2
+	light_power = 0.5
 
 /mob/living/simple_animal/hostile/carp/holodeck/proc/set_safety(var/safe)
 	if (safe)

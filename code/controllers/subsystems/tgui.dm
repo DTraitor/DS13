@@ -201,7 +201,7 @@ SUBSYSTEM_DEF(tgui)
  * Update all UIs attached to src_object.
  *
  * required src_object datum The object/datum which owns the UIs.
- * required update_static_data bool Should UI update static data.
+ * optional update_static_data bool Should UI update static data.
  *
  * return int The number of UIs updated.
  */

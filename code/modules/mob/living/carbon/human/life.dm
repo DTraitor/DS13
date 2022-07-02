@@ -221,10 +221,13 @@
 
 	if(!radiation)
 		if(species.appearance_flags & RADIATION_GLOWS)
-			set_light(0)
+			set_light_on(TRUE)
 	else
 		if(species.appearance_flags & RADIATION_GLOWS)
-			set_light(0.3, 0.1, max(1,min(20,radiation/20)), 2, species.get_flesh_colour(src))
+			set_light_range(max(1,min(20,radiation/20)))
+			set_light_power(0.3)
+			set_light_color(species.get_flesh_colour(src))
+			set_light_on(TRUE)
 		// END DOGSHIT SNOWFLAKE
 
 		var/obj/item/organ/internal/diona/nutrients/rad_organ = locate() in internal_organs
@@ -1006,10 +1009,6 @@
 			E.take_external_damage(burn = round(species_heat_mod * log(10, (burn_temperature + 10)), 0.1), used_weapon = hud_used.fire)
 
 /mob/living/carbon/human/rejuvenate()
-
-	//If the mob was dead and is being rejuvenated, then an admin is probably undoing their death. In this case we'll undo the dead status in the database as well, set them back to living
-	if (stat == DEAD && mind && mind.character_id)
-		character_spawned(mind)
 	restore_blood()
 	full_prosthetic = null
 	shock_stage = 0

@@ -1,4 +1,5 @@
 /mob/Logout()
+	SEND_SIGNAL(src, COMSIG_MOB_LOGOUT, my_client)
 
 	//Cache our last location on the player datum, incase this mob is deleted before we log in again
 	if (ckey)
@@ -12,11 +13,6 @@
 	GLOB.player_list -= src
 	log_access("Logout: [key_name(src)]")
 	handle_admin_logout()
-	if(my_client)
-		my_client.screen -= l_general
-		my_client.screen -= l_plane
-	QDEL_NULL(l_general)
-	QDEL_NULL(l_plane)
 	hide_client_images()
 
 	..()

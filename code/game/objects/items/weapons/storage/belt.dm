@@ -32,7 +32,7 @@
 			overlays += image('icons/obj/clothing/belts_overlays.dmi', "[I.icon_state]")
 
 /obj/item/weapon/storage/belt/get_mob_overlay(mob/user_mob, slot)
-	var/image/ret = ..()
+	var/mutable_appearance/ret = ..()
 	if(slot == slot_belt_str && contents.len)
 		var/list/ret_overlays = list()
 		for(var/obj/item/I in contents)
@@ -166,6 +166,7 @@
 	item_state = "medical"
 	can_hold = list(
 		/obj/item/device/healthanalyzer,
+		/obj/item/device/adv_health_analyzer,
 		/obj/item/weapon/reagent_containers/dropper,
 		/obj/item/weapon/reagent_containers/glass/beaker,
 		/obj/item/weapon/reagent_containers/glass/bottle,
@@ -373,7 +374,6 @@
 		/obj/item/weapon/folder,
 		/obj/item/weapon/paper,
 		/obj/item/weapon/pen,
-		/obj/item/device/spaceflare,
 		/obj/item/device/radio/beacon,
 		/obj/item/weapon/pinpointer/radio,
 		/obj/item/device/taperecorder,

@@ -93,6 +93,10 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 	name = "smokable item"
 	desc = "You're not sure what this is. You should probably ahelp it."
 	body_parts_covered = 0
+	light_on = FALSE
+	light_range = 2
+	light_power = 0.6
+	light_color = "#e38f46"
 	var/lit = 0
 	var/icon_on
 	var/type_butt = null
@@ -105,8 +109,8 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 	var/ignitermes = "USER lights NAME with FLAME"
 	var/brand
 
-/obj/item/clothing/mask/smokable/New()
-	..()
+/obj/item/clothing/mask/smokable/Initialize()
+	.=..()
 	atom_flags |= ATOM_FLAG_NO_REACT // so it doesn't react until you light it
 	create_reagents(chem_volume) // making the cigarrete a chemical holder with a maximum volume of 15
 
@@ -168,11 +172,11 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 		update_icon()
 		var/turf/T = get_turf(src)
 		T.visible_message(flavor_text)
-		set_light(0.6, 0.5, 2, 2, "#e38f46")
+		set_light_on(TRUE)
 		START_PROCESSING(SSobj, src)
 
 /obj/item/clothing/mask/smokable/proc/die(var/nomessage = 0)
-	set_light(0)
+	set_light_on(FALSE)
 	lit = 0
 	STOP_PROCESSING(SSobj, src)
 	update_icon()
@@ -224,8 +228,8 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 	brand = "\improper Trans-Stellar Duty-free"
 	var/list/filling = list(/datum/reagent/tobacco = 1)
 
-/obj/item/clothing/mask/smokable/cigarette/New()
-	..()
+/obj/item/clothing/mask/smokable/cigarette/Initialize()
+	.=..()
 	for(var/R in filling)
 		reagents.add_reagent(R, filling[R])
 
@@ -391,11 +395,11 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 	return item_state
 
 /obj/item/clothing/mask/smokable/cigarette/get_mob_overlay(mob/user_mob, slot)
-	var/image/res = ..()
+	var/mutable_appearance/res = ..()
 	if(lit == 1)
-		var/image/ember = overlay_image(res.icon, "cigember", flags=RESET_COLOR)
-		ember.layer = ABOVE_LIGHTING_LAYER
-		ember.plane = EFFECTS_ABOVE_LIGHTING_PLANE
+		var/mutable_appearance/ember = overlay_image(res.icon, "cigember", flags=RESET_COLOR)
+		ember.plane = ABOVE_LIGHTING_PLANE
+		ember.layer = LIGHTING_SECONDARY_LAYER
 		res.overlays += ember
 	return res
 
@@ -444,8 +448,8 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 	slot_flags = SLOT_EARS
 	throwforce = 1
 
-/obj/item/weapon/cigbutt/New()
-	..()
+/obj/item/weapon/cigbutt/Initialize()
+	.=..()
 	transform = turn(transform,rand(0,360))
 
 /obj/item/weapon/cigbutt/cigarbutt
@@ -492,8 +496,8 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 	var/dry = 1
 	var/list/filling = list(/datum/reagent/tobacco = 5)
 
-/obj/item/weapon/reagent_containers/terrbacco/New()
-	..()
+/obj/item/weapon/reagent_containers/terrbacco/Initialize()
+	.=..()
 	for(var/R in filling)
 		reagents.add_reagent(R, filling[R])
 
@@ -707,7 +711,7 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 	weldermes = "<span class='notice'>USER recklessly lights NAME with FLAME.</span>"
 	ignitermes = "<span class='notice'>USER fiddles with FLAME, and manages to light their NAME with the power of science.</span>"
 
-/obj/item/clothing/mask/smokable/pipe/New()
+/obj/item/clothing/mask/smokable/pipe/Initialize()
 	..()
 	name = "empty [initial(name)]"
 
@@ -810,7 +814,7 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 	var/brand
 	var/list/filling = list()
 
-obj/item/clothing/mask/chewable/New()
+/obj/item/clothing/mask/chewable/Initialize()
 	..()
 	atom_flags |= ATOM_FLAG_NO_REACT // so it doesn't react until you light it
 	create_reagents(chem_volume) // making the cigarrete a chemical holder with a maximum volume of 15
@@ -898,8 +902,9 @@ obj/item/clothing/mask/chewable/Destroy()
 	desc = "A chewy wad of synthetic rubber, laced with nicotine. Possibly the least disgusting method of nicotine delivery."
 	icon_state = "nic_gum"
 	type_butt = /obj/item/weapon/cigbutt/spitgum
-/obj/item/clothing/mask/chewable/tobacco/nico/New()
-	..()
+
+/obj/item/clothing/mask/chewable/tobacco/nico/Initialize()
+	.=..()
 	reagents.add_reagent(/datum/reagent/nicotine, 2)
 	color = reagents.get_color()
 
@@ -936,7 +941,7 @@ obj/item/clothing/mask/chewable/Destroy()
 	item_state = "gum"
 //	brand = "gum"
 
-/obj/item/clothing/mask/chewable/candy/gum/New()
+/obj/item/clothing/mask/chewable/candy/gum/Initialize()
 	..()
 	reagents.add_reagent(pick(list(
 				/datum/reagent/fuel,
@@ -958,7 +963,7 @@ obj/item/clothing/mask/chewable/Destroy()
 	icon_state = "lollipop"
 	item_state = "lollipop"
 //	brand = "unremarkable"
-/obj/item/clothing/mask/chewable/candy/lolli/New()
+/obj/item/clothing/mask/chewable/candy/lolli/Initialize()
 	..()
 	reagents.add_reagent(pick(list(
 				/datum/reagent/fuel,
@@ -979,7 +984,7 @@ obj/item/clothing/mask/chewable/Destroy()
 	type_butt = /obj/item/weapon/cigbutt/lollibutt
 	icon_state = "lollipop"
 
-/obj/item/clothing/mask/chewable/candy/lolli/meds/New()
+/obj/item/clothing/mask/chewable/candy/lolli/meds/Initialize()
 	..()
 	reagents.add_reagent(pick(list(
 				/datum/reagent/dexalinp,
@@ -1011,11 +1016,12 @@ obj/item/clothing/mask/chewable/Destroy()
 	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	slot_flags = SLOT_BELT
 	attack_verb = list("burnt", "singed")
+	light_range = 2
+	light_power = 0.6
 	var/max_fuel = 5
 
 /obj/item/weapon/flame/lighter/Initialize()
-	. = ..()
-
+	.=..()
 	create_reagents(max_fuel)
 	reagents.add_reagent(/datum/reagent/fuel, max_fuel)
 	set_extension(src, /datum/extension/base_icon_state, icon_state)
@@ -1025,7 +1031,7 @@ obj/item/clothing/mask/chewable/Destroy()
 	lit = 1
 	update_icon()
 	light_effects(user)
-	set_light(0.6, 0.5, 2)
+	set_light_on(TRUE)
 	START_PROCESSING(SSobj, src)
 
 /obj/item/weapon/flame/lighter/proc/light_effects(mob/living/carbon/user)
@@ -1047,7 +1053,7 @@ obj/item/clothing/mask/chewable/Destroy()
 		shutoff_effects(user)
 	else
 		visible_message("<span class='notice'>[src] goes out.</span>")
-	set_light(0)
+	set_light_on(FALSE)
 	STOP_PROCESSING(SSobj, src)
 
 /obj/item/weapon/flame/lighter/proc/shutoff_effects(mob/user)
@@ -1075,10 +1081,10 @@ obj/item/clothing/mask/chewable/Destroy()
 		to_chat(user, "<span class='notice'>You refuel [src] from \the [O]</span>")
 		playsound(src.loc, 'sound/effects/refill.ogg', 50, 1, -6)
 
-/obj/item/weapon/flame/lighter/random/New()
+/obj/item/weapon/flame/lighter/random/Initialize()
 	icon_state = "lighter-[pick("r","c","y","g")]"
 	item_state = icon_state
-	..()
+	.=..()
 
 /obj/item/weapon/flame/lighter/attack_self(mob/living/user)
 	if(!lit)
@@ -1106,7 +1112,7 @@ obj/item/clothing/mask/chewable/Destroy()
 	if(lit)
 		M.IgniteMob()
 
-		if(istype(M.wear_mask, /obj/item/clothing/mask/smokable/cigarette) && get_zone_sel(user) == BP_MOUTH)
+		if(istype(M.wear_mask, /obj/item/clothing/mask/smokable/cigarette) && get_zone_sel(user, TRUE) == BP_MOUTH)
 			var/obj/item/clothing/mask/smokable/cigarette/cig = M.wear_mask
 			if(M == user)
 				cig.attackby(src, user)
@@ -1123,9 +1129,9 @@ obj/item/clothing/mask/chewable/Destroy()
 	if(reagents.has_reagent(/datum/reagent/fuel))
 		if(ismob(loc) && prob(10) && reagents.get_reagent_amount(/datum/reagent/fuel) < 1)
 			to_chat(loc, "<span class='warning'>[src]'s flame flickers.</span>")
-			set_light(0)
+			set_light_on(FALSE)
 			spawn(4)
-				set_light(0.6, 0.5, 2)
+				set_light_on(TRUE)
 		reagents.remove_reagent(/datum/reagent/fuel, 0.05)
 	else
 		shutoff()

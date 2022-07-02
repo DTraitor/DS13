@@ -5,6 +5,7 @@ var/list/ventcrawl_machinery = list(
 
 // Vent crawling whitelisted items, whoo
 /mob/living/var/list/can_enter_vent_with = list(
+	/atom/movable/screen,
 	/obj/item/weapon/implant,
 	/obj/item/device/radio/borg,
 	/obj/item/weapon/holder,
@@ -73,6 +74,8 @@ var/list/ventcrawl_machinery = list(
 	return ..()
 
 /mob/living/proc/ventcrawl_carry()
+	if(override_ventcrawl_check)
+		return TRUE
 	for(var/atom/A in contents)
 		if(!is_allowed_vent_crawl_item(A))
 			to_chat(src, "<span class='warning'>You can't carry \the [A] while ventcrawling!</span>")
@@ -173,8 +176,8 @@ var/list/ventcrawl_machinery = list(
 		for(var/obj/machinery/atmospherics/A in (pipeline.members || pipeline.edges))
 			if(!A.pipe_image)
 				A.pipe_image = image(A, A.loc, dir = A.dir)
-			A.pipe_image.layer = ABOVE_LIGHTING_LAYER
-			A.pipe_image.plane = EFFECTS_ABOVE_LIGHTING_PLANE
+			A.pipe_image.plane = ABOVE_LIGHTING_PLANE
+			A.pipe_image.layer = LIGHTING_SECONDARY_LAYER
 			pipes_shown += A.pipe_image
 			client.images += A.pipe_image
 

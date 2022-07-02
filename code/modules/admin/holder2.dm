@@ -31,6 +31,8 @@ GLOBAL_LIST_EMPTY(admin_datums)
 	rank = initial_rank
 	rights = initial_rights
 	GLOB.admin_datums[ckey] = src
+	if(rights & R_DEBUG) //grant profile access, assuming admin profile access is enabled
+		world.SetConfig("APP/admin", ckey, "role=admin")
 
 /datum/admins/proc/associate(client/C)
 	if(istype(C))
@@ -103,7 +105,7 @@ NOTE: It checks usr by default. Supply the "user" argument if you wish to check 
 		return FALSE
 	if(!user.client)
 		return FALSE
-	if(!check_rights(R_ADMIN, user.client)) // Are they allowed?
+	if(!check_rights(R_ADMIN, FALSE, user.client)) // Are they allowed?
 		return FALSE
 	return TRUE
 

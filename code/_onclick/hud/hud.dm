@@ -24,7 +24,7 @@
 	var/atom/movable/screen/move_intent
 	var/atom/movable/screen/stamina/stamina_bar
 	var/atom/movable/screen/meter/health/hud_healthbar
-	var/atom/movable/screen/meter/resource/hud_resource
+	var/list/atom/movable/screen/meter/resource/hud_resource = list()
 	var/atom/movable/screen/hands
 	var/atom/movable/screen/pullin
 	var/atom/movable/screen/purged
@@ -82,7 +82,7 @@
 
 	ability_master = new /atom/movable/screen/movable/ability_master(null,mymob)
 
-	for(var/mytype in subtypesof(/atom/movable/screen/plane_master))
+	for(var/mytype in subtypesof(/atom/movable/screen/plane_master)-/atom/movable/screen/plane_master/rendering_plate)
 		var/atom/movable/screen/plane_master/instance = new mytype()
 		plane_masters["[instance.plane]"] = instance
 		instance.backdrop(mymob)
@@ -90,6 +90,12 @@
 	for(var/mytype in subtypesof(/atom/movable/plane_master_controller))
 		var/atom/movable/plane_master_controller/controller_instance = new mytype(null,src)
 		plane_master_controllers[controller_instance.name] = controller_instance
+
+	for (var/typepath as anything in mymob.extensions)
+		var/datum/extension/E = mymob.extensions[typepath]
+		E.handle_hud(src)
+
+	owner.overlay_fullscreen("see_through_darkness", /atom/movable/screen/fullscreen/see_through_darkness)
 
 /datum/hud/Destroy()
 	if(mymob.hud_used == src)
@@ -124,9 +130,13 @@
 	action_intent = null
 	move_intent = null
 
+	QDEL_LIST(toggleable_inventory)
 	QDEL_LIST(static_inventory)
 	QDEL_LIST(infodisplay)
 	QDEL_LIST(hotkeybuttons)
+	QDEL_LIST_ASSOC_VAL(inv_slots)
+	QDEL_LIST_ASSOC_VAL(plane_masters)
+	QDEL_LIST_ASSOC_VAL(plane_master_controllers)
 
 	mymob = null
 
@@ -163,6 +173,7 @@
 		to_chat(usr, SPAN_WARNING("This mob type does not use a HUD."))
 
 //Version denotes which style should be displayed. blank or 0 means "next version"
+//-1 means "Use the same version as last time" assuming any has previously been set, essentially a refresh function
 /datum/hud/proc/show_hud(version = 0, mob/viewmob)
 	if(!ismob(mymob))
 		return FALSE
@@ -177,6 +188,8 @@
 	var/display_hud_version = version
 	if(!display_hud_version)	//If 0 or blank, display the next hud version
 		display_hud_version = hud_version + 1
+	else if (display_hud_version == -1 && hud_version)
+		display_hud_version = hud_version
 	if(display_hud_version > HUD_VERSIONS)	//If the requested version number is greater than the available versions, reset back to the first version
 		display_hud_version = 1
 
@@ -226,13 +239,53 @@
 				screenmob.client.screen -= infodisplay
 
 	screenmob.refresh_lighting_overlays()
-	screenmob.set_darksight_range(screenmob.client.view_radius)
 	hud_version = display_hud_version
 	persistent_inventory_update(screenmob)
 	screenmob.update_action_buttons()
 	screenmob.reload_fullscreens()
 
+	if(!viewmob)
+		plane_masters_update()
+	else if(viewmob.hud_used)
+		viewmob.hud_used.plane_masters_update()
+
 	return TRUE
+
+/datum/hud/proc/plane_masters_update()
+	// Plane masters are always shown to OUR mob, never to observers
+	for(var/thing in plane_masters)
+		var/atom/movable/screen/plane_master/PM = plane_masters[thing]
+		PM.backdrop(mymob)
+		mymob.client.screen += PM
 
 /datum/hud/proc/update_locked_slots()
 	return
+
+/*
+	Target can be any of..
+		/datum/hud
+		/mob
+		/client
+
+	This proc attempts to return all three of those things related to the target
+*/
+/proc/get_hud_data_for_target(var/target)
+	var/list/data = list()
+	if (ismob(target))
+		var/mob/M = target
+		data["mob"] = target
+		data["client"] = M.client
+		data["hud"] = M.hud_used
+	else if (istype(target, /client))
+		var/client/C = target
+		data["mob"] = C.mob
+		data["client"] = C
+		data["hud"] = C.mob?.hud_used
+	else if (istype(target, /datum/hud))
+		var/datum/hud/M = target
+
+		data["mob"] = M.mymob
+		data["client"] = M.mymob?.client
+		data["hud"] = M
+
+	return data

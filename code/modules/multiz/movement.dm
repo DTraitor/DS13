@@ -154,11 +154,11 @@
 	if(can_fall())
 		begin_falling(lastloc, below)
 
-// We timer(0) here to let the current move operation complete before we start falling. fall() is normally called from
+// We spawn(0) here to let the current move operation complete before we start falling. fall() is normally called from
 // Entered() which is part of Move(), by spawn()ing we let that complete.  But we want to preserve if we were in client movement
 // or normal movement so other move behavior can continue.
 /atom/movable/proc/begin_falling(lastloc, below)
-	addtimer(CALLBACK(src, /atom/movable/proc/fall_callback, below), 0)
+	INVOKE_ASYNC(src, .proc/fall_callback, below)
 
 /atom/movable/proc/fall_callback(turf/below)
 	var/mob/M = src
@@ -202,7 +202,7 @@
 
 /obj/item/pipe/can_fall(anchor_bypass = FALSE, turf/location_override = loc)
 	var/turf/simulated/open/below = loc
-	below = below.below
+	below = GetBelow(below)
 
 	. = ..()
 
@@ -276,18 +276,18 @@
 
 
 /mob/living/carbon/human/proc/climb_up(atom/A)
-	if(!isturf(loc) || !bound_overlay || bound_overlay.destruction_timer || is_physically_disabled())	// This destruction_timer check ideally wouldn't be required, but I'm not awake enough to refactor this to not need it.
+	var/turf/above = GetAbove(src)
+	if(!isturf(loc) || !isopenspace(above) || is_physically_disabled())	// This destruction_timer check ideally wouldn't be required, but I'm not awake enough to refactor this to not need it.
 		return FALSE
 
 	var/turf/T = get_turf(A)
-	var/turf/above = GetAbove(src)
-	if(above && T.Adjacent(bound_overlay) && above.CanZPass(src, UP)) //Certain structures will block passage from below, others not
+	if(above?.CanZPass(src, UP)) //Certain structures will block passage from below, others not
 		var/area/location = get_area(loc)
 		if(location.has_gravity && !can_overcome_gravity())
 			return FALSE
 
 		visible_message("<span class='notice'>[src] starts climbing onto \the [A]!</span>", "<span class='notice'>You start climbing onto \the [A]!</span>")
-		if(do_after(src, 50, A))
+		if(do_after(src, 50, get_turf(src)))
 			visible_message("<span class='notice'>[src] climbs onto \the [A]!</span>", "<span class='notice'>You climb onto \the [A]!</span>")
 			src.Move(T)
 		else
@@ -305,8 +305,8 @@
 			qdel(z_eye)
 			z_eye = null
 			return
-		var/turf/above = GetAbove(src)
-		if(istype(above) && above.z_flags & ZM_MIMIC_BELOW)
+		var/turf/simulated/open/above = GetAbove(src)
+		if(istype(above))
 			z_eye = new /atom/movable/z_observer/z_up(src, src)
 			to_chat(src, "<span class='notice'>You look up.</span>")
 			reset_view(z_eye)
@@ -326,8 +326,8 @@
 			qdel(z_eye)
 			z_eye = null
 			return
-		var/turf/T = get_turf(src)
-		if(T && (T.z_flags & ZM_MIMIC_BELOW) && HasBelow(T.z))
+		var/turf/simulated/open/T = get_turf(src)
+		if(isopenspace(T) && HasBelow(T.z))
 			z_eye = new /atom/movable/z_observer/z_down(src, src)
 			to_chat(src, "<span class='notice'>You look down.</span>")
 			reset_view(z_eye)
@@ -350,15 +350,16 @@
 	. = ..()
 	owner = user
 	follow()
-	GLOB.moved_event.register(owner, src, /atom/movable/z_observer/proc/follow)
+	RegisterSignal(owner, COMSIG_MOVABLE_MOVED, .proc/follow)
 
 /atom/movable/z_observer/proc/follow()
+	SIGNAL_HANDLER
 
 /atom/movable/z_observer/z_up/follow()
 	forceMove(get_step(owner, UP))
 	if(isturf(src.loc))
-		var/turf/T = src.loc
-		if(T.z_flags & ZM_MIMIC_BELOW)
+		var/turf/simulated/open/T = src.loc
+		if(isopenspace(T))
 			return
 	owner.reset_view(null)
 	owner.z_eye = null
@@ -367,14 +368,13 @@
 /atom/movable/z_observer/z_down/follow()
 	forceMove(get_step(owner, DOWN))
 	var/turf/T = get_turf(owner)
-	if(T && (T.z_flags & ZM_MIMIC_BELOW))
+	if(isopenspace(T))
 		return
 	owner.reset_view(null)
 	owner.z_eye = null
 	qdel(src)
 
 /atom/movable/z_observer/Destroy()
-	GLOB.moved_event.unregister(owner, src, /atom/movable/z_observer/proc/follow)
 	owner = null
 	. = ..()
 

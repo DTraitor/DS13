@@ -21,8 +21,6 @@
 			return global.Debug2;
 		if("Holiday")
 			return global.Holiday;
-		if("LIGHTING_CORNER_DIAGONAL")
-			return global.LIGHTING_CORNER_DIAGONAL;
 		if("Tier1Runes")
 			return global.Tier1Runes;
 		if("Tier2Runes")
@@ -157,14 +155,10 @@
 			return global.cable_list;
 		if("cached_icons")
 			return global.cached_icons;
-		if("cached_space")
-			return global.cached_space;
 		if("camera_alarm")
 			return global.camera_alarm;
 		if("camera_range_display_status")
 			return global.camera_range_display_status;
-		if("camera_repository")
-			return global.camera_repository;
 		if("captain_announcement")
 			return global.captain_announcement;
 		if("cargo_supply_pack_root")
@@ -209,8 +203,6 @@
 			return global.create_turf_html;
 		if("created")
 			return global.created;
-		if("crew_repository")
-			return global.crew_repository;
 		if("csrfz_check")
 			return global.csrfz_check;
 		if("custom_event_msg")
@@ -249,8 +241,6 @@
 			return global.doppler_arrays;
 		if("dreams")
 			return global.dreams;
-		if("dummy_lighting_corner")
-			return global.dummy_lighting_corner;
 		if("economic_species_modifier")
 			return global.economic_species_modifier;
 		if("empty_playable_ai_cores")
@@ -387,8 +377,6 @@
 			return global.last_tick_duration;
 		if("light_overlay_cache")
 			return global.light_overlay_cache;
-		if("lighting_overlays_initialised")
-			return global.lighting_overlays_initialised;
 		if("limb_icon_cache")
 			return global.limb_icon_cache;
 		if("lunchables_drink_reagents_")
@@ -411,8 +399,6 @@
 			return global.mannequins_;
 		if("map_count")
 			return global.map_count;
-		if("map_sectors")
-			return global.map_sectors;
 		if("maploader")
 			return global.maploader;
 		if("mark")
@@ -465,8 +451,6 @@
 			return global.mob_repository;
 		if("motion_alarm")
 			return global.motion_alarm;
-		if("moving_levels")
-			return global.moving_levels;
 		if("multi_point_spawns")
 			return global.multi_point_spawns;
 		if("name_to_material")
@@ -509,8 +493,6 @@
 			return global.outfits_decls_by_type_;
 		if("outfits_decls_root_")
 			return global.outfits_decls_root_;
-		if("overmap_event_handler")
-			return global.overmap_event_handler;
 		if("paiController")
 			return global.paiController;
 		if("pai_emotions")
@@ -605,8 +587,6 @@
 			return global.round_progressing;
 		if("rune_list")
 			return global.rune_list;
-		if("same_wires")
-			return global.same_wires;
 		if("secondary_mode")
 			return global.secondary_mode;
 		if("secret_force_mode")
@@ -615,8 +595,6 @@
 			return global.sent_spiders_to_station;
 		if("severity_to_string")
 			return global.severity_to_string;
-		if("ship_engines")
-			return global.ship_engines;
 		if("side_effects")
 			return global.side_effects;
 		if("skin_styles_female_list")
@@ -699,12 +677,6 @@
 			return global.ticket_panels;
 		if("tickets")
 			return global.tickets;
-		if("total_lighting_corners")
-			return global.total_lighting_corners;
-		if("total_lighting_overlays")
-			return global.total_lighting_overlays;
-		if("total_lighting_sources")
-			return global.total_lighting_sources;
 		if("total_unit_tests")
 			return global.total_unit_tests;
 		if("turbolifts")
@@ -747,8 +719,6 @@
 			return global.whitelist;
 		if("whitelisted_species")
 			return global.whitelisted_species;
-		if("wireColours")
-			return global.wireColours;
 		if("world_topic_spam_protect_ip")
 			return global.world_topic_spam_protect_ip;
 		if("world_topic_spam_protect_time")
@@ -786,8 +756,6 @@
 			global.Debug2=newval;
 		if("Holiday")
 			global.Holiday=newval;
-		if("LIGHTING_CORNER_DIAGONAL")
-			global.LIGHTING_CORNER_DIAGONAL=newval;
 		if("Tier1Runes")
 			global.Tier1Runes=newval;
 		if("Tier2Runes")
@@ -922,14 +890,10 @@
 			global.cable_list=newval;
 		if("cached_icons")
 			global.cached_icons=newval;
-		if("cached_space")
-			global.cached_space=newval;
 		if("camera_alarm")
 			global.camera_alarm=newval;
 		if("camera_range_display_status")
 			global.camera_range_display_status=newval;
-		if("camera_repository")
-			global.camera_repository=newval;
 		if("captain_announcement")
 			global.captain_announcement=newval;
 		if("cargo_supply_pack_root")
@@ -974,8 +938,6 @@
 			global.create_turf_html=newval;
 		if("created")
 			global.created=newval;
-		if("crew_repository")
-			global.crew_repository=newval;
 		if("csrfz_check")
 			global.csrfz_check=newval;
 		if("custom_event_msg")
@@ -1014,8 +976,6 @@
 			global.doppler_arrays=newval;
 		if("dreams")
 			global.dreams=newval;
-		if("dummy_lighting_corner")
-			global.dummy_lighting_corner=newval;
 		if("economic_species_modifier")
 			global.economic_species_modifier=newval;
 		if("empty_playable_ai_cores")
@@ -1152,8 +1112,6 @@
 			global.last_tick_duration=newval;
 		if("light_overlay_cache")
 			global.light_overlay_cache=newval;
-		if("lighting_overlays_initialised")
-			global.lighting_overlays_initialised=newval;
 		if("limb_icon_cache")
 			global.limb_icon_cache=newval;
 		if("lunchables_drink_reagents_")
@@ -1176,8 +1134,6 @@
 			global.mannequins_=newval;
 		if("map_count")
 			global.map_count=newval;
-		if("map_sectors")
-			global.map_sectors=newval;
 		if("maploader")
 			global.maploader=newval;
 		if("mark")
@@ -1230,8 +1186,6 @@
 			global.mob_repository=newval;
 		if("motion_alarm")
 			global.motion_alarm=newval;
-		if("moving_levels")
-			global.moving_levels=newval;
 		if("multi_point_spawns")
 			global.multi_point_spawns=newval;
 		if("name_to_material")
@@ -1274,8 +1228,6 @@
 			global.outfits_decls_by_type_=newval;
 		if("outfits_decls_root_")
 			global.outfits_decls_root_=newval;
-		if("overmap_event_handler")
-			global.overmap_event_handler=newval;
 		if("paiController")
 			global.paiController=newval;
 		if("pai_emotions")
@@ -1370,8 +1322,6 @@
 			global.round_progressing=newval;;
 		if("rune_list")
 			global.rune_list=newval;
-		if("same_wires")
-			global.same_wires=newval;
 		if("secondary_mode")
 			global.secondary_mode=newval;
 		if("secret_force_mode")
@@ -1380,8 +1330,6 @@
 			global.sent_spiders_to_station=newval;
 		if("severity_to_string")
 			global.severity_to_string=newval;
-		if("ship_engines")
-			global.ship_engines=newval;
 		if("side_effects")
 			global.side_effects=newval;
 		if("skin_styles_female_list")
@@ -1464,12 +1412,6 @@
 			global.ticket_panels=newval;
 		if("tickets")
 			global.tickets=newval;
-		if("total_lighting_corners")
-			global.total_lighting_corners=newval;
-		if("total_lighting_overlays")
-			global.total_lighting_overlays=newval;
-		if("total_lighting_sources")
-			global.total_lighting_sources=newval;
 		if("total_unit_tests")
 			global.total_unit_tests=newval;
 		if("turbolifts")
@@ -1512,8 +1454,6 @@
 			global.whitelist=newval;
 		if("whitelisted_species")
 			global.whitelisted_species=newval;
-		if("wireColours")
-			global.wireColours=newval;
 		if("world_topic_spam_protect_ip")
 			global.world_topic_spam_protect_ip=newval;
 		if("world_topic_spam_protect_time")
@@ -1540,7 +1480,6 @@
 	"DEPT_FREQS",
 	"Debug2",
 	"Holiday",
-	"LIGHTING_CORNER_DIAGONAL",
 	"Tier1Runes",
 	"Tier2Runes",
 	"Tier3Runes",
@@ -1608,10 +1547,8 @@
 	"bomb_set",
 	"cable_list",
 	"cached_icons",
-	"cached_space",
 	"camera_alarm",
 	"camera_range_display_status",
-	"camera_repository",
 	"can_call_ert",
 	"captain_announcement",
 	"cargo_supply_pack_root",
@@ -1635,7 +1572,6 @@
 	"create_object_html",
 	"create_turf_html",
 	"created",
-	"crew_repository",
 	"csrfz_check",
 	"custom_event_msg",
 	"custom_items",
@@ -1656,7 +1592,6 @@
 	"dna_genes",
 	"doppler_arrays",
 	"dreams",
-	"dummy_lighting_corner",
 	"economic_species_modifier",
 	"empty_playable_ai_cores",
 	"endgame_exits",
@@ -1729,7 +1664,6 @@
 	"last_message_id",
 	"last_tick_duration",
 	"light_overlay_cache",
-	"lighting_overlays_initialised",
 	"limb_icon_cache",
 	"loadout_categories",
 	"lunchables_drink_reagents_",
@@ -1742,7 +1676,6 @@
 	"maint_all_access",
 	"mannequins_",
 	"map_count",
-	"map_sectors",
 	"maploader",
 	"mark",
 	"master_controller",
@@ -1769,7 +1702,6 @@
 	"mob_hat_cache",
 	"mob_repository",
 	"motion_alarm",
-	"moving_levels",
 	"multi_point_spawns",
 	"name_to_material",
 	"narsie_behaviour",
@@ -1791,7 +1723,6 @@
 	"outfits_decls_",
 	"outfits_decls_by_type_",
 	"outfits_decls_root_",
-	"overmap_event_handler",
 	"paiController",
 	"pai_emotions",
 	"pai_software_by_key",
@@ -1839,13 +1770,11 @@
 	"robot_modules",
 	"round_progressing",
 	"rune_list",
-	"same_wires",
 	"secondary_mode",
 	"secret_force_mode",
 	"send_emergency_team",
 	"sent_spiders_to_station",
 	"severity_to_string",
-	"ship_engines",
 	"side_effects",
 	"skin_styles_female_list",
 	"skipped_unit_tests",
@@ -1887,9 +1816,6 @@
 	"text_tag_icons",
 	"ticket_panels",
 	"tickets",
-	"total_lighting_corners",
-	"total_lighting_overlays",
-	"total_lighting_sources",
 	"total_unit_tests",
 	"turbolifts",
 	"turret_icons",
@@ -1911,7 +1837,6 @@
 	"weighted_randomevent_locations",
 	"whitelist",
 	"whitelisted_species",
-	"wireColours",
 	"world_topic_spam_protect_ip",
 	"world_topic_spam_protect_time",
 	"world_uplinks",

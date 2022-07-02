@@ -262,10 +262,9 @@
 		sleep(duration)
 
 
-
-
 /datum/execution_stage/finisher/skullbore/enter()
-
+	if(host.safety_check() == EXECUTION_CANCEL)
+		return
 
 	host.user.visible_message(SPAN_EXECUTION("[host.user] drives the [host.weapon] into [host.victim]'s forehead, with a sickening crunch."))
 
@@ -388,7 +387,6 @@
 
 
 /datum/extension/mount/infector/on_dismount()
-	sleep(1)
 	var/mob/living/carbon/human/user = mountee
 
 	user.default_rotation = 0

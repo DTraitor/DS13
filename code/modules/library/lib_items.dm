@@ -97,36 +97,36 @@
 /obj/structure/bookcase/manuals/medical
 	name = "Medical Manuals bookcase"
 
-	New()
-		..()
-		new /obj/item/weapon/book/manual/medical_cloning(src)
-		new /obj/item/weapon/book/manual/medical_diagnostics_manual(src)
-		new /obj/item/weapon/book/manual/medical_diagnostics_manual(src)
-		new /obj/item/weapon/book/manual/medical_diagnostics_manual(src)
-		update_icon()
+/obj/structure/bookcase/manuals/medical/Initialize()
+	.=..()
+	new /obj/item/weapon/book/manual/medical_cloning(src)
+	new /obj/item/weapon/book/manual/medical_diagnostics_manual(src)
+	new /obj/item/weapon/book/manual/medical_diagnostics_manual(src)
+	new /obj/item/weapon/book/manual/medical_diagnostics_manual(src)
+	update_icon()
 
 
 /obj/structure/bookcase/manuals/engineering
 	name = "Engineering Manuals bookcase"
 
-	New()
-		..()
-		new /obj/item/weapon/book/manual/engineering_construction(src)
-		new /obj/item/weapon/book/manual/engineering_particle_accelerator(src)
-		new /obj/item/weapon/book/manual/engineering_hacking(src)
-		new /obj/item/weapon/book/manual/engineering_guide(src)
-		new /obj/item/weapon/book/manual/atmospipes(src)
-		new /obj/item/weapon/book/manual/engineering_singularity_safety(src)
-		new /obj/item/weapon/book/manual/evaguide(src)
-		update_icon()
+/obj/structure/bookcase/manuals/engineering/Initialize()
+	.=..()
+	new /obj/item/weapon/book/manual/engineering_construction(src)
+	new /obj/item/weapon/book/manual/engineering_particle_accelerator(src)
+	new /obj/item/weapon/book/manual/engineering_hacking(src)
+	new /obj/item/weapon/book/manual/engineering_guide(src)
+	new /obj/item/weapon/book/manual/atmospipes(src)
+	new /obj/item/weapon/book/manual/engineering_singularity_safety(src)
+	new /obj/item/weapon/book/manual/evaguide(src)
+	update_icon()
 
 /obj/structure/bookcase/manuals/research_and_development
 	name = "R&D Manuals bookcase"
 
-	New()
-		..()
-		new /obj/item/weapon/book/manual/research_and_development(src)
-		update_icon()
+/obj/structure/bookcase/manuals/research_and_development/Initialize()
+	.=..()
+	new /obj/item/weapon/book/manual/research_and_development(src)
+	update_icon()
 
 
 /*
@@ -220,7 +220,7 @@
 		..()
 
 /obj/item/weapon/book/attack(mob/living/carbon/M as mob, mob/living/carbon/user as mob)
-	if(get_zone_sel(user) == BP_EYES)
+	if(get_zone_sel(user, TRUE) == BP_EYES)
 		user.visible_message("<span class='notice'>You open up the book and show it to [M]. </span>", \
 			"<span class='notice'> [user] opens up a book and shows it to [M]. </span>")
 		M << browse("<i>Author: [author].</i><br><br>" + "[dat]", "window=book;size=1000x550")

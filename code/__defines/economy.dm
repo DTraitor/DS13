@@ -1,4 +1,4 @@
-#define SALARY_INTERVAL	(30 MINUTES)
+#define SALARY_INTERVAL	(20 MINUTES)
 
 #define SALARY_UNSKILLED	500	//Minimum salary employees, civilians, miners, expendable people
 #define SALARY_SKILLED	750	//People who work with their hands, engineers mostly
@@ -7,11 +7,5 @@
 	//Only used in departments which have a tier between normal worker and head of department
 #define SALARY_COMMAND	1500	//Department heads and bridge staff
 #define SALARY_HIGH_COMMAND	3000	//The captain and first officer
-
-
-
-#define FEE_NEUTRAL	0.1	//10 percent
-#define FEE_DEATH	0.15
-
 
 #define REWARD_SCHEMATIC	3000

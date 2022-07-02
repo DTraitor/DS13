@@ -98,6 +98,7 @@ Class Procs:
 	icon = 'icons/obj/stationobjs.dmi'
 	w_class = ITEM_SIZE_NO_CONTAINER
 	layer = STRUCTURE_LAYER // Layer under items
+	blocks_emissive = EMISSIVE_BLOCK_GENERIC
 
 	var/stat = 0
 	var/emagged = 0
@@ -345,15 +346,15 @@ Class Procs:
 			return 1
 	return 0
 
-/obj/machinery/proc/default_deconstruction_crowbar(var/mob/user, var/obj/item/weapon/tool/crowbar/C)
-	if(!istype(C))
+/obj/machinery/proc/default_deconstruction_crowbar(mob/user, obj/item/C)
+	if(!istype(C) || !isCrowbar(C))
 		return 0
 	if(!panel_open)
 		return 0
 	. = dismantle()
 
-/obj/machinery/proc/default_deconstruction_screwdriver(var/mob/user, var/obj/item/weapon/tool/screwdriver/S)
-	if(!istype(S))
+/obj/machinery/proc/default_deconstruction_screwdriver(mob/user, obj/item/S)
+	if(!istype(S) || !isScrewdriver(S))
 		return 0
 	playsound(src.loc, 'sound/items/Screwdriver.ogg', 50, 1)
 	panel_open = !panel_open

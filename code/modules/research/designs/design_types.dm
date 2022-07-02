@@ -141,7 +141,7 @@ Botany:
 
 
 /datum/design/item
-	build_type = PROTOLATHE | STORE
+	build_type = PROTOLATHE | STORE_ROUNDSTART
 
 /datum/design/item/powernode
 	name = "power node"
@@ -152,7 +152,7 @@ Botany:
 
 /datum/design/item/stock_part
 	category = "Parts"
-	build_type = PROTOLATHE | STORE
+	build_type = PROTOLATHE | STORE_ROUNDSTART
 
 /datum/design/item/stock_part/basic_capacitor
 	name = "basic capacitor"
@@ -291,7 +291,7 @@ Botany:
 	build_path = /obj/item/weapon/handcuffs
 
 /datum/design/item/powercell
-	build_type = PROTOLATHE | STORE
+	build_type = PROTOLATHE | STORE_ROUNDSTART
 	category = "Power"
 
 /datum/design/item/powercell/basic
@@ -313,6 +313,7 @@ Botany:
 	id = "super_cell"
 	materials = list(MATERIAL_STEEL = 700, MATERIAL_GLASS = 70)
 	build_path = /obj/item/weapon/cell/super
+	price = 1000
 
 /datum/design/item/powercell/hyper
 	name = "hyper-capacity power cell"
@@ -337,7 +338,7 @@ Botany:
 
 /datum/design/item/optical
 	materials = list(MATERIAL_STEEL = 50, MATERIAL_GLASS = 50)
-	build_type = PROTOLATHE | STORE
+	build_type = PROTOLATHE | STORE_SCHEMATICS
 	category = "Optics"
 
 /datum/design/item/optical/health
@@ -371,7 +372,7 @@ Botany:
 	price = 750
 
 /datum/design/item/mining
-	build_type = PROTOLATHE | STORE
+	build_type = PROTOLATHE | STORE_SCHEMATICS
 	category = "Mining"
 
 /datum/design/item/mining/rocksaw
@@ -410,7 +411,7 @@ Botany:
 	price = 300
 
 /datum/design/item/medical
-	build_type = PROTOLATHE | STORE
+	build_type = PROTOLATHE | STORE_ROUNDSTART
 	materials = list(MATERIAL_STEEL = 30, MATERIAL_GLASS = 20)
 	category = "Medical"
 
@@ -479,34 +480,35 @@ Botany:
 	build_type = PROTOLATHE	//No appearing in store
 
 /datum/design/item/surgery
-	build_type = PROTOLATHE | STORE
+	build_type = PROTOLATHE | STORE_SCHEMATICS
 	category = "Medical"
 
 /datum/design/item/surgery/scalpel_laser1
 	name = "Basic Laser Scalpel"
 	id = "scalpel_laser1"
 	materials = list(MATERIAL_STEEL = 12500, MATERIAL_GLASS = 7500)
-	build_path = /obj/item/weapon/scalpel/laser1
+	build_path = /obj/item/weapon/tool/scalpel/advanced
 	price = 750
 
 /datum/design/item/surgery/scalpel_laser2
 	name = "Improved Laser Scalpel"
 	id = "scalpel_laser2"
-	materials = list(MATERIAL_STEEL = 12500, MATERIAL_GLASS = 7500, MATERIAL_SILVER = 2500)
-	build_path = /obj/item/weapon/scalpel/laser2
+	materials = list(MATERIAL_STEEL = 12500, MATERIAL_GLASS = 7500)
+	build_path = /obj/item/weapon/tool/scalpel/laser
+	price = 750
 
 /datum/design/item/surgery/scalpel_laser3
 	name = "Advanced Laser Scalpel"
 	id = "scalpel_laser3"
 	materials = list(MATERIAL_STEEL = 12500, MATERIAL_GLASS = 7500, MATERIAL_SILVER = 2000, MATERIAL_GOLD = 1500)
-	build_path = /obj/item/weapon/scalpel/laser3
+	build_path = /obj/item/weapon/tool/scalpel/laser
 	price = 1500
 
 /datum/design/item/surgery/scalpel_manager
 	name = "Incision Management System"
 	id = "scalpel_manager"
 	materials = list (MATERIAL_STEEL = 12500, MATERIAL_GLASS = 7500, MATERIAL_SILVER = 1500, MATERIAL_GOLD = 1500, MATERIAL_DIAMOND = 750)
-	build_path = /obj/item/weapon/scalpel/manager
+	build_path = /obj/item/weapon/tool/scalpel/manager
 	price = 2500
 
 /datum/design/item/beaker
@@ -655,7 +657,7 @@ Botany:
 /datum/design/item/tool/welding_mask
 	name = "Welding Mask"
 	id = "weldingmask"
-	build_type = PROTOLATHE | STORE
+	build_type = PROTOLATHE | STORE_ROUNDSTART
 	materials = list(MATERIAL_STEEL = 4000, MATERIAL_GLASS = 1000)
 	build_path = /obj/item/clothing/head/welding
 

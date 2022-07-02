@@ -20,7 +20,8 @@ var/list/airlock_overlays = list()
 	icon = 'icons/obj/doors/station/door_medsec.dmi'
 	icon_state = "closed"
 	power_channel = ENVIRON
-
+	light_range = 1
+	light_power = 0.25
 	explosion_resistance = 10
 	var/aiControlDisabled = 0 //If 1, AI control is disabled until the AI hacks back in and disables the lock. If 2, the AI has bypassed the lock. If -1, the control is enabled but the AI had bypassed it earlier, so if it is disabled again the AI would have no trouble getting back in.
 	var/hackProof = 0 // if 1, this door can't be hacked by the AI
@@ -159,6 +160,23 @@ var/list/airlock_overlays = list()
 /obj/machinery/door/airlock/civilian
 	stripe_color = COLOR_CIVIE_GREEN
 
+/obj/machinery/door/airlock/civilian/tram
+	icon = 'icons/obj/doors/station/door_tram.dmi'
+	stripe_color = null
+	stripe_file = null
+	stripe_fill_file = null
+	bolts_file = null
+	deny_file = null
+	lights_file = null
+	welded_file = 'icons/obj/doors/hazard/welded.dmi'
+	emag_file = null
+	opacity = 0
+	lights = 0
+	open_sound_powered = "doorheavyopen"
+	open_sound_unpowered = "doorheavyopen"
+	close_sound_powered = "doorheavyclose"
+	close_sound_unpowered = "doorheavyclose"
+
 /obj/machinery/door/airlock/freezer
 	name = "Freezer Airlock"
 	stripe_color = COLOR_WHITE
@@ -171,6 +189,21 @@ var/list/airlock_overlays = list()
 	lights_file = 'icons/obj/doors/station/lights_green.dmi'
 	stripe_color = COLOR_PALE_ORANGE
 	req_access = list(1)
+
+/obj/machinery/door/airlock/shuttle
+	name = "Pod Door"
+	icon_state = "closed"
+	icon = 'icons/obj/doors/external/pod.dmi'
+	fill_file = null
+	color_file = null
+	color_fill_file = null
+	glass_file = null
+	bolts_file = null
+	deny_file = null
+	lights_file = null
+	emag_file = null
+	req_access = list(15)
+	paintable = 0
 
 //Glass airlock presets
 
@@ -477,10 +510,6 @@ About the new airlock wires panel:
 		return 1
 	return 0
 
-/obj/machinery/door/airlock/proc/isWireCut(var/wireIndex)
-	// You can find the wires in the datum folder.
-	return wires.IsIndexCut(wireIndex)
-
 /obj/machinery/door/airlock/proc/canAIControl()
 	return ((src.aiControlDisabled!=1) && (!src.isAllPowerLoss()));
 
@@ -493,7 +522,7 @@ About the new airlock wires panel:
 	return (src.main_power_lost_until==0 || src.backup_power_lost_until==0)
 
 /obj/machinery/door/airlock/requiresID()
-	return !(src.isWireCut(AIRLOCK_WIRE_IDSCAN) || aiDisabledIdScanner)
+	return !(wires.is_cut(WIRE_IDSCAN) || aiDisabledIdScanner)
 
 /obj/machinery/door/airlock/proc/isAllPowerLoss()
 	if(stat & (NOPOWER|BROKEN))
@@ -503,10 +532,10 @@ About the new airlock wires panel:
 	return 0
 
 /obj/machinery/door/airlock/proc/mainPowerCablesCut()
-	return src.isWireCut(AIRLOCK_WIRE_MAIN_POWER1) || src.isWireCut(AIRLOCK_WIRE_MAIN_POWER2)
+	return wires.is_cut(WIRE_MAIN_POWER1) || wires.is_cut(WIRE_MAIN_POWER2)
 
 /obj/machinery/door/airlock/proc/backupPowerCablesCut()
-	return src.isWireCut(AIRLOCK_WIRE_BACKUP_POWER1) || src.isWireCut(AIRLOCK_WIRE_BACKUP_POWER2)
+	return wires.is_cut(WIRE_BACKUP_POWER1) || wires.is_cut(WIRE_BACKUP_POWER2)
 
 /obj/machinery/door/airlock/proc/loseMainPower()
 	main_power_lost_until = mainPowerCablesCut() ? -1 : world.time + SecondsToTicks(60)
@@ -548,7 +577,7 @@ About the new airlock wires panel:
 
 /obj/machinery/door/airlock/proc/electrify(var/duration, var/feedback = 0)
 	var/message = ""
-	if(src.isWireCut(AIRLOCK_WIRE_ELECTRIFY) && arePowerSystemsOn())
+	if(wires.is_cut(WIRE_ELECTRIFY) && arePowerSystemsOn())
 		message = text("The electrification wire is cut - Door permanently electrified.")
 		src.electrified_until = -1
 		. = 1
@@ -575,7 +604,7 @@ About the new airlock wires panel:
 
 /obj/machinery/door/airlock/proc/set_idscan(var/activate, var/feedback = 0)
 	var/message = ""
-	if(src.isWireCut(AIRLOCK_WIRE_IDSCAN))
+	if(wires.is_cut(WIRE_IDSCAN))
 		message = "The IdScan wire is cut - IdScan feature permanently disabled."
 	else if(activate && src.aiDisabledIdScanner)
 		src.aiDisabledIdScanner = 0
@@ -590,7 +619,7 @@ About the new airlock wires panel:
 /obj/machinery/door/airlock/proc/set_safeties(var/activate, var/feedback = 0)
 	var/message = ""
 	// Safeties!  We don't need no stinking safeties!
-	if (src.isWireCut(AIRLOCK_WIRE_SAFETY))
+	if (wires.is_cut(WIRE_SAFETY))
 		message = text("The safety wire is cut - Cannot enable safeties.")
 	else if (!activate && src.safe)
 		safe = 0
@@ -655,7 +684,7 @@ About the new airlock wires panel:
 	var/icon/sparks_overlay
 	var/icon/brace_overlay
 
-	set_light(0)
+	set_light_on(FALSE)
 
 	if(door_color && door_color != "none")
 		var/ikey = "[airlock_type]-[door_color]-color"
@@ -704,7 +733,8 @@ About the new airlock wires panel:
 			if(lights && src.arePowerSystemsOn())
 				if(locked)
 					lights_overlay = bolts_file
-					set_light(0.25, 0.1, 1, 2, COLOR_RED_LIGHT)
+					set_light_color(COLOR_RED_LIGHT)
+					set_light_on(TRUE)
 
 		if(AIRLOCK_DENY)
 			if(!src.arePowerSystemsOn())
@@ -719,7 +749,8 @@ About the new airlock wires panel:
 				weld_overlay = welded_file
 			if(lights && src.arePowerSystemsOn())
 				lights_overlay = deny_file
-				set_light(0.25, 0.1, 1, 2, COLOR_RED_LIGHT)
+				set_light_color(COLOR_RED_LIGHT)
+				set_light_on(TRUE)
 
 		if(AIRLOCK_EMAG)
 			sparks_overlay = emag_file
@@ -735,7 +766,8 @@ About the new airlock wires panel:
 		if(AIRLOCK_CLOSING)
 			if(lights && src.arePowerSystemsOn())
 				lights_overlay = lights_file
-				set_light(0.25, 0.1, 1, 2, COLOR_LIME)
+				set_light_color(COLOR_LIME)
+				set_light_on(TRUE)
 			if(p_open)
 				panel_overlay = panel_file
 
@@ -748,7 +780,8 @@ About the new airlock wires panel:
 		if(AIRLOCK_OPENING)
 			if(lights && src.arePowerSystemsOn())
 				lights_overlay = lights_file
-				set_light(0.25, 0.1, 1, 2, COLOR_LIME)
+				set_light_color(COLOR_LIME)
+				set_light_on(TRUE)
 			if(p_open)
 				panel_overlay = panel_file
 
@@ -931,7 +964,7 @@ About the new airlock wires panel:
 			if(!backup_power_lost_until)
 				src.loseBackupPower()
 		if("bolts")
-			if(src.isWireCut(AIRLOCK_WIRE_DOOR_BOLTS))
+			if(wires.is_cut(WIRE_DOOR_BOLTS))
 				to_chat(usr, "The door bolt control wire is cut - Door bolts permanently dropped.")
 			else if(activate && src.lock())
 				to_chat(usr, "The door bolts have been dropped.")
@@ -954,7 +987,7 @@ About the new airlock wires panel:
 			set_safeties(!activate, 1)
 		if("timing")
 			// Door speed control
-			if(src.isWireCut(AIRLOCK_WIRE_SPEED))
+			if(wires.is_cut(WIRE_SPEED))
 				to_chat(usr, text("The timing wire is cut - Cannot alter timing."))
 			else if (activate && src.normalspeed)
 				normalspeed = 0
@@ -962,7 +995,7 @@ About the new airlock wires panel:
 				normalspeed = 1
 		if("lights")
 			// Lights
-			if(src.isWireCut(AIRLOCK_WIRE_LIGHT))
+			if(wires.is_cut(WIRE_BOLT_LIGHT))
 				to_chat(usr, "The lights wire is cut - The door lights are permanently disabled.")
 			else if (!activate && src.lights)
 				lights = 0
@@ -989,7 +1022,7 @@ About the new airlock wires panel:
 		cut_verb = "slicing"
 		cut_sound = "sparks"
 		cut_delay *= 0.66
-	else if(istype(item,/obj/item/weapon/tool/saw/circular))
+	else if(isSaw(item))
 		cut_verb = "sawing"
 		cut_sound = 'sound/weapons/circsawhit.ogg'
 		quality = QUALITY_SAWING
@@ -1235,7 +1268,7 @@ About the new airlock wires panel:
 		return 0
 
 	if(!forced)
-		if(!arePowerSystemsOn() || isWireCut(AIRLOCK_WIRE_OPEN_DOOR))
+		if(!arePowerSystemsOn() || wires.is_cut(WIRE_OPEN_DOOR))
 			return 0
 
 	if(locked || welded)
@@ -1248,7 +1281,7 @@ About the new airlock wires panel:
 
 	if(!forced)
 		//despite the name, this wire is for general door control.
-		if(!arePowerSystemsOn() || isWireCut(AIRLOCK_WIRE_OPEN_DOOR))
+		if(!arePowerSystemsOn() || wires.is_cut(WIRE_OPEN_DOOR))
 			return	0
 
 	return ..()
@@ -1301,7 +1334,7 @@ About the new airlock wires panel:
 		return
 
 	if (!forced)
-		if(operating || !src.arePowerSystemsOn() || isWireCut(AIRLOCK_WIRE_DOOR_BOLTS))
+		if(operating || !src.arePowerSystemsOn() || wires.is_cut(WIRE_DOOR_BOLTS))
 			return
 
 	src.locked = 0
@@ -1465,7 +1498,7 @@ About the new airlock wires panel:
 
 /obj/machinery/door/airlock/get_force_difficulty()
 	.=..()
-	if(!arePowerSystemsOn() || isWireCut(AIRLOCK_WIRE_OPEN_DOOR))
+	if(!arePowerSystemsOn() || wires.is_cut(WIRE_OPEN_DOOR))
 		.-=(force_resist* 0.3)//Depowered door is easier to force, it has a third of its base force resistance
 
 	//Bolts help

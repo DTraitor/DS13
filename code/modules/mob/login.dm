@@ -66,7 +66,7 @@
 	if(client.byond_version > MAX_COMPILER_VERSION || client.byond_build > MAX_COMPILER_BUILD)
 		to_chat(src, SPAN_WARNING("WARNING! Your byond version is over the recommended [MAX_COMPILER_VERSION].[MAX_COMPILER_BUILD]! There may be unexpected byond bugs!"))
 
-	player_login()
+	register_client_and_player()
 
 
 	update_Login_details()
@@ -108,6 +108,8 @@
 	//set macro to normal incase it was overriden (like cyborg currently does)
 	winset(src, null, "mainwindow.macro=hotkeymode hotkey_toggle.is-checked=true mapwindow.map.focus=true input.background-color=#d3b5b5")
 
+	SEND_SIGNAL(src, COMSIG_MOB_LOGIN)
+	SEND_GLOBAL_SIGNAL(COMSIG_GLOB_MOB_LOGGED_IN, src)
 
 /*
 	This updates lighting, darkvision, and skybox
@@ -117,13 +119,5 @@
 	if (!client)
 		return
 
-	if (l_plane)
-		QDEL_NULL(l_plane)
-	if (l_general)
-		QDEL_NULL(l_general)
-
-	l_plane = new(null, client)
-	l_general = new(null, client)
-	client.screen += l_plane
-	client.screen += l_general
+	sync_lighting_plane_alpha()
 	client.update_skybox(TRUE)

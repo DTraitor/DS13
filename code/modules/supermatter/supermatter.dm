@@ -45,7 +45,7 @@
 	icon_state = "darkmatter"
 	density = 1
 	anchored = 0
-	light_outer_range = 4
+	light_range = 4
 
 	layer = ABOVE_OBJ_LAYER
 
@@ -248,8 +248,10 @@
 
 //Changes color and luminosity of the light to these values if they were not already set
 /obj/machinery/power/supermatter/proc/shift_light(var/lum, var/clr)
-	if(lum != light_outer_range || clr != light_color)
-		set_light(1, 0.1, lum, l_color = clr)
+	if(lum != light_range || clr != light_color)
+		set_light_range(lum)
+		set_light_power(1)
+		set_light_color(clr)
 
 /obj/machinery/power/supermatter/proc/get_integrity()
 	var/integrity = damage / explosion_point
@@ -449,7 +451,7 @@
 
 
 /obj/machinery/power/supermatter/attackby(obj/item/weapon/W as obj, mob/living/user as mob)
-	if(istype(W, /obj/item/weapon/tool/tape_roll))
+	if(isSealing(W))
 		to_chat(user, "You repair some of the damage to \the [src] with \the [W].")
 		damage = max(damage -10, 0)
 

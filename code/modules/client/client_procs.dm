@@ -31,6 +31,9 @@
 		if (!asset_cache_job)
 			return
 
+	if(href_list["open_vote_menu"])
+		SSvote.tgui_interact(mob)
+
 	#if defined(TOPIC_DEBUGGING)
 	log_debug("[src]'s Topic: [href] destined for [hsrc].")
 
@@ -211,6 +214,7 @@
 
 	. = ..()	//calls mob.Login()
 	prefs.sanitize_preferences()
+	fps = text2num(get_preference_value(/datum/client_preference/client_fps))
 
 	GLOB.using_map.map_info(src)
 

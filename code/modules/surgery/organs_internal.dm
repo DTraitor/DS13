@@ -122,7 +122,7 @@
 /datum/surgery_step/internal/detatch_organ
 
 	allowed_tools = list(
-	/obj/item/weapon/scalpel = 100,		\
+	/obj/item/weapon/tool/scalpel = 100,		\
 	/obj/item/weapon/material/knife = 75,	\
 	/obj/item/weapon/material/kitchen/utensil/knife = 75,	\
 	/obj/item/weapon/material/shard = 50, 		\
@@ -186,7 +186,7 @@
 /datum/surgery_step/internal/remove_organ
 	priority = 2
 	allowed_tools = list(
-	/obj/item/weapon/hemostat = 100,	\
+	/obj/item/weapon/tool/hemostat = 100,	\
 	/obj/item/weapon/tool/wirecutters = 75,
 	/obj/item/weapon/material/knife = 75,	\
 	/obj/item/weapon/material/kitchen/utensil/fork = 20
@@ -301,9 +301,6 @@
 		to_chat(user, "<span class='warning'>There's no place in [target] to fit \the [O.organ_tag].</span>")
 		return SURGERY_FAILURE
 
-	if(O.damage > (O.max_damage * 0.75))
-		to_chat(user, "<span class='warning'>\The [O.name] [o_is] in no state to be transplanted.</span>")
-		return SURGERY_FAILURE
 	if(O.w_class > affected.cavity_max_w_class)
 		to_chat(user, "<span class='warning'>\The [O.name] [o_is] too big for [affected.cavity_name] cavity!</span>")
 		return SURGERY_FAILURE

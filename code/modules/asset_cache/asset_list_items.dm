@@ -75,13 +75,21 @@ proc/get_craft_item(path)
 	//Now we load and assign the whitelists
 	load_patron_item_whitelists()
 
-	//These procs update and sort various other things after the patron items have added themselves to them
-	sort_loadout_categories()
-	SSdatabase.update_store_designs()
+	for(var/D in SSresearch.design_ids)
+		var/datum/design/design = SSresearch.design_ids[D]
+		var/datum/computer_file/binary/design/design_file = new
+		design_file.design = design
+		design_file.on_design_set()
+		design.file = design_file
 
-	GLOB.custom_items_loaded = TRUE
-	if (LOADOUT_LOADED)
-		handle_pending_loadouts()
+	SSresearch.designs_initialized = TRUE
+
+	// Initialize design files that were created before
+	for(var/file in SSresearch.design_files_to_init)
+		SSresearch.initialize_design_file(file)
+	SSresearch.design_files_to_init = list()
+
+	. = ..()
 
 	.=..()
 
@@ -150,6 +158,45 @@ proc/get_craft_item(path)
 		"stamp-cent" = 'icons/stamp_icons/large_stamp-centcom.png',
 		"stamp-syndicate" = 'icons/stamp_icons/large_stamp-syndicate.png'
 	)
+
+/datum/asset/simple/nanomaps
+	keep_local_name = TRUE
+	assets = list(
+		"ishimura-1.png"		= 'nano/images/ishimura/ishimura-1.png',
+		"ishimura-2.png"		= 'nano/images/ishimura/ishimura-2.png',
+		"ishimura-3.png"		= 'nano/images/ishimura/ishimura-3.png',
+		"ishimura-4.png"		= 'nano/images/ishimura/ishimura-4.png',
+		"ishimura-5.png"		= 'nano/images/ishimura/ishimura-5.png',
+		"ishimura-6.png"		= 'nano/images/ishimura/ishimura-6.png',
+		"colony-1.png"			= 'nano/images/colony/colony-1.png',
+		"colony-2.png"			= 'nano/images/colony/colony-2.png',
+		"colony-3.png"			= 'nano/images/colony/colony-3.png',
+	)
+
+/datum/asset/simple/patron_content/register()
+	log_debug("Registering patron content")
+	var/total = 0
+	for (var/typepath in subtypesof(/datum/patron_item))
+		log_debug("Registering [typepath]")
+		total++
+		var/datum/patron_item/PI = new typepath()
+
+		GLOB.patron_items += PI
+
+	log_debug("Done Registering patron content. Total: [total]")
+	log_debug("---------------------------------")
+
+	//Now we load and assign the whitelists
+	load_patron_item_whitelists()
+
+	//These procs update and sort various other things after the patron items have added themselves to them
+	sort_loadout_categories()
+
+	GLOB.custom_items_loaded = TRUE
+	if (LOADOUT_LOADED)
+		handle_pending_loadouts()
+
+	.=..()
 
 /datum/asset/simple/chem_master
 	keep_local_name = TRUE

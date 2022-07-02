@@ -201,7 +201,7 @@ var/list/flooring_types
 	removal_time = 250
 	health = 275
 	has_base_range = 0
-	resistance = RESISTANCE_HEAVILY_ARMOURED
+	resistance = RESISTANCE_VAULT
 	footstep_sound = "catwalk"
 	space_smooth = SMOOTH_ALL
 	floor_smooth = SMOOTH_NONE
@@ -270,9 +270,9 @@ var/list/flooring_types
 	//try_update_icon = 0
 	plating_type = null
 	is_plating = TRUE
-	health = 700	//Virtually indestructible
-	resistance = RESISTANCE_HEAVILY_ARMOURED
-	removal_time = 1 MINUTES //Cutting through the hull is very slow work
+	health = 800	//Virtually indestructible
+	resistance = RESISTANCE_UNBREAKABLE
+	removal_time = 1.5 MINUTES //Cutting through the hull is very slow work
 	footstep_sound = "hull"
 	wall_smooth = SMOOTH_ALL
 	space_smooth = SMOOTH_NONE
@@ -285,7 +285,11 @@ var/list/flooring_types
 
 /decl/flooring/reinforced/plating/hull/get_plating_type(var/turf/location)
 	if (turf_is_lower_hull(location)) //Hull plating is only on the lowest level of the ship
-		return null
+		//Not ideal but works for now
+		if(istype(GLOB.using_map, /datum/map/ishimura))
+			return null
+		else
+			return /decl/flooring/reinforced/plating/hull
 	else if (turf_is_upper_hull(location))
 		return /decl/flooring/reinforced/plating/under
 	else
@@ -311,6 +315,15 @@ var/list/flooring_types
 	build_type = null
 	step_priority = 2 //Soft surfaces have more distinctive sounds
 
+/decl/flooring/asteroid_ds
+	name = "soil"
+	desc = "Dirt."
+	flags = 0
+	icon = 'icons/turf/floors_outside_ds13.dmi'
+	icon_base = "wet_soft"
+	build_type = null
+	step_priority = 2 //Soft surfaces have more distinctive sounds
+
 /decl/flooring/carpet
 	name = "brown carpet"
 	desc = "Comfy and fancy carpeting."
@@ -318,7 +331,7 @@ var/list/flooring_types
 	icon_base = "brown"
 	build_type = /obj/item/stack/tile/carpet
 	damage_temperature = T0C+200
-	flags = TURF_HAS_CORNERS | TURF_REMOVE_CROWBAR | TURF_CAN_BURN
+	flags = TURF_HAS_CORNERS | TURF_REMOVE_CROWBAR | TURF_CAN_BURN | TURF_HIDES_THINGS
 	step_priority = 2 //Soft surfaces have more distinctive sounds
 	space_smooth = SMOOTH_NONE
 	floor_smooth = SMOOTH_NONE
@@ -366,7 +379,7 @@ var/list/flooring_types
 	icon_base = "lino"
 	can_paint = 1
 	build_type = /obj/item/stack/tile/linoleum
-	flags = TURF_REMOVE_SCREWDRIVER
+	flags = TURF_REMOVE_SCREWDRIVER | TURF_HIDES_THINGS
 
 /decl/flooring/tiling
 	name = "floor"
@@ -376,7 +389,7 @@ var/list/flooring_types
 	color = COLOR_DARK_GUNMETAL
 	has_damage_range = 4
 	damage_temperature = T0C+1400
-	flags = TURF_REMOVE_CROWBAR | TURF_CAN_BREAK | TURF_CAN_BURN
+	flags = TURF_REMOVE_CROWBAR | TURF_CAN_BREAK | TURF_CAN_BURN | TURF_HIDES_THINGS
 	build_type = /obj/item/stack/tile/floor
 	can_paint = 1
 
@@ -412,7 +425,7 @@ var/list/flooring_types
 	icon_base = "freezer"
 	color = null
 	has_damage_range = null
-	flags = TURF_REMOVE_CROWBAR
+	flags = TURF_REMOVE_CROWBAR | TURF_HIDES_THINGS
 	build_type = /obj/item/stack/tile/floor_freezer
 
 /decl/flooring/tiling/tech
@@ -462,14 +475,14 @@ var/list/flooring_types
 	damage_temperature = T0C+200
 	descriptor = "planks"
 	build_type = /obj/item/stack/tile/wood
-	flags = TURF_CAN_BREAK | TURF_IS_FRAGILE | TURF_REMOVE_SCREWDRIVER
+	flags = TURF_CAN_BREAK | TURF_IS_FRAGILE | TURF_REMOVE_SCREWDRIVER | TURF_HIDES_THINGS
 
 /decl/flooring/reinforced
 	name = "reinforced floor"
 	desc = "Heavily reinforced with steel plating."
 	icon = 'icons/turf/flooring/tiles.dmi'
 	icon_base = "reinforced"
-	flags = TURF_REMOVE_WRENCH | TURF_ACID_IMMUNE
+	flags = TURF_REMOVE_WRENCH | TURF_ACID_IMMUNE | TURF_HIDES_THINGS
 	build_type = /obj/item/stack/material/steel
 	build_cost = 1
 	build_time = 30
@@ -482,7 +495,7 @@ var/list/flooring_types
 	icon = 'icons/turf/flooring/circuit.dmi'
 	icon_base = "bcircuit"
 	build_type = null
-	flags = TURF_ACID_IMMUNE | TURF_CAN_BREAK | TURF_REMOVE_WRENCH
+	flags = TURF_ACID_IMMUNE | TURF_CAN_BREAK | TURF_REMOVE_WRENCH | TURF_HIDES_THINGS
 	can_paint = 1
 
 /decl/flooring/reinforced/circuit/green
@@ -490,14 +503,14 @@ var/list/flooring_types
 
 /decl/flooring/reinforced/circuit/red
 	icon_base = "rcircuit"
-	flags = TURF_ACID_IMMUNE
+	flags = TURF_ACID_IMMUNE | TURF_HIDES_THINGS
 	can_paint = 0
 
 /decl/flooring/reinforced/shuttle
 	name = "floor"
 	icon = 'icons/turf/shuttle.dmi'
 	build_type = null
-	flags = TURF_ACID_IMMUNE | TURF_CAN_BREAK | TURF_REMOVE_WRENCH
+	flags = TURF_ACID_IMMUNE | TURF_CAN_BREAK | TURF_REMOVE_WRENCH | TURF_HIDES_THINGS
 	can_paint = 1
 
 /decl/flooring/reinforced/shuttle/blue
@@ -520,3 +533,11 @@ var/list/flooring_types
 
 /decl/flooring/reinforced/shuttle/black
 	icon_base = "floor7"
+
+/decl/flooring/water
+	name = "shallow water"
+	icon = 'icons/misc/beach.dmi'
+	icon_base = "seashallow"
+	flags = 0
+	footstep_sound = "water"
+	smooth_nothing = TRUE

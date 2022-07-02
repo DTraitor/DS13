@@ -473,6 +473,20 @@ var/const/NO_EMAG_ACT = -50
 	item_state = "holowarrant_filled"
 	job_access_type = /datum/job/botanist
 
+/obj/item/weapon/card/id/holo/civilian/janitor
+	name = "holographic id"
+	desc = "A holographic identification badge used in conjunction with RIG clothing. This one belongs to a Janitor."
+	icon_state = "holowarrant_filled"
+	item_state = "holowarrant_filled"
+	job_access_type = /datum/job/janitor
+
+/obj/item/weapon/card/id/holo/civilian/chaplain
+	name = "holographic id"
+	desc = "A holographic identification badge used in conjunction with RIG clothing. This one belongs to a Unitologist Chaplain."
+	icon_state = "holowarrant_filled"
+	item_state = "holowarrant_filled"
+	job_access_type = /datum/job/chaplain
+
 /obj/item/weapon/card/id/holo/command
 	name = "holographic id"
 	desc = "A holographic identification badge used in conjunction with RIG clothing. This one belongs to a Bridge Ensign."
@@ -549,6 +563,13 @@ var/const/NO_EMAG_ACT = -50
 	icon_state = "holowarrant_filled"
 	item_state = "holowarrant_filled"
 	job_access_type = /datum/job/surg
+
+/obj/item/weapon/card/id/holo/medical/psych
+	name = "holographic id"
+	desc = "A holographic identification badge used in conjunction with RIG clothing. This one belongs to a Psychologist."
+	icon_state = "holowarrant_filled"
+	item_state = "holowarrant_filled"
+	job_access_type = /datum/job/psychologist
 
 /obj/item/weapon/card/id/holo/science
 	name = "holographic id"

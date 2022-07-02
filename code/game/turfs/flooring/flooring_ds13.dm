@@ -4,7 +4,6 @@
 	icon = 'icons/turf/floors_ds13.dmi'
 	icon_state = "dank_plating"
 
-
 /decl/flooring/tiling_ds
 	name = "floor"
 	desc = "Scuffed from the passage of countless planet crackers, it looks ancient."
@@ -12,7 +11,7 @@
 	icon_base = "dank_tile"
 	has_damage_range = 4
 	damage_temperature = T0C+1400
-	flags = TURF_REMOVE_CROWBAR | TURF_CAN_BREAK | TURF_CAN_BURN
+	flags = TURF_REMOVE_CROWBAR | TURF_CAN_BREAK | TURF_CAN_BURN | TURF_HIDES_THINGS
 	build_type = /obj/item/stack/tile/dank
 	can_paint = 1
 
@@ -67,6 +66,30 @@
 	icon_base = "slashed_odd"
 	build_type = /obj/item/stack/tile/slashed/odd
 
+/decl/flooring/tiling_ds/tramcorner
+	name = "tram floor"
+	desc = "Scuffed from the passage of countless tram users."
+	icon_base = "tramcorner"
+	build_type = /obj/item/stack/tile/tramcorner
+
+/decl/flooring/tiling_ds/trammiddle
+	name = "tram floor"
+	desc = "Scuffed from the passage of countless tram users."
+	icon_base = "trammiddle"
+	build_type = /obj/item/stack/tile/trammiddle
+
+/decl/flooring/tiling_ds/tramwarning
+	name = "tram floor"
+	desc = "Scuffed from the passage of countless tram users."
+	icon_base = "tramwarning"
+	build_type = /obj/item/stack/tile/tramwarning
+
+/decl/flooring/tiling_ds/tramgrating
+	name = "tram floor"
+	desc = "Scuffed from the passage of countless tram users."
+	icon_base = "tramgrating"
+	build_type = /obj/item/stack/tile/tramgrating
+
 /decl/flooring/tiling/mono
 	icon_base = "monotile"
 	build_type = /obj/item/stack/tile/mono
@@ -110,12 +133,9 @@
 
 // FLOOR UPDATE 2 ELECTRIC BOOGALO.
 
-/decl/flooring/complex/tiling_ds
-	footstep_sound = "hull"
-
 /decl/flooring/complex/tiling_ds/tech
 	name = "tech plating"
-	desc = "Ingenius plating that can supposedly withstand more tension stress."
+	desc = "Ingenious plating that can supposedly withstand more tension stress."
 	icon_base = "tech"
 	build_type = null
 	has_base_range = 6

@@ -41,8 +41,7 @@
 
 
 	//Vision
-	darksight_range = -1
-	darksight_tint = DARKTINT_MODERATE
+	lighting_alpha = LIGHTING_PLANE_ALPHA_MOSTLY_INVISIBLE
 
 	// Move intents
 	move_intents = list(/decl/move_intent/walk, /decl/move_intent/stalk)
@@ -83,7 +82,7 @@
 	healing_factor = 0	//Necromorphs don't naturally heal, but they will be able to heal through certain situational effects
 	limb_health_factor = 0.60	//Limbs easier to cut off
 	wound_remnant_time = 0 //No cuts sitting around forever
-	burn_mod = 1.3	//Takes more damage from burn attacks
+	burn_mod = 1.2	//Takes more damage from burn attacks
 	weaken_mod = 0.75	//Get back up faster
 	blood_oxy = FALSE
 	reagent_tag = IS_NECROMORPH
@@ -177,6 +176,9 @@
 
 	disarm_cooldown = 10
 
+	var/lowest_money_drop = 0
+	var/highest_money_drop = 0
+
 /datum/species/necromorph/psychosis_vulnerable()
 	return FALSE
 
@@ -259,6 +261,7 @@
 		remove_massive_atom(H)
 	GLOB.necrovision.remove_source(H)
 	SSnecromorph.major_vessels -= H
+	spawn_money(rand(lowest_money_drop, highest_money_drop), get_turf(H))
 
 //How much damage has this necromorph taken?
 //We'll loop through each organ tag in the species' initial health values list, which should definitely be populated already, and try to get the organ for each

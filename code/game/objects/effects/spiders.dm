@@ -79,7 +79,7 @@
 		START_PROCESSING(SSobj, src)
 
 /obj/effect/spider/eggcluster/New(var/location, var/atom/parent)
-	get_light_and_color(parent)
+	set_light_and_color(parent)
 	..()
 
 /obj/effect/spider/eggcluster/Destroy()
@@ -131,11 +131,11 @@
 		dormant = FALSE
 
 	if(dormant)
-		GLOB.moved_event.register(src, src, /obj/effect/spider/spiderling/proc/disturbed)
+		RegisterSignal(src, COMSIG_MOVABLE_MOVED, .proc/disturbed)
 	else
 		START_PROCESSING(SSobj, src)
 
-	get_light_and_color(parent)
+	set_light_and_color(parent)
 	. = ..()
 
 /obj/effect/spider/spiderling/mundane
@@ -145,8 +145,6 @@
 	dormant = TRUE    // It lies in wait, hoping you will walk face first into its web
 
 /obj/effect/spider/spiderling/Destroy()
-	if(dormant)
-		GLOB.moved_event.unregister(src, src, /obj/effect/spider/spiderling/proc/disturbed)
 	STOP_PROCESSING(SSobj, src)
 	walk(src, 0) // Because we might have called walk_to, we must stop the walk loop or BYOND keeps an internal reference to us forever.
 	. = ..()
@@ -161,11 +159,12 @@
 		disturbed()
 
 /obj/effect/spider/spiderling/proc/disturbed()
+	SIGNAL_HANDLER
 	if(!dormant)
 		return
 	dormant = FALSE
 
-	GLOB.moved_event.unregister(src, src, /obj/effect/spider/spiderling/proc/disturbed)
+	UnregisterSignal(src, COMSIG_MOVABLE_MOVED)
 	START_PROCESSING(SSobj, src)
 
 /obj/effect/spider/spiderling/Bump(atom/user)

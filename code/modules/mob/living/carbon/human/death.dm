@@ -40,11 +40,6 @@
 	if(s)
 		s.do_backup()
 
-
-	//Database update
-	if (mind)
-		mind.on_death()
-
 	//Handle species-specific deaths.
 	species.handle_death(src)
 	animate_tail_stop()
@@ -86,8 +81,9 @@
 
 	handle_hud_list()
 
-	//TODO Future: Check if this was actually a crewmember
-	SSticker.mode.on_crew_death(src)
+	if(SSticker && SSticker.mode)
+		//TODO Future: Check if this was actually a crewmember
+		SSticker.mode.on_crew_death(src)
 
 /mob/living/carbon/human/proc/ChangeToHusk()
 	if(HUSK in mutations)	return

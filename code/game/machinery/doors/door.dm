@@ -10,6 +10,7 @@
 	opacity = 1
 	density = 1
 	layer = CLOSED_DOOR_LAYER
+	blocks_emissive = EMISSIVE_BLOCK_UNIQUE
 	var/open_layer = OPEN_DOOR_LAYER
 	var/closed_layer = CLOSED_DOOR_LAYER
 
@@ -543,8 +544,7 @@
 	operating = 0
 
 	//I shall not add a check every x ticks if a door has closed over some fire.
-	var/obj/fire/fire = locate() in loc
-	if(fire)
+	for(var/obj/fire/fire in loc)
 		qdel(fire)
 	return
 

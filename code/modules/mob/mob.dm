@@ -13,14 +13,13 @@
 	if(client)
 		for(var/atom/movable/AM in client.screen)
 			var/atom/movable/screen/screenobj = AM
-			if(!istype(screenobj) || !screenobj.globalscreen)
+			if(istype(screenobj) && !screenobj.globalscreen)
 				qdel(screenobj)
 		client.screen = list()
 	if(mind && mind.current == src)
 		spellremove(src)
 	ghostize()
-	..()
-	return QDEL_HINT_HARDDEL
+	.=..()
 
 /mob/Initialize()
 	GLOB.mob_list += src
@@ -97,8 +96,9 @@
 			M.show_message(blind_message, AUDIBLE_MESSAGE)
 			continue
 	//Multiz, have shadow do same
-	if(bound_overlay)
-		bound_overlay.visible_message(message, blind_message, range, checkghosts)
+	var/turf/above = GetAbove(src)
+	if(isopenspace(above))
+		above.visible_message(message, blind_message, range, checkghosts)
 
 // Show a message to all mobs and objects in earshot of this one
 // This would be for audible actions by the src mob
@@ -231,7 +231,10 @@
 	if ((incapacitation_flags & INCAPACITATION_STUNNED) && stunned)
 		return 1
 
-	if ((incapacitation_flags & INCAPACITATION_FORCELYING) && (weakened || resting || pinned.len))
+	if ((incapacitation_flags & INCAPACITATION_FORCELYING) && (weakened || pinned.len))
+		return 1
+
+	if ((incapacitation_flags & INCAPACITATION_LYING) && resting)
 		return 1
 
 	if ((incapacitation_flags & INCAPACITATION_KNOCKOUT) && (stat || paralysis || sleeping || (status_flags & FAKEDEATH)))
@@ -280,7 +283,7 @@
 				view_changed = TRUE
 
 			if (view_changed)
-				GLOB.view_changed_event.raise_event(src)
+				SEND_SIGNAL(src, COMSIG_MOB_VIEW_CHANGED)
 
 
 /mob/proc/show_inv(mob/user as mob)
@@ -917,8 +920,11 @@
 
 
 /mob/proc/set_stat(var/new_stat)
+	var/old_stat = stat
 	. = stat != new_stat
 	stat = new_stat
+	if(.)
+		SEND_SIGNAL(src, COMSIG_MOB_STATCHANGE, old_stat, new_stat)
 
 /mob/verb/northfaceperm()
 	set hidden = 1
@@ -1042,3 +1048,10 @@
 ///Get the item on the mob in the storage slot identified by the id passed in
 /mob/proc/get_item_by_slot(slot_id)
 	return null
+
+///Set the lighting plane hud alpha to the mobs lighting_alpha var
+/mob/proc/sync_lighting_plane_alpha()
+	if(hud_used)
+		var/atom/movable/screen/plane_master/lighting/L = hud_used.plane_masters["[LIGHTING_PLANE]"]
+		if (L)
+			L.alpha = lighting_alpha

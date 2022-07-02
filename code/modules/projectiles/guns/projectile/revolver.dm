@@ -107,8 +107,8 @@
 	max_shells = 7
 	ammo_type = /obj/item/ammo_casing/cap
 
-/obj/item/weapon/gun/projectile/revolver/capgun/attackby(var/obj/item/weapon/tool/wirecutters/W, mob/user)
-	if(!istype(W) || icon_state == "revolver")
+/obj/item/weapon/gun/projectile/revolver/capgun/attackby(var/obj/item/W, mob/user)
+	if(!isWirecutter(W) || icon_state == "revolver")
 		return ..()
 	to_chat(user, "<span class='notice'>You snip off the toy markings off the [src].</span>")
 	name = "revolver"
@@ -125,6 +125,14 @@
 	caliber = ".44"
 	origin_tech = list(TECH_COMBAT = 2, TECH_MATERIAL = 2)
 	ammo_type = /obj/item/ammo_casing/c44
+
+/obj/item/weapon/gun/projectile/revolver/webley/marooned
+	name = "worn-out revolver"
+
+/obj/item/weapon/gun/projectile/revolver/webley/marooned/Initialize()
+	. = ..()
+	consume_next_projectile()
+	handle_post_fire()
 
 /obj/item/weapon/gun/projectile/revolver/hr
 	name = "antique revolver"

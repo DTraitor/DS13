@@ -37,27 +37,39 @@
 	var/growth_timer_handle
 
 	can_block_movement = TRUE
+	light_range = 7
+	light_power = 1
+	light_color = COLOR_NECRO_YELLOW
 
 /obj/structure/corruption_node/nest/Initialize()
 	//Add ourselves as a possible spawnpoint for the marker
 	.=..()
 	if (!dummy)
-		if (SSnecromorph.marker)
+		if(SSnecromorph.marker)
 			register_spawnpoint()
-
-
-		set_light(1, 1, 7, 2, COLOR_NECRO_YELLOW)
+		SSnecromorph.nests += src
 
 /obj/structure/corruption_node/nest/proc/register_spawnpoint()
 	SSnecromorph.marker.add_spawnpoint(src)
 
 /obj/structure/corruption_node/nest/Destroy()
-
-	if (!dummy)
-		if (SSnecromorph.marker)
+	if(!dummy)
+		if(SSnecromorph.marker)
 			SSnecromorph.marker.remove_spawnpoint(src)
+		SSnecromorph.nests -= src
 	.=..()
 
+/mob/dead/observer/eye/signal/verb/jump_to_nest()
+	set name = "Jump to Nest"
+	set category = "Necromorph"
+
+	if(!SSnecromorph.nests.len)
+		to_chat(src, SPAN_WARNING("There are no nests in the world."))
+		return
+
+	var/obj/structure/corruption_node/nest/nest = tgui_input_list(src, "Choose a nest to jump", "Jump to Nest", SSnecromorph.nests)
+	if(nest)
+		jumpTo(get_turf(nest))
 
 /obj/structure/corruption_node/nest/proc/increase_upgrade_level()
 	if (upgrade_level >= upgrade_multipliers.len)
@@ -157,6 +169,7 @@
 
 
 /obj/structure/corruption_node/nest/proc/start_growth()
+	SIGNAL_HANDLER
 	if (total_spawns() >= max_spawns)
 		return
 
@@ -196,8 +209,7 @@
 	for (var/a in spawned_creatures)
 		var/mob/living/L = a
 		if (QDELETED(L) || L.stat == DEAD)
-			GLOB.death_event.unregister(L, src, /obj/structure/corruption_node/nest/proc/start_growth)
-			GLOB.destroyed_event.unregister(L, src, /obj/structure/corruption_node/nest/proc/start_growth)
+			UnregisterSignal(L, list(COMSIG_PARENT_QDELETING, COMSIG_LIVING_DEATH))
 			spawned_creatures -= L
 			continue
 
@@ -223,9 +235,8 @@
 	if (spawns_ready <= 0)
 		return null
 	spawns_ready--
-	var/mob/living/L = new spawner_species.mob_type(loc)
-	GLOB.death_event.register(L, src, /obj/structure/corruption_node/nest/proc/start_growth)
-	GLOB.destroyed_event.register(L, src, /obj/structure/corruption_node/nest/proc/start_growth)
+	var/mob/living/L = new spawner_species.mob_type(pick(clear_turfs_in_view(10)))
+	RegisterSignal(L, list(COMSIG_PARENT_QDELETING, COMSIG_LIVING_DEATH), .proc/start_growth)
 	L.biomass = 0	//This won't give anything when slain
 	return L
 

@@ -22,6 +22,7 @@ var/global/list/obj/machinery/telecomms/telecomms_list = list()
 	var/list/autolinkers = list() // list of text/number values to link with
 	var/id = "NULL" // identification string
 	var/network = "NULL" // the network of the machinery
+	clicksound = "button2"
 
 	var/list/freq_listening = list() // list of frequencies to tune into: if none, will listen to all
 	var/list/channel_tags = list() // a list specifying what to tag packets on different frequencies
@@ -356,7 +357,7 @@ var/global/list/obj/machinery/telecomms/telecomms_list = list()
 	var/broadcasting = 1
 	var/receiving = 1
 
-/obj/machinery/telecomms/relay/forceMove(var/newloc)
+/obj/machinery/telecomms/relay/forceMove(newloc, hardforce, glide_size_override)
 	. = ..(newloc)
 	listening_levels = GetConnectedZlevels(z)
 	update_power()

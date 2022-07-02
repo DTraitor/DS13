@@ -1,20 +1,18 @@
 /turf/space
 	plane = SPACE_PLANE
 	icon = 'icons/turf/space.dmi'
-
+	//when this be added to vis_contents of something it be associated with something on clicking, important for visualisation of turf in openspace and interraction with openspace that show you turf.
+	vis_flags = VIS_INHERIT_ID
 	name = "\proper space"
 	icon_state = "default"
-	dynamic_lighting = 0
+	light_power = 0.25
+	always_lit = TRUE
 	temperature = T20C
 	thermal_conductivity = OPEN_HEAT_TRANSFER_COEFFICIENT
 	var/static/list/dust_cache
-	permit_ao = FALSE
 
 	is_hole = TRUE
 	explosion_resistance = 0.5 //Impedes blasts less than any other tile, though not zero
-
-	z_eventually_space = TRUE
-
 	var/solid_below
 
 /turf/space/proc/build_dust_cache()
@@ -50,14 +48,6 @@
 
 	return INITIALIZE_HINT_LATELOAD // oh no! we need to switch to being a different kind of turf!
 
-/turf/space/Destroy()
-	// Cleanup cached z_eventually_space values above us.
-	if (above)
-		var/turf/T = src
-		while ((T = GetAbove(T)))
-			T.z_eventually_space = FALSE
-	return ..()
-
 /turf/space/LateInitialize()
 	if(GLOB.using_map.base_floor_area)
 		var/area/new_area = locate(GLOB.using_map.base_floor_area) || new GLOB.using_map.base_floor_area
@@ -73,24 +63,26 @@
 	return locate(/obj/structure/lattice, src) || locate(/obj/structure/catwalk, src) //counts as solid structure if it has a lattice or catwalk
 
 /turf/space/proc/update_starlight()
-	if(!CONFIG_GET(number/starlight))
-		return
-	if(locate(/turf/simulated) in orange(src,1)) //Let's make sure not to break everything if people use a crazy setting.
-		set_light(min(0.1*CONFIG_GET(number/starlight), 1), 1, 3, l_color = SSskybox.background_color)
-	else
+	if(CONFIG_GET(number/starlight))
+		for(var/t in RANGE_TURFS(src, 1)) //RANGE_TURFS is in code\__HELPERS\game.dm
+			if(isspaceturf(t))
+				//let's NOT update this that much pls
+				continue
+			set_light(2)
+			return
 		set_light(0)
 
 /turf/space/attackby(obj/item/C as obj, mob/user as mob)
 
-	if (istype(C, /obj/item/stack/material/rods))
-		var/obj/structure/lattice/L = locate(/obj/structure/lattice, src)
+	if (istype(C, /obj/item/stack/rods))
+		var/obj/structure/L = locate(/obj/structure/lattice, src) || locate(/obj/structure/catwalk, src)
 		if(L)
 			return L.attackby(C, user)
-		var/obj/item/stack/material/rods/R = C
+		var/obj/item/stack/rods/R = C
 		if (R.use(1))
 			to_chat(user, "<span class='notice'>Constructing support lattice ...</span>")
 			playsound(src, 'sound/weapons/Genhit.ogg', 50, 1)
-			ReplaceWithLattice(R.material.name)
+			ReplaceWithLattice()
 		return
 
 	if (istype(C, /obj/item/stack/tile/floor))

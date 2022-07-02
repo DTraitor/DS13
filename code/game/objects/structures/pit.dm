@@ -9,7 +9,7 @@
 	var/open = 1
 
 /obj/structure/pit/attackby(obj/item/W, mob/user)
-	if( istype(W,/obj/item/weapon/tool/shovel) )
+	if(isShovel(W))
 		visible_message("<span class='notice'>\The [user] starts [open ? "filling" : "digging open"] \the [src]</span>")
 		if( do_after(user, 50) )
 			visible_message("<span class='notice'>\The [user] [open ? "fills" : "digs open"] \the [src]!</span>")
@@ -37,11 +37,6 @@
 
 /obj/structure/pit/update_icon()
 	icon_state = "pit[open]"
-	if(istype(loc,/turf/simulated/floor/exoplanet))
-		var/turf/simulated/floor/exoplanet/E = loc
-		if(E.mudpit)
-			icon_state="pit[open]mud"
-			blend_mode = BLEND_OVERLAY
 
 /obj/structure/pit/proc/open()
 	name = "pit"

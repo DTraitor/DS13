@@ -150,9 +150,12 @@
 	splinted = null
 
 	if(owner)
-		if(limb_flags & ORGAN_FLAG_CAN_GRASP) owner.grasp_limbs -= src
-		if(limb_flags & ORGAN_FLAG_CAN_STAND) owner.stance_limbs -= src
+		if(limb_flags & ORGAN_FLAG_CAN_GRASP)
+			owner.grasp_limbs -= src
+		if(limb_flags & ORGAN_FLAG_CAN_STAND)
+			owner.stance_limbs -= src
 		owner.organs -= src
+		owner.bad_external_organs -= src
 		owner.organs_by_name[organ_tag] = null
 		owner.organs_by_name -= organ_tag
 		while(null in owner.organs)
@@ -248,7 +251,7 @@
 				stage++
 				return
 		if(2)
-			if(W.sharp || istype(W,/obj/item/weapon/hemostat) || isWirecutter(W))
+			if(W.sharp || istype(W,/obj/item/weapon/tool/hemostat) || isWirecutter(W))
 				var/list/organs = get_contents_recursive()
 				if(organs.len)
 					var/obj/item/removing = pick(organs)

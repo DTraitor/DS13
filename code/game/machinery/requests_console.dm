@@ -50,7 +50,6 @@ var/list/obj/machinery/requests_console/allConsoles = list()
 	var/message = "";
 	var/recipient = ""; //the department which will be receiving the message
 	var/priority = -1 ; //Priority of the message being sent
-	light_outer_range = 0
 	var/datum/announcement/announcement = new
 
 /obj/machinery/requests_console/update_icon()
@@ -75,8 +74,6 @@ var/list/obj/machinery/requests_console/allConsoles = list()
 		req_console_supplies |= department
 	if (departmentType & RC_INFO)
 		req_console_information |= department
-
-	set_light(1)
 
 /obj/machinery/requests_console/Destroy()
 	allConsoles -= src
@@ -177,7 +174,6 @@ var/list/obj/machinery/requests_console/allConsoles = list()
 				if (Console.department == department)
 					Console.newmessagepriority = 0
 					Console.icon_state = "req_comp0"
-					Console.set_light(1)
 		if(tempScreen == RCS_MAINMENU)
 			reset_message()
 		screen = tempScreen
@@ -189,29 +185,7 @@ var/list/obj/machinery/requests_console/allConsoles = list()
 	updateUsrDialog()
 	return
 
-					//err... hacking code, which has no reason for existing... but anyway... it was once supposed to unlock priority 3 messanging on that console (EXTREME priority...), but the code for that was removed.
 /obj/machinery/requests_console/attackby(var/obj/item/weapon/O as obj, var/mob/user as mob)
-	/*
-	if (istype(O, /obj/item/weapon/tool/crowbar))
-		if(open)
-			open = 0
-			icon_state="req_comp0"
-		else
-			open = 1
-			if(hackState == 0)
-				icon_state="req_comp_open"
-			else if(hackState == 1)
-				icon_state="req_comp_rewired"
-	if (istype(O, /obj/item/weapon/tool/screwdriver))
-		if(open)
-			if(hackState == 0)
-				hackState = 1
-				icon_state="req_comp_rewired"
-			else if(hackState == 1)
-				hackState = 0
-				icon_state="req_comp_open"
-		else
-			to_chat(user, "You can't do much with that.") */
 	if (istype(O, /obj/item/weapon/card/id))
 		if(inoperable(MAINT)) return
 		if(screen == RCS_MESSAUTH)

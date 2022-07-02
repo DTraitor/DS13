@@ -15,7 +15,6 @@
 		blocks_air = ZONE_BLOCKED
 		update_icon()
 		update_air()
-		set_light(0)
 		src.blocks_air = 0
 		set_opacity(0)
 		for(var/turf/simulated/turf in loc)
@@ -29,7 +28,6 @@
 		update_icon()
 		update_air()
 		sleep(15)
-		set_light(0.4, 0.1, 1)
 		src.blocks_air = 1
 		set_opacity(1)
 		for(var/turf/simulated/turf in loc)
@@ -196,7 +194,7 @@
 				dismantle_sound = "sparks"
 				dismantle_verb = "slicing"
 				cut_delay *= 0.5
-			else if(istype(W,/obj/item/weapon/tool/pickaxe))
+			else if(isPickaxe(W))
 				req_quality = QUALITY_DIGGING
 				var/obj/item/weapon/tool/pickaxe/P = W
 				dismantle_verb = "digging"

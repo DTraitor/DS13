@@ -206,9 +206,9 @@
 	alpha = 255
 
 	switch(dir)
-		if(SOUTH || NORTH)
+		if(SOUTH, NORTH)
 			initialize_directions = SOUTH|NORTH
-		if(EAST || WEST)
+		if(EAST, WEST)
 			initialize_directions = EAST|WEST
 		if(NORTHEAST)
 			initialize_directions = NORTH|EAST
@@ -1393,12 +1393,12 @@
 			universal_underlays(node2)
 		else
 			var/node1_dir = get_dir(node1,src)
-			universal_underlays(,node1_dir)
+			universal_underlays(null, node1_dir)
 	else if (node2)
 		universal_underlays(node2)
 	else
-		universal_underlays(,dir)
-		universal_underlays(dir, -180)
+		universal_underlays(null, dir)
+		universal_underlays(null, turn(dir, -180))
 
 /obj/machinery/atmospherics/pipe/simple/visible/universal/update_underlays()
 	..()

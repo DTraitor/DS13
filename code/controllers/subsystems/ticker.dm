@@ -102,7 +102,6 @@ SUBSYSTEM_DEF(ticker)
 			mode.process(wait * 0.1)
 
 			if(!roundend_check_paused && mode.check_finished(force_ending) || force_ending)
-				SSdatabase.handle_endround_schematics()
 				current_state = GAME_STATE_FINISHED
 				config.ooc_allowed = TRUE
 				config.dooc_allowed = TRUE
@@ -188,6 +187,7 @@ SUBSYSTEM_DEF(ticker)
 	log_world("Game start took [(world.timeofday - init_start) / 10]s")
 	round_start_time = world.time
 
+	load_store_database()
 	current_state = GAME_STATE_PLAYING
 	Master.SetRunLevel(RUNLEVEL_GAME)
 
@@ -485,22 +485,7 @@ SUBSYSTEM_DEF(ticker)
 
 /datum/controller/subsystem/ticker/proc/Reboot(reason, delay)
 	set waitfor = FALSE
-
-	if(usr && !check_rights(R_SERVER))
-		return
-
-	if(istype(GLOB.tgs, /datum/tgs_api/v3210))
-		var/datum/tgs_api/v3210/API = GLOB.tgs
-		if(API.reboot_mode == 2)
-			graceful = TRUE
-	else if(istype(GLOB.tgs, /datum/tgs_api/v4))
-		var/datum/tgs_api/v4/API = GLOB.tgs
-		if(API.reboot_mode == 1)
-			graceful = TRUE
-
-	if(graceful)
-		to_chat_immediate(world, "<h3>[SPAN_BOLDNOTICE("Shutting down...")]</h3>")
-		world.Reboot(FALSE)
+	if(usr && !check_rights(R_SERVER, TRUE))
 		return
 
 	if(!delay)
@@ -508,19 +493,20 @@ SUBSYSTEM_DEF(ticker)
 
 	var/skip_delay = check_rights()
 	if(delay_end && !skip_delay)
-		to_chat(world, SPAN_BOLDNOTICE("An admin has delayed the round end."))
+		to_chat(world, SPAN_BOLDANNOUNCE("An admin has delayed the round end."))
 		return
 
-	to_chat(world, SPAN_BOLDNOTICE("Rebooting World in [DisplayTimeText(delay)]. [reason]"))
+	to_chat(world, SPAN_BOLDANNOUNCE("Rebooting World in [DisplayTimeText(delay)]. [reason]"))
 
 	var/start_wait = world.time
+	while(!((world.time - start_wait) > (delay * 2))) //don't wait forever
+		stoplag()
 	sleep(delay - (world.time - start_wait))
 
 	if(delay_end && !skip_delay)
-		to_chat(world, SPAN_BOLDNOTICE("Reboot was cancelled by an admin."))
+		to_chat(world, SPAN_BOLDANNOUNCE("Reboot was cancelled by an admin."))
 		return
 
-	log_game("Rebooting World. [reason]")
-	to_chat_immediate(world, "<h3>[SPAN_BOLDNOTICE("Rebooting...")]</h3>")
+	log_game(SPAN_BOLDANNOUNCE("Rebooting World. [reason]"))
 
-	world.Reboot(TRUE)
+	world.Reboot()

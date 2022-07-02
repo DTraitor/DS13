@@ -44,7 +44,7 @@ export const WarningParameter = new Juke.Parameter({
 export const DmMapsIncludeTarget = new Juke.Target({
   executes: async () => {
     const folders = [
-      ...Juke.glob('maps/DeadSpace/**/*.dmm'),
+      ...Juke.glob('maps/**/*.dmm'),
     ];
     const content = folders
       .map((file) => file.replace('maps/', ''))
@@ -64,6 +64,7 @@ export const DmTarget = new Juke.Target({
     'html/**',
     'icons/**',
     'interface/**',
+    'maps/**',
     `${DME_NAME}.dme`,
   ],
   outputs: [

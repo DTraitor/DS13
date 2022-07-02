@@ -195,7 +195,7 @@ var/global/list/robot_modules = list(
 	name = "medical robot module"
 	channels = list("Medical" = 1)
 	networks = list(NETWORK_MEDICAL)
-	subsystems = list(/datum/nano_module/crew_monitor)
+	subsystems = list(/datum/tgui_module/crew_monitor)
 	can_be_pushed = 0
 
 /obj/item/weapon/robot_module/medical/surgeon
@@ -213,15 +213,15 @@ var/global/list/robot_modules = list(
 	src.modules += new /obj/item/device/flash(src)
 	src.modules += new /obj/item/device/healthanalyzer(src)
 	src.modules += new /obj/item/weapon/reagent_containers/borghypo/surgeon(src)
-	src.modules += new /obj/item/weapon/scalpel/manager(src)
-	src.modules += new /obj/item/weapon/hemostat(src)
-	src.modules += new /obj/item/weapon/retractor(src)
-	src.modules += new /obj/item/weapon/cautery(src)
+	src.modules += new /obj/item/weapon/tool/scalpel/manager(src)
+	src.modules += new /obj/item/weapon/tool/hemostat(src)
+	src.modules += new /obj/item/weapon/tool/retractor(src)
+	src.modules += new /obj/item/weapon/tool/cautery(src)
 	src.modules += new /obj/item/weapon/bonegel(src)
 	src.modules += new /obj/item/weapon/FixOVein(src)
-	src.modules += new /obj/item/weapon/bonesetter(src)
+	src.modules += new /obj/item/weapon/tool/bonesetter(src)
 	src.modules += new /obj/item/weapon/tool/saw/circular(src)
-	src.modules += new /obj/item/weapon/surgicaldrill(src)
+	src.modules += new /obj/item/weapon/tool/surgicaldrill(src)
 	src.modules += new /obj/item/weapon/gripper/organ(src)
 	src.modules += new /obj/item/robot_rack/roller(src, 1)
 	src.modules += new /obj/item/weapon/shockpaddles/robot(src)
@@ -410,7 +410,7 @@ var/global/list/robot_modules = list(
 	name = "security robot module"
 	channels = list("Security" = 1)
 	networks = list(NETWORK_SECURITY)
-	subsystems = list(/datum/nano_module/crew_monitor, /datum/nano_module/digitalwarrant)
+	subsystems = list(/datum/tgui_module/crew_monitor, /datum/nano_module/digitalwarrant)
 	can_be_pushed = 0
 	supported_upgrades = list(/obj/item/borg/upgrade/weaponcooler)
 
@@ -628,7 +628,7 @@ var/global/list/robot_modules = list(
 	src.modules += new /obj/item/weapon/tool/weldingtool(src)
 	src.modules += new /obj/item/weapon/tool/wirecutters(src)
 	src.modules += new /obj/item/weapon/tool/crowbar(src)
-	src.modules += new /obj/item/weapon/scalpel/laser3(src)
+	src.modules += new /obj/item/weapon/tool/scalpel/laser(src)
 	src.modules += new /obj/item/weapon/tool/saw/circular(src)
 	src.modules += new /obj/item/weapon/extinguisher/mini(src)
 	src.modules += new /obj/item/weapon/reagent_containers/syringe(src)

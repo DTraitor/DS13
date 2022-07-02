@@ -99,7 +99,7 @@
 	return ..()
 
 /datum/species/human/handle_organ_external_damage(var/obj/item/organ/external/organ, brute, burn, damage_flags, used_weapon)
-	GLOB.damage_hit_event.raise_event(organ.owner, organ, brute, burn, damage_flags, used_weapon)
+	SEND_SIGNAL(organ.owner, COMSIG_MOB_DAMAGE_HIT, organ, brute, burn, damage_flags, used_weapon)
 
 	var/mob/living/L = organ.owner
 	//Here we'll handle pain audio
@@ -124,8 +124,7 @@
 	preview_icon = 'icons/mob/human_races/species/tajara/preview.dmi'
 	default_h_style = "Tajaran Ears"
 	unarmed_types = list(/datum/unarmed_attack/stomp, /datum/unarmed_attack/kick, /datum/unarmed_attack/claws, /datum/unarmed_attack/punch, /datum/unarmed_attack/bite/sharp)
-	darksight_range = 8
-	darksight_tint = DARKTINT_MODERATE
+	lighting_alpha = LIGHTING_PLANE_ALPHA_NV_TRAIT
 	slowdown = -0.5
 	brute_mod = 1.15
 	burn_mod =  1.15
@@ -218,8 +217,7 @@
 
 	body_temperature = null // cold-blooded, implemented the same way nabbers do it
 
-	darksight_range = 4
-	darksight_tint = DARKTINT_POOR
+	lighting_alpha = LIGHTING_PLANE_ALPHA_NV_TRAIT
 
 	spawn_flags = SPECIES_IS_RESTRICTED | SPECIES_IS_WHITELISTED | SPECIES_NO_FBP_CONSTRUCTION
 	appearance_flags = HAS_HAIR_COLOR | HAS_LIPS | HAS_UNDERWEAR | HAS_SKIN_COLOR
@@ -385,7 +383,7 @@
 /datum/species/diona/handle_post_spawn(var/mob/living/carbon/human/H)
 	H.gender = NEUTER
 	. = ..()
-	addtimer(CALLBACK(src, .proc/fill_with_nymphs, H), 0)
+	INVOKE_ASYNC(src, .proc/fill_with_nymphs, H)
 
 /datum/species/diona/proc/fill_with_nymphs(var/mob/living/carbon/human/H)
 

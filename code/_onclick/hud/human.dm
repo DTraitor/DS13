@@ -64,9 +64,6 @@
 		hud_healthbar = new /atom/movable/screen/meter/health(owner, src)
 		infodisplay += hud_healthbar
 
-	if(hud_data.has_resources)
-		hud_resource = new /atom/movable/screen/meter/resource/essence(owner, src)
-		infodisplay += hud_resource
 
 	if(hud_data.has_m_intent)
 		move_intent = new /atom/movable/screen/movement()
@@ -110,7 +107,7 @@
 		static_inventory += inv_box
 
 		inv_box = new /atom/movable/screen/inventory/hand()
-		inv_box.setDir(EAST)
+		inv_box.set_dir(EAST)
 		inv_box.icon = ui_style
 		if(owner?.hand)	//This being 1 means the left hand is in use
 			inv_box.add_overlay("hand_active")

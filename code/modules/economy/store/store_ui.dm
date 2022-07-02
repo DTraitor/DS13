@@ -69,11 +69,8 @@
 		if(D.PI?.can_buy_in_store(occupant) && D.category == current_category)
 			data["categories"] |= D.category
 
-	if(current_design_id)
-		var/datum/design/D = SSresearch.designs_by_id[current_design_id]
-		data["selected_design"] = D.ui_data
-		if(occupant_can_afford())
-			data["selected_design"]["buy_enabled"] = TRUE
+		if(ispath(current_design.build_path, /obj/item/rig_module) || ispath(current_design.build_path, /obj/item/weapon/rig))
+			data["transfer_enabled"] = TRUE
 
 		if(D.store_transfer)
 			data["selected_design"]["transfer_enabled"] = TRUE
@@ -86,8 +83,44 @@
 
 	return data
 
-/obj/machinery/store/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
-	if(..())
+/*
+	Called whenever a new occupant enters
+*/
+/obj/machinery/store/proc/update_occupant_data()
+	combined_store_data = list()
+	var/existing_categories = list()
+
+	for(var/list/L in list(GLOB.unlimited_store_designs, GLOB.limited_store_designs, GLOB.public_store_designs))
+		for(var/id in L)
+			var/datum/design/D = SSresearch.design_ids[id]
+			if(!(D.category in existing_categories))
+				existing_categories += D.category
+				combined_store_data[D.category] = list()
+			if(!D.PI || D.PI.can_buy_in_store(occupant))
+				LAZYADD(combined_store_data[D.category], list(D.ui_data()))
+
+
+/obj/machinery/store/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null)
+	var/list/data = ui_data(user, ui_key)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data)
+	if (!ui)
+		var/datum/asset/assets = get_asset_datum(/datum/asset/simple/research_designs)
+		assets.send(user)
+		// the ui does not exist, so we'll create a new() one
+		// for a list of parameters and their descriptions see the code docs in \code\modules\nano\nanoui.dm
+		ui = new(user, src, ui_key, "store.tmpl", "Store", 900, 600)
+		// when the ui is first opened this is the data it will use
+		ui.set_initial_data(data)
+		// open the new ui window
+		ui.open()
+
+
+/obj/machinery/store/OnTopic(var/mob/user, var/href_list, var/datum/topic_state/state)
+	.= TOPIC_REFRESH
+
+
+	if (busy)
+		playsound(src, 'sound/machines/deadspace/menu_negative.ogg', VOLUME_MID, TRUE)
 		return
 
 	if (busy || usr != occupant)

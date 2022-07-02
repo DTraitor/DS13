@@ -23,6 +23,10 @@
 	item_flags = 0
 	obj_flags = 0
 
+/obj/item/stack/tile/Initialize()
+	.=..()
+	AddElement(/datum/element/openspace_item_click_handler)
+
 /*
  * Grass
  */
@@ -365,6 +369,50 @@
 	obj_flags = OBJ_FLAG_CONDUCTIBLE
 
 /obj/item/stack/tile/slashed/odd/fifty
+	amount = 50
+
+/obj/item/stack/tile/tramcorner
+	name = "tram floor"
+	desc = "Scuffed from the passage of countless tram users."
+	icon = 'icons/turf/floors_ds13.dmi'
+	icon_state = "rivets_held"
+	matter = list(MATERIAL_STEEL = 937.5)
+	obj_flags = OBJ_FLAG_CONDUCTIBLE
+
+/obj/item/stack/tile/tramcorner/fifty
+	amount = 50
+
+/obj/item/stack/tile/trammiddle
+	name = "tram floor"
+	desc = "Scuffed from the passage of countless tram users."
+	icon = 'icons/turf/floors_ds13.dmi'
+	icon_state = "rivets_held"
+	matter = list(MATERIAL_STEEL = 937.5)
+	obj_flags = OBJ_FLAG_CONDUCTIBLE
+
+/obj/item/stack/tile/trammiddle/fifty
+	amount = 50
+
+/obj/item/stack/tile/tramwarning
+	name = "tram floor"
+	desc = "Scuffed from the passage of countless tram users."
+	icon = 'icons/turf/floors_ds13.dmi'
+	icon_state = "rivets_held"
+	matter = list(MATERIAL_STEEL = 937.5)
+	obj_flags = OBJ_FLAG_CONDUCTIBLE
+
+/obj/item/stack/tile/tramwarning/fifty
+	amount = 50
+
+/obj/item/stack/tile/tramgrating
+	name = "tram floor"
+	desc = "Scuffed from the passage of countless tram users."
+	icon = 'icons/turf/floors_ds13.dmi'
+	icon_state = "rivets_held"
+	matter = list(MATERIAL_STEEL = 937.5)
+	obj_flags = OBJ_FLAG_CONDUCTIBLE
+
+/obj/item/stack/tile/tramgrating/fifty
 	amount = 50
 
 /*

@@ -102,12 +102,6 @@ macro "borghotkeymode"
 		name = "CTRL+F"
 		command = "a-intent left"
 	elem
-		name = "G"
-		command = "a-intent right"
-	elem
-		name = "CTRL+G"
-		command = "a-intent right"
-	elem
 		name = "J"
 		command = "toggle-gun-mode"
 	elem
@@ -122,9 +116,9 @@ macro "borghotkeymode"
 	elem
 		name = "R"
 		command = ".southwest"
-	elem
+	elem "rotate_placement"
 		name = "CTRL+R"
-		command = ".southwest"
+		command = "rotate_placement"
 	elem "s_key"
 		name = "S+REP"
 		command = ".movedown"
@@ -310,9 +304,9 @@ macro "macro"
 	elem
 		name = "CTRL+Q"
 		command = ".northwest"
-	elem
+	elem "rotate_placement"
 		name = "CTRL+R"
-		command = ".southwest"
+		command = "rotate_placement"
 	elem
 		name = "CTRL+S+REP"
 		command = ".movedown"
@@ -499,12 +493,6 @@ macro "hotkeymode"
 		name = "CTRL+F"
 		command = "a-intent left"
 	elem
-		name = "G"
-		command = "a-intent right"
-	elem
-		name = "CTRL+G"
-		command = "a-intent right"
-	elem
 		name = "H"
 		command = "holster"
 	elem
@@ -522,12 +510,12 @@ macro "hotkeymode"
 	elem
 		name = "CTRL+Q"
 		command = ".northwest"
-	elem "rotate_placement"
-		name = "R"
-		command = "rotate_placement"
 	elem
-		name = "CTRL+R"
+		name = "R"
 		command = ".southwest"
+	elem "rotate_placement"
+		name = "CTRL+R"
+		command = "rotate_placement"
 	elem "s_key"
 		name = "S+REP"
 		command = ".movedown"
@@ -719,9 +707,9 @@ macro "borgmacro"
 	elem
 		name = "CTRL+Q"
 		command = ".northwest"
-	elem
+	elem "rotate_placement"
 		name = "CTRL+R"
-		command = ".southwest"
+		command = "rotate_placement"
 	elem
 		name = "CTRL+S+REP"
 		command = ".movedown"
@@ -841,6 +829,7 @@ menu "menu"
 		category = "&Help"
 		saved-params = "is-checked"
 
+
 window "mainwindow"
 	elem "mainwindow"
 		type = MAIN
@@ -850,11 +839,11 @@ window "mainwindow"
 		anchor2 = -1,-1
 		is-default = true
 		saved-params = "pos;size;is-minimized;is-maximized"
+		statusbar = false
 		is-maximized = true
 		icon = 'icons\\ss13_64.png'
 		macro = "macro"
 		menu = "menu"
-		statusbar = false
 	elem "split"
 		type = CHILD
 		pos = 3,0
@@ -869,8 +858,8 @@ window "mainwindow"
 		type = BROWSER
 		pos = 0,0
 		size = 200x200
-		anchor1 = none
-		anchor2 = none
+		anchor1 = -1,-1
+		anchor2 = -1,-1
 		is-visible = false
 		saved-params = ""
 	elem "tooltip"
@@ -916,12 +905,14 @@ window "mapwindow"
 		pos = 0,464
 		size = 280x16
 		anchor1 = 0,100
+		anchor2 = -1,-1
+		text-color = #ffffff
+		background-color = #222222
 		is-visible = false
+		border = line
+		saved-params = ""
 		text = ""
 		align = left
-		background-color = #222222
-		text-color = #ffffff
-		border = line
 
 window "infowindow"
 	elem "infowindow"
@@ -1000,15 +991,15 @@ window "infowindow"
 window "outputwindow"
 	elem "outputwindow"
 		type = MAIN
-		pos = 281,0
+		pos = 372,0
 		size = 640x480
 		anchor1 = -1,-1
 		anchor2 = -1,-1
 		background-color = none
 		saved-params = "pos;size;is-minimized;is-maximized"
 		is-pane = true
-		outer-size = 656x538
-		inner-size = 640x499
+		outer-size = 658x549
+		inner-size = 640x502
 	elem "input"
 		type = INPUT
 		pos = 2,460
@@ -1077,35 +1068,41 @@ window "outputwindow"
 		is-default = true
 		saved-params = ""
 
-
 window "popupwindow"
 	elem "popupwindow"
 		type = MAIN
-		pos = 281,0
-		size = 120x120
+		pos = 372,0
+		size = 148x120
 		anchor1 = -1,-1
 		anchor2 = -1,-1
+		background-color = none
 		is-visible = false
 		saved-params = "pos;size;is-minimized;is-maximized"
 		statusbar = false
 		can-resize = false
+		outer-size = 166x167
+		inner-size = 148x120
 
 window "preferences_window"
 	elem "preferences_window"
 		type = MAIN
-		pos = 281,0
-		size = 1280x1000
+		pos = 372,0
+		size = 1280x983
 		anchor1 = -1,-1
 		anchor2 = -1,-1
+		background-color = none
 		is-visible = false
 		saved-params = "pos;size;is-minimized;is-maximized"
 		statusbar = false
+		outer-size = 1298x1030
+		inner-size = 1280x983
 	elem "preferences_browser"
 		type = BROWSER
 		pos = 0,0
 		size = 960x1000
 		anchor1 = 0,0
 		anchor2 = 75,100
+		background-color = none
 		saved-params = ""
 	elem "character_preview_map"
 		type = MAP
@@ -1119,18 +1116,22 @@ window "preferences_window"
 window "statwindow"
 	elem "statwindow"
 		type = MAIN
-		pos = 281,0
+		pos = 372,0
 		size = 640x480
 		anchor1 = -1,-1
 		anchor2 = -1,-1
+		background-color = none
 		saved-params = "pos;size;is-minimized;is-maximized"
 		is-pane = true
+		outer-size = 658x549
+		inner-size = 640x502
 	elem "statbrowser"
 		type = BROWSER
 		pos = 0,0
 		size = 640x480
 		anchor1 = 0,0
 		anchor2 = 100,100
+		background-color = none
 		is-visible = false
 		saved-params = ""
 
@@ -1139,8 +1140,8 @@ window "Telecomms IDE"
 		type = MAIN
 		pos = 281,0
 		size = 569x582
-		anchor1 = none
-		anchor2 = none
+		anchor1 = -1,-1
+		anchor2 = -1,-1
 		background-color = #ffffff
 		is-visible = false
 		saved-params = "pos;size;is-minimized;is-maximized"
@@ -1219,8 +1220,8 @@ window "chemdispenser"
 		type = MAIN
 		pos = 281,0
 		size = 340x480
-		anchor1 = none
-		anchor2 = none
+		anchor1 = -1,-1
+		anchor2 = -1,-1
 		is-visible = false
 		saved-params = "pos;size;is-minimized;is-maximized"
 		title = "Chem Dispenser"
@@ -1229,16 +1230,16 @@ window "chemdispenser"
 		type = LABEL
 		pos = 8,24
 		size = 56x16
-		anchor1 = none
-		anchor2 = none
+		anchor1 = -1,-1
+		anchor2 = -1,-1
 		saved-params = ""
 		text = "Energy: 25"
 	elem "eject"
 		type = BUTTON
 		pos = 264,4
 		size = 72x20
-		anchor1 = none
-		anchor2 = none
+		anchor1 = -1,-1
+		anchor2 = -1,-1
 		saved-params = "is-checked"
 		text = "[Insert beaker]"
 		command = "skincmd \"chemdispenser;eject\""
@@ -1246,8 +1247,8 @@ window "chemdispenser"
 		type = BUTTON
 		pos = 208,4
 		size = 48x20
-		anchor1 = none
-		anchor2 = none
+		anchor1 = -1,-1
+		anchor2 = -1,-1
 		saved-params = "is-checked"
 		text = "[Other]"
 		command = "skincmd \"chemdispenser;amountc\""
@@ -1255,8 +1256,8 @@ window "chemdispenser"
 		type = BUTTON
 		pos = 176,4
 		size = 24x20
-		anchor1 = none
-		anchor2 = none
+		anchor1 = -1,-1
+		anchor2 = -1,-1
 		saved-params = "is-checked"
 		text = "[30]"
 		command = "skincmd \"chemdispenser;amount30\""
@@ -1264,8 +1265,8 @@ window "chemdispenser"
 		type = BUTTON
 		pos = 144,4
 		size = 24x20
-		anchor1 = none
-		anchor2 = none
+		anchor1 = -1,-1
+		anchor2 = -1,-1
 		saved-params = "is-checked"
 		text = "[20]"
 		command = "skincmd \"chemdispenser;amount20\""
@@ -1273,8 +1274,8 @@ window "chemdispenser"
 		type = BUTTON
 		pos = 112,4
 		size = 24x20
-		anchor1 = none
-		anchor2 = none
+		anchor1 = -1,-1
+		anchor2 = -1,-1
 		saved-params = "is-checked"
 		text = "[10]"
 		command = "skincmd \"chemdispenser;amount10\""
@@ -1282,8 +1283,8 @@ window "chemdispenser"
 		type = LABEL
 		pos = 4,4
 		size = 100x20
-		anchor1 = none
-		anchor2 = none
+		anchor1 = -1,-1
+		anchor2 = -1,-1
 		font-size = 12
 		saved-params = ""
 		text = "Amount: 30"
@@ -1291,8 +1292,8 @@ window "chemdispenser"
 		type = CHILD
 		pos = 0,40
 		size = 340x440
-		anchor1 = none
-		anchor2 = none
+		anchor1 = -1,-1
+		anchor2 = -1,-1
 		saved-params = "splitter"
 		left = "chemdispenser_reagents"
 		is-vert = false
@@ -1302,8 +1303,8 @@ window "chemdispenser_reagents"
 		type = MAIN
 		pos = 281,0
 		size = 340x448
-		anchor1 = none
-		anchor2 = none
+		anchor1 = -1,-1
+		anchor2 = -1,-1
 		saved-params = "pos;size;is-minimized;is-maximized"
 		titlebar = false
 		statusbar = false
@@ -1316,8 +1317,8 @@ window "chemdispenser_reagents"
 		type = BUTTON
 		pos = 256,8
 		size = 64x32
-		anchor1 = none
-		anchor2 = none
+		anchor1 = -1,-1
+		anchor2 = -1,-1
 		is-visible = false
 		saved-params = "is-checked"
 		text = "Dispense"
@@ -1328,11 +1329,12 @@ window "chemdispenser_reagents"
 		type = LABEL
 		pos = 18,8
 		size = 230x32
-		anchor1 = none
-		anchor2 = none
+		anchor1 = -1,-1
+		anchor2 = -1,-1
 		font-size = 15
 		is-visible = false
 		saved-params = ""
 		text = "Chloral Hydrate"
 		image = 'icons\\reagentname_bg.png'
 		image-mode = stretch
+

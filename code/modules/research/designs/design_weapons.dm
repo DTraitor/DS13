@@ -4,7 +4,7 @@ Guns:
 +	chemsprayer
 +	large capacity syringe gun
 +	large chemical grenade case
-	//advanced flash
+//	advanced flash
 +	C99 Supercollider Contact Beam
 +	210-V mining cutter
 +	Advanced Combat Shield
@@ -20,11 +20,13 @@ Ammo:
 +	Incendiary Divet Magazine
 +	Hollow Point Divet Magazine
 +	Armor Piercing Divet Magazine
++	Rubber Divet Magazine
 +	speed loader (.44 magnum)
 +	plasma energy
 +	rivet bolts
 +	pulse rounds
 +	high velocity pulse rounds
++	deflection pulse rounds
 +	seeker shell
 S	fuel tank (gasoline)
 S	fuel tank (hydrazine)
@@ -36,7 +38,7 @@ S	fuel tank (hydrazine)
 */
 /datum/design/item/weapon
 	category = "Weapons"
-	build_type = PROTOLATHE | STORE
+	build_type = PROTOLATHE | STORE_SCHEMATICS
 	price = 7000
 	materials = list(MATERIAL_STEEL = 30000, MATERIAL_GLASS = 2000, MATERIAL_SILVER = 4000, MATERIAL_URANIUM = 4000)
 
@@ -124,8 +126,8 @@ S	fuel tank (hydrazine)
 /datum/design/item/weapon/javelingun
 	name = "T15 Javelin Gun"
 	id = "javgun"
-	build_path = /obj/item/weapon/gun/projectile/javelin_gun
 	materials = list(MATERIAL_PLASTEEL = 4000, MATERIAL_STEEL = 35000, MATERIAL_PHORON = 4000)
+	build_path = /obj/item/weapon/gun/projectile/javelin_gun
 	price = 11000
 
 /datum/design/item/weapon/flamethrower
@@ -152,11 +154,11 @@ S	fuel tank (hydrazine)
 	id = "forcegun"
 	build_path = /obj/item/weapon/gun/energy/forcegun
 	materials = list(MATERIAL_STEEL = 5000, MATERIAL_PLASTIC = 3500, MATERIAL_GLASS = 500, MATERIAL_SILVER = 500)
-	price = 11000
+	price = 7000
 
 /datum/design/item/ammo
 	category = "Ammunition"
-	build_type = PROTOLATHE | STORE
+	build_type = PROTOLATHE | STORE_SCHEMATICS
 	price = 2000
 
 //Sidearms
@@ -182,6 +184,14 @@ S	fuel tank (hydrazine)
 	build_path = /obj/item/ammo_magazine/divet/hollow_point
 	build_type = PROTOLATHE
 
+/datum/design/item/ammo/rbds
+	name = "Rubber Divet Magazine"
+	id = "rbds"
+	materials = list(MATERIAL_PLASTIC = 2500)
+	build_path = /obj/item/ammo_magazine/divet/rb
+	build_type = PROTOLATHE
+	price = 900
+
 /datum/design/item/ammo/apds
 	name = "Armor Piercing Divet Magazine"
 	id = "apds"
@@ -199,7 +209,7 @@ S	fuel tank (hydrazine)
 /datum/design/item/ammo/plasma_energy
 	name = "plasma energy"
 	id = "plasma_energy"
-	build_path =/obj/item/weapon/cell/plasmacutter
+	build_path = /obj/item/weapon/cell/plasmacutter
 	materials = list(MATERIAL_STEEL = 4000, MATERIAL_GLASS = 1000)
 	price = 1200
 
@@ -220,12 +230,19 @@ S	fuel tank (hydrazine)
 	build_path = /obj/item/ammo_magazine/pulse
 	price = 1250
 
+/datum/design/item/ammo/pulsedeflect
+	name = "deflection pulse rounds"
+	id = "pulsedeflect"
+	materials = list(MATERIAL_PLASTEEL = 5000, MATERIAL_DIAMOND = 2000, MATERIAL_PHORON = 500)
+	build_path = /obj/item/ammo_magazine/pulse/df
+	price = 4000
+
 /datum/design/item/ammo/pulsehighvel
 	name = "high velocity pulse rounds"
 	id = "pulsehighvel"
-	materials = list(MATERIAL_PLASTEEL = 7500, MATERIAL_DIAMOND = 2500, MATERIAL_PHORON = 500)
+	materials = list(MATERIAL_PLASTEEL = 7500, MATERIAL_DIAMOND = 3000, MATERIAL_PHORON = 500)
 	build_path = /obj/item/ammo_magazine/pulse/hv
-	price = 5750
+	build_type = PROTOLATHE
 
 /datum/design/item/ammo/seeker_ammo
 	name = "seeker shell"
@@ -241,22 +258,22 @@ S	fuel tank (hydrazine)
 	id = "javelin_rack"
 	materials = list(MATERIAL_PLASTEEL = 4000, MATERIAL_PHORON = 2500)
 	build_path = /obj/item/ammo_magazine/javelin
-	price = 1200	// 400 per 2 spears, same as in DS2
+	price = 2000	// 400 per 2 spears, same as in DS2
 
 
 /datum/design/item/ammo/fuel_tank
 	name = "fuel tank (gasoline)"
 	id = "fuel_tank"
-	build_type = STORE
+	build_type = STORE_SCHEMATICS
 	build_path = /obj/item/weapon/reagent_containers/glass/fuel_tank/fuel
-	price = 1000
+	price = 2500
 
 /datum/design/item/ammo/hydrazine_tank
 	name = "fuel tank (hydrazine)"
 	id = "hydrazine_tank"
-	build_type = STORE
+	build_type = STORE_SCHEMATICS
 	build_path = /obj/item/weapon/reagent_containers/glass/fuel_tank/hydrazine
-	price = 2000
+	price = 5000
 
 
 
