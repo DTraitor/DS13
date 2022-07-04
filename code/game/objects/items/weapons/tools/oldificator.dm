@@ -294,7 +294,7 @@
 
 				P = rand(10,100)//Set hull integrity
 				P /= 100
-				health = initial(health)*P
+				health = max_health*P
 
 
 			if (21 to 40)
@@ -324,7 +324,7 @@
 
 				P = rand(5,50)//Set hull integrity
 				P /= 100
-				health = initial(health)*P
+				health = max_health*P
 				misconfigure_systems(15)
 
 
@@ -357,7 +357,7 @@
 
 				P = rand(5,50)//Set hull integrity
 				P /= 100
-				health = initial(health)*P
+				health = max_health*P
 				misconfigure_systems(45)
 
 

@@ -69,7 +69,7 @@
 	if(!..()) return
 	if(overload)
 		health--
-		if(health < initial(health) - initial(health)/3)
+		if(health < max_health - max_health/3)
 			overload = 0
 			step_in = initial(step_in)
 			step_energy_drain = initial(step_energy_drain)

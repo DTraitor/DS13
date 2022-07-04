@@ -9,8 +9,8 @@
 
 	x = 2
 	y = 5
-	icon_file = 'icons/obj/tools.dmi'
-	icon = "wrench"
+	icon = 'icons/obj/tools.dmi'
+	icon_state = "wrench"
 
 	required_technologies = list()
 	cost = 0
@@ -25,8 +25,8 @@
 
 	x = 2
 	y = 3.5
-	icon_file = 'icons/obj/stock_parts.dmi'
-	icon = "matter_bin"
+	icon = 'icons/obj/stock_parts.dmi'
+	icon_state = "matter_bin"
 
 	required_technologies = list("basic_engineering")
 	cost = 150
@@ -48,9 +48,10 @@
 	unlocks_designs = list("atmosalerts", "air_management")
 
 /datum/technology/engineering/monitoring/generate_icon()
-	I = icon('icons/obj/computer.dmi', "computer")
-	I.Blend(icon('icons/obj/computer.dmi', "alert:0"), ICON_OVERLAY)
-	I.Blend(icon('icons/obj/computer.dmi', "atmos_key"), ICON_OVERLAY)
+	var/icon/ret = icon('icons/obj/computer.dmi', "computer")
+	ret.Blend(icon('icons/obj/computer.dmi', "alert:0"), ICON_OVERLAY)
+	ret.Blend(icon('icons/obj/computer.dmi', "atmos_key"), ICON_OVERLAY)
+	return ret
 
 /datum/technology/engineering/gas_heat
 	name = "Gas Heating and Cooling"
@@ -59,8 +60,8 @@
 
 	x = 4.5
 	y = 3.5
-	icon_file = 'icons/obj/atmos.dmi'
-	icon = "sheater-heat"
+	icon = 'icons/obj/atmos.dmi'
+	icon_state = "sheater-heat"
 
 	required_technologies = list("monitoring")
 	cost = 500
@@ -74,8 +75,8 @@
 
 	x = 4.5
 	y = 2
-	icon_file = 'icons/obj/ammo.dmi'
-	icon = "hydecanister_e"
+	icon = 'icons/obj/ammo.dmi'
+	icon_state = "hydecanister_e"
 
 	required_technologies = list("gas_heat", "divet")
 	cost = 1500
@@ -97,9 +98,10 @@
 	unlocks_designs = list("destructive_analyzer", "protolathe", "circuit_imprinter", "rdservercontrol", "rdserver", "rdconsole")
 
 /datum/technology/engineering/res_tech/generate_icon()
-	I = icon('icons/obj/computer.dmi', "computer")
-	I.Blend(icon('icons/obj/computer.dmi', "rdcomp"), ICON_OVERLAY)
-	I.Blend(icon('icons/obj/computer.dmi', "rd_key"), ICON_OVERLAY)
+	var/icon/ret = icon('icons/obj/computer.dmi', "computer")
+	ret.Blend(icon('icons/obj/computer.dmi', "rdcomp"), ICON_OVERLAY)
+	ret.Blend(icon('icons/obj/computer.dmi', "rd_key"), ICON_OVERLAY)
+	return ret
 
 /datum/technology/engineering/xenoarch
 	name = "Xenoarcheology"
@@ -108,8 +110,8 @@
 
 	x = 7
 	y = 3.5
-	icon_file = 'icons/obj/pda.dmi'
-	icon = "crap"
+	icon = 'icons/obj/pda.dmi'
+	icon_state = "crap"
 
 	required_technologies = list("res_tech")
 	cost = 500
@@ -123,8 +125,8 @@
 
 	x = 13.5
 	y = 3.5
-	icon_file = 'icons/obj/xenoarchaeology.dmi'
-	icon = "excavationdrill7"
+	icon = 'icons/obj/xenoarchaeology.dmi'
+	icon_state = "excavationdrill7"
 
 	required_technologies = list("xenoarch")
 	cost = 1000
@@ -138,8 +140,8 @@
 
 	x = 13.5
 	y = 2
-	icon_file = 'icons/obj/xenoarchaeology.dmi'
-	icon = "Dexcavationdrill7"
+	icon = 'icons/obj/xenoarchaeology.dmi'
+	icon_state = "Dexcavationdrill7"
 
 	required_technologies = list("excavation_drill")
 	cost = 1500
@@ -153,8 +155,8 @@
 
 	x = 7
 	y = 6.5
-	icon_file = 'icons/obj/weapons.dmi'
-	icon = "ds_rocksaw1"
+	icon = 'icons/obj/weapons.dmi'
+	icon_state = "ds_rocksaw1"
 
 	required_technologies = list("res_tech")
 	cost = 1000
@@ -168,8 +170,8 @@
 
 	x = 3
 	y = 3
-	icon_file = 'icons/obj/machines/mining_machines.dmi'
-	icon = "furnace"
+	icon = 'icons/obj/machines/mining_machines.dmi'
+	icon_state = "furnace"
 
 	required_technologies = list("basic_mining")
 	cost = 1000
@@ -183,8 +185,8 @@
 
 	x = 13.5
 	y = 6.5
-	icon_file = 'icons/obj/tools.dmi'
-	icon = "plasmacutter"
+	icon = 'icons/obj/tools.dmi'
+	icon_state = "plasmacutter"
 
 	required_technologies = list("basic_mining", "recharger")
 	cost = 2000
@@ -198,8 +200,8 @@
 
 	x = 13.5
 	y = 8
-	icon_file = 'icons/obj/ammo.dmi'
-	icon = "contact_energy"
+	icon = 'icons/obj/ammo.dmi'
+	icon_state = "contact_energy"
 
 	required_technologies = list("adv_mining")
 	cost = 1250
@@ -213,8 +215,8 @@
 
 	x = 15.5
 	y = 5
-	icon_file = 'icons/obj/storage.dmi'
-	icon = "RPED"
+	icon = 'icons/obj/storage.dmi'
+	icon_state = "RPED"
 
 	required_technologies = list("adv_mining", "excavation_drill")
 	cost = 2000
@@ -228,8 +230,8 @@
 
 	x = 13.5
 	y = 5
-	icon_file = 'icons/obj/stock_parts.dmi'
-	icon = "advanced_matter_bin"
+	icon = 'icons/obj/stock_parts.dmi'
+	icon_state = "advanced_matter_bin"
 
 	required_technologies = list("adv_eng")
 	cost = 1000
@@ -243,8 +245,8 @@
 
 	x = 11.5
 	y = 5
-	icon_file = 'icons/obj/stock_parts.dmi'
-	icon = "super_matter_bin"
+	icon = 'icons/obj/stock_parts.dmi'
+	icon_state = "super_matter_bin"
 
 	required_technologies = list("adv_parts")
 	cost = 2000
@@ -258,8 +260,8 @@
 
 	x = 17.5
 	y = 5
-	icon_file = 'icons/obj/tools.dmi'
-	icon = "pneumo_crowbar"
+	icon = 'icons/obj/tools.dmi'
+	icon_state = "pneumo_crowbar"
 
 	required_technologies = list("adv_eng")
 	cost = 2000
@@ -273,8 +275,8 @@
 
 	x = 9
 	y = 5
-	icon_file = 'icons/obj/tools.dmi'
-	icon = "maintenance_jack"
+	icon = 'icons/obj/tools.dmi'
+	icon_state = "maintenance_jack"
 
 	required_technologies = list("res_tech")
 	cost = 500
@@ -288,8 +290,8 @@
 
 	x = 15.5
 	y = 8
-	icon_file = 'icons/obj/assemblies/electronic_tools.dmi'
-	icon = "circuit_printer"
+	icon = 'icons/obj/assemblies/electronic_tools.dmi'
+	icon_state = "circuit_printer"
 
 	required_technologies = list("adv_eng")
 	cost = 750
@@ -303,8 +305,8 @@
 
 	x = 15.5
 	y = 9.5
-	icon_file = 'icons/obj/assemblies/electronic_tools.dmi'
-	icon = "upgrade_disk"
+	icon = 'icons/obj/assemblies/electronic_tools.dmi'
+	icon_state = "upgrade_disk"
 
 	required_technologies = list("icprinter")
 	cost = 1500
@@ -318,8 +320,8 @@
 
 	x = 17
 	y = 8
-	icon_file = 'icons/obj/assemblies/electronic_tools.dmi'
-	icon = "upgrade_disk_clone"
+	icon = 'icons/obj/assemblies/electronic_tools.dmi'
+	icon_state = "upgrade_disk_clone"
 
 	required_technologies = list("icprinter")
 	cost = 1000
@@ -333,9 +335,9 @@
 
 	x = 20.5
 	y = 5
-	icon_file = 'icons/obj/tools.dmi'
+	icon = 'icons/obj/tools.dmi'
 	no_lines = TRUE
-	icon = "powernode"
+	icon_state = "powernode"
 
 	required_technologies = list("adv_tools", "adv_power_storage", "hyp_power")
 	cost = 4000

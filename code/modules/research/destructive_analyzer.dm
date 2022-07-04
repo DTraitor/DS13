@@ -69,14 +69,6 @@
 		loading = FALSE
 		update_icon()
 		if(linked_console)
-			var/icon/I = getFlatIcon(O)
-			var/key = "da_[sanitizeFileName("[loaded_item.type]")].png"
-			if(!SSassets.cache[key])
-				SSassets.transport.register_asset(key, I, TRUE)
-			for(var/datum/tgui/another_ui as anything in SStgui.get_open_uis(linked_console))
-				// Any item can be here. I had no other choice (excpet removing icon from RD Console UI)
-				SSassets.transport.send_assets(another_ui.user, key)
-			qdel(I)
 			SStgui.update_uis(linked_console, TRUE)
 		return TRUE
 	return FALSE

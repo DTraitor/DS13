@@ -95,8 +95,8 @@
 /obj/item/ammo_casing/sawblade/examine(var/mob/user)
 	.=..()
 	//Show damage on inspection
-	if (health < initial(health))
-		var/hp = health / initial(health)
+	if (health < max_health)
+		var/hp = health / max_health
 		switch (hp)
 			if (0.8 to 1.0)
 				to_chat(user, "It has a few minor scuffs and scratches")
@@ -108,7 +108,7 @@
 
 //Damaged blades are worth less to recyle. Every 1% health lost reduces matter by 0.5%
 /obj/item/ammo_casing/sawblade/get_matter()
-	var/hp = health / initial(health)
+	var/hp = health / max_health
 	var/matmult = (0.5 * hp) + 0.5 //This will give a value in the range 0.5..1.0
 	var/list/returnmat = list()
 	for (var/m in matter)

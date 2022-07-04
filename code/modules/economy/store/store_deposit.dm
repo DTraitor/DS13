@@ -9,7 +9,7 @@
 /obj/item/weapon/storage/internal/deposit/proc/update_ui_data()
 	ui_data = list()
 	for (var/obj/item/I in contents)
-		ui_data += list(I.name)
+		ui_data += list(list("name" = copytext(I.name, 1, 21), "value" = 0))
 
 
 	///If the list is empty, null it out
@@ -29,7 +29,7 @@
 /obj/machinery/store/proc/eject_item_by_name(var/item_name)
 	//Ejects a specific item by name
 	for (var/obj/item/I in deposit_box.contents)
-		if (item_name == I.name)
+		if (item_name == copytext(I.name, 1, 21))
 			eject_item_from_deposit(I)
 
 /obj/machinery/store/proc/eject_all()

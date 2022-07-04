@@ -39,7 +39,7 @@
 /obj/item/store_schematic/proc/get_design()
 	if(GLOB.public_store_designs.len)
 		var/id = pick(GLOB.public_store_designs)
-		var/datum/design/D = SSresearch.design_ids[id]
+		var/datum/design/D = SSresearch.designs_by_id[id]
 		design_name = D.item_name
 		design_id = D.id
 		name = "Store Schematic ([design_name])"

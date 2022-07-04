@@ -1,6 +1,6 @@
 /datum/technology/bio
 	tech_type = TECH_BIO
-	icon_file = 'icons/obj/device.dmi'
+	icon = 'icons/obj/device.dmi'
 
 /datum/technology/bio/basic
 	name = "Basic Biotech"
@@ -9,7 +9,7 @@
 
 	x = 2
 	y = 5
-	icon = "health"
+	icon_state = "health"
 
 	required_technologies = list()
 	cost = 0
@@ -31,9 +31,10 @@
 	unlocks_designs = list("operating", "crewconsole")
 
 /datum/technology/bio/basic_medical_machines/generate_icon()
-	I = icon('icons/obj/computer.dmi', "computer")
-	I.Blend(icon('icons/obj/computer.dmi', "crew"), ICON_OVERLAY)
-	I.Blend(icon('icons/obj/computer.dmi', "med_key"), ICON_OVERLAY)
+	var/icon/ret = icon('icons/obj/computer.dmi', "computer")
+	ret.Blend(icon('icons/obj/computer.dmi', "crew"), ICON_OVERLAY)
+	ret.Blend(icon('icons/obj/computer.dmi', "med_key"), ICON_OVERLAY)
+	return ret
 
 /datum/technology/bio/hydroponics
 	name = "Hydroponics"
@@ -42,8 +43,8 @@
 
 	x = 2
 	y = 6.5
-	icon_file = 'icons/obj/hydroponics_machines.dmi'
-	icon = "hydrotray3"
+	icon = 'icons/obj/hydroponics_machines.dmi'
+	icon_state = "hydrotray3"
 
 	required_technologies = list("basic_biotech")
 	cost = 250
@@ -57,8 +58,8 @@
 
 	x = 2
 	y = 8
-	icon_file = 'icons/obj/hydroponics_machines.dmi'
-	icon = "traitcopier"
+	icon = 'icons/obj/hydroponics_machines.dmi'
+	icon_state = "traitcopier"
 
 	required_technologies = list("hydroponics")
 	cost = 750
@@ -72,8 +73,8 @@
 
 	x = 4
 	y = 6.5
-	icon_file = 'icons/obj/kitchen.dmi'
-	icon = "mw"
+	icon = 'icons/obj/kitchen.dmi'
+	icon_state = "mw"
 
 	required_technologies = list("hydroponics")
 	cost = 500
@@ -87,8 +88,8 @@
 
 	x = 4
 	y = 3.5
-	icon_file = 'icons/obj/items.dmi'
-	icon = "implantcase-r"
+	icon = 'icons/obj/items.dmi'
+	icon_state = "implantcase-r"
 
 	required_technologies = list("basic_medical_machines")
 	cost = 1500
@@ -110,7 +111,7 @@
 	unlocks_designs = list("cryo_cell", "sleeper", "body_scanner")
 
 /datum/technology/bio/adv_med_machines/generate_icon()
-	I = icon('icons/obj/Cryogenic2.dmi', "sleeper_0", 4)
+	return icon('icons/obj/Cryogenic2.dmi', "sleeper_0", 4)
 
 /datum/technology/bio/add_med_tools
 	name = "Additional Medical Tools"
@@ -119,8 +120,8 @@
 
 	x = 8
 	y = 5
-	icon_file = 'icons/obj/clothing/glasses.dmi'
-	icon = "healthhud"
+	icon = 'icons/obj/clothing/glasses.dmi'
+	icon_state = "healthhud"
 
 	required_technologies = list("adv_med_machines")
 	cost = 750
@@ -134,7 +135,7 @@
 
 	x = 10
 	y = 5
-	icon = "adv_spectrometer"
+	icon_state = "adv_spectrometer"
 
 	required_technologies = list("add_med_tools")
 	cost = 1250
@@ -148,7 +149,7 @@
 
 	x = 8
 	y = 6.5
-	icon = "locator"
+	icon_state = "locator"
 
 	required_technologies = list("add_med_tools")
 	cost = 500
@@ -157,13 +158,13 @@
 
 /datum/technology/bio/chemicals
 	name = "Chemicals"
-	desc = "Don't let the clown get access to this!"
+	desc = "Don't let the clown access it!"
 	id = "chemicals"
 
 	x = 12
 	y = 5
-	icon_file = 'icons/obj/chemical.dmi'
-	icon = "dispenser"
+	icon = 'icons/obj/chemical.dmi'
+	icon_state = "dispenser"
 
 	required_technologies = list("adv_add_med_tools")
 	cost = 2000
@@ -177,8 +178,8 @@
 
 	x = 12
 	y = 6.5
-	icon_file = 'icons/obj/syringe.dmi'
-	icon = "hypo"
+	icon = 'icons/obj/syringe.dmi'
+	icon_state = "hypo"
 
 	required_technologies = list("chemicals")
 	cost = 2000
@@ -192,8 +193,8 @@
 
 	x = 14
 	y = 6.5
-	icon_file = 'icons/obj/gun.dmi'
-	icon = "rapidsyringegun"
+	icon = 'icons/obj/gun.dmi'
+	icon_state = "rapidsyringegun"
 
 	required_technologies = list("hypospray", "nleth_eq")
 	cost = 1500
@@ -207,8 +208,8 @@
 
 	x = 12
 	y = 3.5
-	icon_file = 'icons/obj/surgery.dmi'
-	icon = "scalpel_manager_on"
+	icon = 'icons/obj/tools.dmi'
+	icon_state = "scalpel_manager_on"
 
 	required_technologies = list("chemicals")
 	cost = 2000
@@ -222,7 +223,7 @@
 
 	x = 16
 	y = 5
-	icon = "health_adv"
+	icon_state = "health_adv"
 
 	required_technologies = list("chemicals")
 	cost = 3000
@@ -236,8 +237,8 @@
 
 	x = 14
 	y = 3.5
-	icon_file = 'icons/obj/chemical.dmi'
-	icon = "beakerbluespace"
+	icon = 'icons/obj/chemical.dmi'
+	icon_state = "beakerbluespace"
 
 	required_technologies = list("chemicals")
 	cost = 1500

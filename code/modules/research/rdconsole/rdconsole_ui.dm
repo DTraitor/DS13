@@ -5,13 +5,6 @@
 /obj/machinery/computer/rdconsole/attack_hand(mob/user as mob)
 	if(..())
 		return
-	if(linked_destroy?.loaded_item)
-		var/icon/I = getFlatIcon(linked_destroy.loaded_item)
-		var/key = "da_[sanitizeFileName("[linked_destroy.loaded_item.type]")].png"
-		if(!SSassets.cache[key])
-			SSassets.transport.register_asset(key, I, TRUE)
-		SSassets.transport.send_assets(user, key)
-		qdel(I) // We don't want to make infinite amount of icons
 	tgui_interact(user)
 
 /obj/machinery/computer/rdconsole/attack_ai(mob/user)
@@ -23,7 +16,7 @@
 /obj/machinery/computer/rdconsole/ui_assets(mob/user)
 	return list(
 		get_asset_datum(/datum/asset/spritesheet/research_designs),
-		get_asset_datum(/datum/asset/spritesheet/simple/research_technologies)
+		get_asset_datum(/datum/asset/spritesheet/research_technologies)
 	)
 
 /obj/machinery/computer/rdconsole/tgui_interact(mob/user, datum/tgui/ui)
@@ -49,7 +42,7 @@
 
 	data["research_points"] = files.research_points
 
-	data["access"] = job_master
+	data["access"] = req_access
 
 	data["console_tab"] = cats[4]
 

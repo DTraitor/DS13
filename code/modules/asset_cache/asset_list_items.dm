@@ -75,21 +75,12 @@ proc/get_craft_item(path)
 	//Now we load and assign the whitelists
 	load_patron_item_whitelists()
 
-	for(var/D in SSresearch.design_ids)
-		var/datum/design/design = SSresearch.design_ids[D]
-		var/datum/computer_file/binary/design/design_file = new
-		design_file.design = design
-		design_file.on_design_set()
-		design.file = design_file
+	//These procs update and sort various other things after the patron items have added themselves to them
+	sort_loadout_categories()
 
-	SSresearch.designs_initialized = TRUE
-
-	// Initialize design files that were created before
-	for(var/file in SSresearch.design_files_to_init)
-		SSresearch.initialize_design_file(file)
-	SSresearch.design_files_to_init = list()
-
-	. = ..()
+	GLOB.custom_items_loaded = TRUE
+	if (LOADOUT_LOADED)
+		handle_pending_loadouts()
 
 	.=..()
 
@@ -97,19 +88,23 @@ proc/get_craft_item(path)
 	name = "rnd_designs"
 
 /datum/asset/spritesheet/research_designs/register()
-	for(var/A in SSresearch.designs_by_id)
-		var/datum/design/D = SSresearch.designs_by_id[A]
-		Insert(A, D.ui_data["icon"])
+	for(var/datum/design/D as anything in SSresearch.designs_by_id)
+		D = SSresearch.designs_by_id[D]
+		var/icon/I
+		I := getFlatTypeIcon(D.build_path)
+		I.Scale(I.Width()*3, I.Height()*3)
+		Insert(D.id, I)
 	.=..()
 
-/datum/asset/spritesheet/simple/research_technologies
+/datum/asset/spritesheet/research_technologies
 	name = "rdtech"
 
-/datum/asset/spritesheet/simple/research_technologies/register()
-	for(var/A in SSresearch.all_technologies)
-		var/datum/technology/T = SSresearch.all_technologies[A]
-		T.I.Scale(T.I.Width()*3, T.I.Height()*3)
-		assets[A] = T.I
+/datum/asset/spritesheet/research_technologies/register()
+	for(var/datum/technology/T as anything in SSresearch.all_technologies)
+		T = SSresearch.all_technologies[T]
+		var/icon/icon = T.generate_icon()
+		icon.Scale(icon.Width()*3, icon.Height()*3)
+		Insert(T.id, icon)
 	.=..()
 
 /datum/asset/simple/jquery

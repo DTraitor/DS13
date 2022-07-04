@@ -64,8 +64,6 @@ other types of metals and chemistry for reagents).
 	// If true does not require any technologies and unlocked from the start.
 	var/starts_unlocked = FALSE
 
-	var/datum/patron_item/PI // A patron item datum used to manage access
-
 //These procs are used in subtypes for assigning names and descriptions dynamically
 /datum/design/proc/AssembleDesignInfo()
 	var/atom/movable/temp_atom = Fabricate()
@@ -149,7 +147,8 @@ other types of metals and chemistry for reagents).
 		"category" = category,
 		"price" = price)
 
-	var/icon/I = getFlatIcon(temp)
+	var/icon/I = icon()
+	I := getFlatTypeIcon(temp.type)
 
 	I.Scale(I.Width()*3, I.Height()*3)
 

@@ -1,6 +1,6 @@
 /datum/technology/tcom
 	tech_type = TECH_BLUESPACE
-	icon_file = 'icons/obj/stationobjs.dmi'
+	icon = 'icons/obj/stationobjs.dmi'
 
 /datum/technology/tcom/parts
 	name = "Telecommuncation Parts"
@@ -10,8 +10,8 @@
 
 	x = 12
 	y = 8
-	icon_file = 'icons/obj/stock_parts.dmi'
-	icon = "subspace_ansible"
+	icon = 'icons/obj/stock_parts.dmi'
+	icon_state = "subspace_ansible"
 
 	required_technologies = list("super_parts")
 	cost = 750
@@ -33,9 +33,10 @@
 	unlocks_designs = list("comm_monitor", "comm_server", "comm_traffic", "message_monitor")
 
 /datum/technology/tcom/monitoring/generate_icon()
-	I = icon('icons/obj/computer.dmi', "computer")
-	I.Blend(icon('icons/obj/computer.dmi', "comm_logs"), ICON_OVERLAY)
-	I.Blend(icon('icons/obj/computer.dmi', "generic_key"), ICON_OVERLAY)
+	var/icon/ret = icon('icons/obj/computer.dmi', "computer")
+	ret.Blend(icon('icons/obj/computer.dmi', "comm_logs"), ICON_OVERLAY)
+	ret.Blend(icon('icons/obj/computer.dmi', "generic_key"), ICON_OVERLAY)
+	return ret
 
 /datum/technology/tcom/rcon
 	name = "RCON"
@@ -52,9 +53,10 @@
 	unlocks_designs = list("rcon_console")
 
 /datum/technology/tcom/rcon/generate_icon()
-	I = icon('icons/obj/computer.dmi', "computer")
-	I.Blend(icon('icons/obj/computer.dmi', "ai-fixer"), ICON_OVERLAY)
-	I.Blend(icon('icons/obj/computer.dmi', "power_key"), ICON_OVERLAY)
+	var/icon/ret = icon('icons/obj/computer.dmi', "computer")
+	ret.Blend(icon('icons/obj/computer.dmi', "ai-fixer"), ICON_OVERLAY)
+	ret.Blend(icon('icons/obj/computer.dmi', "power_key"), ICON_OVERLAY)
+	return ret
 
 /datum/technology/tcom/mainframes
 	name = "Mainframes"
@@ -63,7 +65,7 @@
 
 	x = 10.5
 	y = 6.5
-	icon = "relay"
+	icon_state = "relay"
 
 	required_technologies = list("telecomm_parts")
 	cost = 1500
@@ -77,7 +79,7 @@
 
 	x = 9
 	y = 6.5
-	icon = "bus"
+	icon_state = "bus"
 
 	required_technologies = list("telecomm_parts")
 	cost = 1750
@@ -91,7 +93,7 @@
 
 	x = 13.5
 	y = 6.5
-	icon = "broadcaster_send"
+	icon_state = "broadcaster_send"
 
 	required_technologies = list("telecomm_parts")
 	cost = 1500
@@ -105,7 +107,7 @@
 
 	x = 15
 	y = 6.5
-	icon = "processor"
+	icon_state = "processor"
 
 	required_technologies = list("telecomm_parts")
 	cost = 1500
@@ -120,8 +122,8 @@
 	x = 12
 	y = 9.5
 	no_lines = TRUE
-	icon_file = 'icons/obj/machines/shielding.dmi'
-	icon = "generator1"
+	icon = 'icons/obj/machines/shielding.dmi'
+	icon_state = "generator1"
 
 	required_technologies = list("telecomm_parts")
 	cost = 3000

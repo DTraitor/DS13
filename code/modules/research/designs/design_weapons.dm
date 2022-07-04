@@ -139,7 +139,7 @@ S	fuel tank (hydrazine)
 	price = 11000
 
 /datum/design/item/weapon/flamethrower/store
-	build_type = STORE
+	build_type = STORE_SCHEMATICS
 	build_path = /obj/item/weapon/gun/spray/hydrazine_torch/fuel
 
 /datum/design/item/weapon/seeker

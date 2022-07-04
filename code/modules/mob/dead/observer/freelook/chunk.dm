@@ -185,10 +185,9 @@ SUBSYSTEM_DEF(chunk)
 /datum/chunk/proc/apply_visibility(remove=TRUE, list/update_list)
 	set waitfor = FALSE
 	//There's no way of getting around this, we'll have to take the hit, however this shouldn't be too bad as each chunk is relatively small.
-	for(var/image/obfuscation_image in update_list)
-		for(var/eye in seenby)
-			var/mob/dead/observer/eye/m = eye
-			if(m && m.owner && m.owner.client)
+	for(var/image/obfuscation_image as anything in update_list)
+		for(var/mob/dead/observer/eye/m as anything in seenby)
+			if(m?.owner?.client)
 				if(remove)
 					m.owner.client.images -= obfuscation_image
 				else

@@ -59,8 +59,8 @@
 		to_chat(user, "<span class='notice'>The anchoring bolts [anchored ? "are" : "can be"] <b>wrenched</b> in place and the maintenance panel [opened ? "can be" : "is"] <b>screwed</b> in place.</span>")
 	else
 		to_chat(user, "<span class='notice'>The maintenance panel [opened ? "can be" : "is"] <b>screwed</b> in place.</span>")
-	if(health != initial(health))
-		if(health <= initial(health)/2)
+	if(health != max_health)
+		if(health <= max_health/2)
 			to_chat(user,"<span class='warning'>It looks pretty beat up.</span>")
 		else
 			to_chat(user, "<span class='warning'>Its got a few dents in it.</span>")
@@ -104,7 +104,7 @@
 		P.make_energy()
 
 	var/power_failure = FALSE
-	if(initial(health)/health < 0.5 && prob(5))
+	if(max_health/health < 0.5 && prob(5))
 		visible_message("<span class='warning'>\The [src] shudders and sparks</span>")
 		power_failure = TRUE
 	// Now spend it.
@@ -461,9 +461,9 @@
 		update_icon()
 	else if(isCoil(I))
 		var/obj/item/stack/cable_coil/C = I
-		if(health != initial(health) && !do_after(user, 10, src) && C.use(1))
+		if(health != max_health && !do_after(user, 10, src) && C.use(1))
 			user.visible_message("\The [user] patches up \the [src]")
-			health = min(initial(health), health + 5)
+			health = min(max_health, health + 5)
 	else
 		if(user.a_intent == I_HURT) // Kill it
 			to_chat(user, "<span class='danger'>\The [user] hits \the [src] with \the [I]</span>")

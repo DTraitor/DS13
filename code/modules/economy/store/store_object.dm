@@ -16,9 +16,13 @@ GLOBAL_VAR_INIT(number_of_store_kiosks, 0)
 	// Power
 	use_power = 1
 	idle_power_usage = 50
+
+	buckle_pixel_shift = "x=0;y=8"
+
 	light_range = 4
 	light_power = 0.8
 	light_color = COLOR_DEEP_SKY_BLUE
+	light_on = FALSE
 
 	var/vend_power_usage = 450 //actuators and stuff
 
@@ -32,7 +36,6 @@ GLOBAL_VAR_INIT(number_of_store_kiosks, 0)
 	var/close_time = 1.4 SECONDS
 	var/light_time = 7 SECONDS
 	var/bolt_time = 1 SECONDS
-	buckle_pixel_shift = "x=0;y=8"
 
 	//Sounds
 	var/sound_open = 'sound/machines/store/store_door_open.ogg'
@@ -52,8 +55,6 @@ GLOBAL_VAR_INIT(number_of_store_kiosks, 0)
 	deposit_box = new(src)
 	machine_id = "[station_name()] Store #[GLOB.number_of_store_kiosks++]"
 
-
-
 /obj/machinery/store/update_icon()
 	var/light = TRUE
 	if (operable())
@@ -64,7 +65,7 @@ GLOBAL_VAR_INIT(number_of_store_kiosks, 0)
 
 	overlays.Cut()
 	if (door_state == -1)
-		var/mutable_appearance/I = mutable_appearance(icon, "door_closed", ABOVE_HUMAN_LAYER, DEFAULT_PLANE)
+		var/image/I = image(icon, src, "door_closed",ABOVE_HUMAN_LAYER )
 		overlays += I
 		light = FALSE
 
@@ -97,8 +98,7 @@ GLOBAL_VAR_INIT(number_of_store_kiosks, 0)
 /obj/machinery/store/Uncrossed(atom/movable/O)
 	if (occupant == O)
 		remove_occupant()
-	if(istype(O, /mob))
-		SStgui.close_user_uis(O, src)
+
 	.=..()
 
 
@@ -108,6 +108,7 @@ GLOBAL_VAR_INIT(number_of_store_kiosks, 0)
 			return
 		remove_occupant()
 	occupant = O
+	update_occupant_data()
 
 
 /obj/machinery/store/proc/remove_occupant()
@@ -264,8 +265,6 @@ GLOBAL_VAR_INIT(number_of_store_kiosks, 0)
 
 	//Time to start animating!
 	makeover_animation()
-
-
 
 /obj/machinery/store/proc/get_box_modules()
 	.=list()

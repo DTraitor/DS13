@@ -6,8 +6,8 @@
 
 	x = 12
 	y = 5.5
-	icon_file = 'icons/obj/gun.dmi'
-	icon = "divet_spec"
+	icon = 'icons/obj/gun.dmi'
+	icon_state = "divet_spec"
 
 	required_technologies = list("divet")
 	cost = 1250
@@ -22,8 +22,8 @@
 
 	x = 12
 	y = 4
-	icon_file = 'icons/obj/ammo.dmi'
-	icon = "icds"
+	icon = 'icons/obj/ammo.dmi'
+	icon_state = "icds"
 
 	required_technologies = list("divet")
 	cost = 1500
@@ -38,8 +38,8 @@
 
 	x = 10.5
 	y = 5.5
-	icon_file = 'icons/obj/ammo.dmi'
-	icon = "hpds"
+	icon = 'icons/obj/ammo.dmi'
+	icon_state = "hpds"
 
 	required_technologies = list("divet")
 	cost = 1500
@@ -54,8 +54,8 @@
 
 	x = 13.5
 	y = 5.5
-	icon_file = 'icons/obj/ammo.dmi'
-	icon = "apds"
+	icon = 'icons/obj/ammo.dmi'
+	icon_state = "apds"
 
 	required_technologies = list("divet")
 	cost = 1500
@@ -70,8 +70,8 @@
 
 	x = 12
 	y = 7
-	icon_file = 'icons/obj/items.dmi'
-	icon = "implantcase-r"
+	icon = 'icons/obj/items.dmi'
+	icon_state = "implantcase-r"
 
 	required_technologies = list("implants")
 	cost = 1250
@@ -86,8 +86,8 @@
 
 	x = 13.5
 	y = 7
-	icon_file = 'icons/obj/items.dmi'
-	icon = "implantcase-r"
+	icon = 'icons/obj/items.dmi'
+	icon_state = "implantcase-r"
 
 	required_technologies = list("implants")
 	cost = 1250
@@ -102,8 +102,8 @@
 
 	x = 10.5
 	y = 7
-	icon_file = 'icons/obj/items.dmi'
-	icon = "implantcase-r"
+	icon = 'icons/obj/items.dmi'
+	icon_state = "implantcase-r"
 
 	required_technologies = list("implants")
 	cost = 1250
@@ -118,8 +118,8 @@
 
 	x = 12
 	y = 8.5
-	icon_file = 'icons/obj/items.dmi'
-	icon = "implantcase-r"
+	icon = 'icons/obj/items.dmi'
+	icon_state = "implantcase-r"
 
 	required_technologies = list("implants")
 	cost = 1250

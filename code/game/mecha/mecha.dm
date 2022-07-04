@@ -224,7 +224,7 @@
 
 /obj/mecha/examine(mob/user)
 	. = ..(user)
-	var/integrity = health/initial(health)*100
+	var/integrity = health/max_health*100
 	switch(integrity)
 		if(85 to 100)
 			to_chat(user, "It's fully intact.")
@@ -1269,7 +1269,7 @@
 
 
 /obj/mecha/proc/get_stats_part()
-	var/integrity = health/initial(health)*100
+	var/integrity = health/max_health*100
 	var/cell_charge = get_charge()
 	var/tank_pressure = internal_tank ? round(internal_tank.return_pressure(),0.01) : "None"
 	var/tank_temperature = internal_tank ? internal_tank.return_temperature() : "Unknown" //Results in type mismatch if there is no tank.
